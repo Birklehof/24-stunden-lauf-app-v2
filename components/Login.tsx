@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { OAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, microsoftOAuthProvider } from "../firebase";
 import useAuth from "../hooks/useAuth";
+import router from "next/router";
 
 const Auth = () => {
   const { isLoggedIn, user } = useAuth();
@@ -9,7 +10,7 @@ const Auth = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (isLoggedIn) {
-        window.location.href = "/runner";
+        router.push("/runner");
       }
     }
   }, [isLoggedIn, user]);

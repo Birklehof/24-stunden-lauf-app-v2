@@ -6,7 +6,7 @@ import {
 } from "firebase/remote-config";
 import { useEffect, useState } from "react";
 
-// Test of Remote Config
+// Test of Remote Config ⇾ remove this component for production (bad performance)
 const Title = () => {
   const [title, setTitle] = useState("24 Stunden Lauf");
 

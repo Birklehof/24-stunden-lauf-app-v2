@@ -9,6 +9,7 @@ import {
 import { db } from "../../firebase";
 import { useEffect, useState } from "react";
 import { type Runner } from "../../interfaces/runner";
+import router from "next/router";
 import Link from "next/link";
 
 export default function Runner() {
@@ -58,34 +59,15 @@ export default function Runner() {
   return (
     <>
       <main>
-        <h1>Läufer</h1>
-        <div>
-          <p>ID: {runner?.id}</p>
-          <p>Number: {runner?.number}</p>
-          <p>Name: {runner?.name}</p>
-          {runner?.email && <p>Email: {runner?.email}</p>}
-          {runner?.studentId && <p>Student ID: {runner?.studentId}</p>}
-          <p>Laps: {laps}</p>
-        </div>
+        <h1>Mehr Details</h1>
         {/*
-        <div> Next to each other
-          <div>
-            Laps
-          </div>
-          <div>
-            Place
-          </div>
-          <div>
-            Total distance
-          </div>
-          <div>
-            Progress (e.g. progress towards a personal goal)
-          </div>
-        </div>
+        Show detailed information about the runner
+        - number of laps over time (graph)
+        - number of laps in reference to the time of day (graph)
+        - progress towards different goals (like in houses or groups)
         */}
         <div>
-          <Link href={`/runner/detailed`}>Details</Link>
-          <button onClick={() => logout()}>Logout</button>
+          <Link href="/runner">Back to overview</Link>
         </div>
       </main>
     </>
