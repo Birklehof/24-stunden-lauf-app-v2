@@ -6,6 +6,7 @@ import {
 } from "firebase/remote-config";
 import { useEffect, useState } from "react";
 
+// Test of Remote Config
 const Title = () => {
   const [title, setTitle] = useState("24 Stunden Lauf");
 

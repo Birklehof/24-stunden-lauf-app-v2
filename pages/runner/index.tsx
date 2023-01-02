@@ -16,7 +16,6 @@ export default function Runner() {
   const [runner, setRunner] = useState<Runner>();
 
   useEffect(() => {
-    console.log("useEffect");
     if (!isLoggedIn || !user) {
       return;
     }
