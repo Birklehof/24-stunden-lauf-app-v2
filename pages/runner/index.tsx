@@ -1,18 +1,17 @@
 import useAuth from "../../hooks/useAuth";
-import { collection, query, where, getDocs } from "@firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  getCountFromServer,
+} from "@firebase/firestore";
 import { db } from "../../firebase";
 import { useEffect, useState } from "react";
-
-interface Runner {
-  uid: string;
-  number: number;
-  firstName: string;
-  lastName: string;
-  studentId: string;
-}
+import { type Runner } from "../../interfaces/runner";
 
 export default function Runner() {
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, logout } = useAuth();
   const [laps, setLaps] = useState(0);
   const [runner, setRunner] = useState<Runner>();
 
@@ -21,10 +20,7 @@ export default function Runner() {
     if (!isLoggedIn || !user) {
       return;
     }
-    getLapCount().catch((error) => {
-      console.log("Error getting documents: ", error);
-    });
-    getRunnerData().catch((error) => {
+    getRunner().catch((error) => {
       console.log("Error getting documents: ", error);
     });
   }, [isLoggedIn, user]);
@@ -33,24 +29,30 @@ export default function Runner() {
     return (
       <>
         <main>
-          <h1>Account</h1>
+          <h1>Runner</h1>
           <p>Loading ...</p>
         </main>
       </>
     );
   }
 
-  const getLapCount = async () => {
-    const q = query(collection(db, "laps"), where("uid", "==", user?.uid));
+  const getRunner = async () => {
+    const q = query(
+      collection(db, "runners"),
+      where("email", "==", user?.email)
+    );
     const querySnapshot = await getDocs(q);
-    setLaps(querySnapshot.size);
+    const id = querySnapshot.docs[0].id;
+    getLapCount(id);
+    const data = querySnapshot.docs[0].data();
+    const runner = { id, ...data } as Runner;
+    await setRunner(runner);
   };
 
-  const getRunnerData = async () => {
-    const q = query(collection(db, "runners"), where("uid", "==", user?.uid));
-    const querySnapshot = await getDocs(q);
-    const runner = querySnapshot.docs[0].data() as Runner;
-    setRunner(runner);
+  const getLapCount = async (runnerId: string) => {
+    const q = query(collection(db, "laps"), where("runnerId", "==", runnerId));
+    const lapCount = await getCountFromServer(q);
+    setLaps(lapCount.data().count);
   };
 
   return (
@@ -58,11 +60,15 @@ export default function Runner() {
       <main>
         <h1>Runner</h1>
         <div>
+          <p>ID: {runner?.id}</p>
           <p>Number: {runner?.number}</p>
-          <p>First Name: {runner?.firstName}</p>
-          <p>Last Name: {runner?.lastName}</p>
-          <p>Student ID: {runner?.studentId}</p>
+          <p>Name: {runner?.name}</p>
+          {runner?.email && <p>Email: {runner?.email}</p>}
+          {runner?.studentId && <p>Student ID: {runner?.studentId}</p>}
           <p>Laps: {laps}</p>
+        </div>
+        <div>
+          <button onClick={() => logout()}>Logout</button>
         </div>
       </main>
     </>
