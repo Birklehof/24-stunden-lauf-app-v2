@@ -25,5 +25,9 @@ microsoftOAuthProvider.setCustomParameters({
   prompt: "consent",
   tenant: "89cd34a8-db37-49d2-a4f9-9231b59f7e1a",
 });
+const githubOAuthProvider = new OAuthProvider("github.com");
+githubOAuthProvider.setCustomParameters({
+  allow_signup: "false",
+});
 
-export { app, db, auth, microsoftOAuthProvider };
+export { app, db, auth, microsoftOAuthProvider, githubOAuthProvider };

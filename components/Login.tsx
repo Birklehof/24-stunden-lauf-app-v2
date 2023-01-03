@@ -1,19 +1,54 @@
 import React, { useEffect } from "react";
 import { OAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth, microsoftOAuthProvider } from "../firebase";
+import {
+  auth,
+  db,
+  githubOAuthProvider,
+  microsoftOAuthProvider,
+} from "../firebase";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  getCountFromServer,
+  doc,
+  getDoc,
+} from "@firebase/firestore";
 import useAuth from "../hooks/useAuth";
 import router from "next/router";
+import { User } from "../interfaces/user";
 
 const Auth = () => {
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, logout } = useAuth();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (isLoggedIn) {
-        router.push("/runner");
+      if (isLoggedIn && user) {
+        redirect(user).then((path) => {
+          router.push(path);
+        });
       }
     }
   }, [isLoggedIn, user]);
+
+  async function redirect(user: User): Promise<string> {
+    const userRole = await getUserRole(user.uid);
+
+    if (userRole === "admin") {
+      return "/admin";
+    } else if (userRole === "assistant") {
+      return "/assistant";
+    } else {
+      return "/runner";
+    }
+  }
+
+  async function getUserRole(uid: string): Promise<string> {
+    const userRole = await getDoc(doc(db, "user-roles", uid));
+    const role = userRole.data()?.role || "";
+    return role;
+  }
 
   const handleRunnerAuth = async () => {
     signInWithPopup(auth, microsoftOAuthProvider)
@@ -28,7 +63,15 @@ const Auth = () => {
   };
 
   const handleAdminAuth = async () => {
-    console.log("Admin");
+    signInWithPopup(auth, githubOAuthProvider)
+      .then((result) => {
+        const credential = OAuthProvider.credentialFromResult(result);
+        const accessToken = credential?.accessToken;
+        const idToken = credential?.idToken;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleAssistantAuth = async () => {

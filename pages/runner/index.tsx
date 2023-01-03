@@ -12,11 +12,12 @@ import { type Runner } from "../../interfaces/runner";
 import Link from "next/link";
 import Loading from "../../components/Loading";
 import Head from "../../components/Head";
+import router from "next/router";
 
 export default function Runner() {
   const { isLoggedIn, user, logout } = useAuth();
   const [laps, setLaps] = useState(0);
-  const [runner, setRunner] = useState<Runner>();
+  const [runner, setRunner] = useState<Runner | null>(null);
 
   useEffect(() => {
     if (!isLoggedIn || !user) {
@@ -26,10 +27,6 @@ export default function Runner() {
       console.log("Error getting documents: ", error);
     });
   }, [isLoggedIn, user]);
-
-  if (!isLoggedIn || !user) {
-    return <Loading />;
-  }
 
   const getRunner = async () => {
     const q = query(
@@ -49,6 +46,10 @@ export default function Runner() {
     const lapCount = await getCountFromServer(q);
     setLaps(lapCount.data().count);
   };
+
+  if (!isLoggedIn || !user || !runner) {
+    return <Loading />;
+  }
 
   return (
     <>

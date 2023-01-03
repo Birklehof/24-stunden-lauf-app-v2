@@ -17,7 +17,7 @@ import Head from "../../components/Head";
 export default function Runner() {
   const { isLoggedIn, user, logout } = useAuth();
   const [laps, setLaps] = useState(0);
-  const [runner, setRunner] = useState<Runner>();
+  const [runner, setRunner] = useState<Runner | null>(null);
 
   useEffect(() => {
     if (!isLoggedIn || !user) {
@@ -27,10 +27,6 @@ export default function Runner() {
       console.log("Error getting documents: ", error);
     });
   }, [isLoggedIn, user]);
-
-  if (!isLoggedIn || !user) {
-    return <Loading />;
-  }
 
   const getRunner = async () => {
     const q = query(
@@ -50,6 +46,10 @@ export default function Runner() {
     const lapCount = await getCountFromServer(q);
     setLaps(lapCount.data().count);
   };
+
+  if (!isLoggedIn || !user || !runner) {
+    return <Loading />;
+  }
 
   return (
     <>
