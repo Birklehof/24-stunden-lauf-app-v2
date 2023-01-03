@@ -6,24 +6,28 @@ import {
   getDocs,
   getCountFromServer,
 } from "@firebase/firestore";
-import { db } from "../../firebase";
+import { app, db } from "../../firebase";
 import { useEffect, useState } from "react";
 import { type Runner } from "../../interfaces/runner";
 import Loading from "../../components/Loading";
 import Head from "../../components/Head";
 import Menu from "../../components/Menu";
+import { getRemoteConfig, getString } from "firebase/remote-config";
 
 export default function Runner() {
   const { isLoggedIn, user } = useAuth();
   const [laps, setLaps] = useState(0);
   const [position, setPosition] = useState(0);
-  const [distancePerLap, setDistancePerLap] = useState(100);
+  const [distancePerLap, setDistancePerLap] = useState(660);
   const [runner, setRunner] = useState<Runner | null>(null);
 
   useEffect(() => {
     if (!isLoggedIn || !user) {
       return;
     }
+    setDistancePerLap(
+      parseFloat(getString(getRemoteConfig(app), "distancePerLap"))
+    );
     getRunner().catch((error) => {
       console.log("Error getting documents: ", error);
     });

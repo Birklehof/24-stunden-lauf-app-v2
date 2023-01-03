@@ -6,25 +6,54 @@ import {
   getDocs,
   getCountFromServer,
 } from "@firebase/firestore";
-import { db } from "../../firebase";
+import { app, db } from "../../firebase";
 import { useEffect, useState } from "react";
 import { type Runner } from "../../interfaces/runner";
-import Link from "next/link";
 import Loading from "../../components/Loading";
 import Head from "../../components/Head";
-import router from "next/router";
 import Menu from "../../components/Menu";
-import Icon from "../../components/Icon";
+import {
+  getRemoteConfig,
+  fetchAndActivate,
+  getString,
+} from "firebase/remote-config";
 
 export default function Runner() {
   const { isLoggedIn, user } = useAuth();
-  const [distancePerLap, setDistancePerLap] = useState(100);
+  const [gradeLevels, setGradeLevels] = useState<string[]>([
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+  ]);
+  const [houses, setHouses] = useState<string[]>([
+    "Extern (Kollegium)",
+    "Extern (Schüler)",
+    "Ab",
+    "Kh",
+    "Nb",
+    "NHO",
+    "NHW",
+    "Pb",
+    "Sb",
+    "St",
+    "Uh",
+    "WobS",
+    "WobN",
+  ]);
+  const [distancePerLap, setDistancePerLap] = useState(660);
   const [runners, setRunners] = useState<Runner[] | null>(null);
 
   useEffect(() => {
     if (!isLoggedIn || !user) {
       return;
     }
+    const remoteConfig = getRemoteConfig(app);
+    setGradeLevels(JSON.parse(getString(remoteConfig, "gradeLevels")));
+    setHouses(JSON.parse(getString(remoteConfig, "houses")));
+    setDistancePerLap(parseFloat(getString(remoteConfig, "distancePerLap")));
+
     getRunners()
       .then((runners) => {
         setRunners(runners);
@@ -32,6 +61,33 @@ export default function Runner() {
       .catch((error) => {
         console.log("Error getting documents: ", error);
       });
+    if (typeof window !== "undefined") {
+      const remoteConfig = getRemoteConfig(app);
+      remoteConfig.settings.minimumFetchIntervalMillis = 3600000;
+
+      fetchAndActivate(remoteConfig)
+        .then(() => {
+          console.log(remoteConfig);
+          const gradeLevelData = getString(remoteConfig, "gradeLevels");
+          const houseData = getString(remoteConfig, "houses");
+          const distancePerLapData = getString(remoteConfig, "distancePerLap");
+          console.log(gradeLevelData);
+          console.log(houseData);
+          console.log(distancePerLapData);
+          if (gradeLevelData) {
+            setGradeLevels(JSON.parse(gradeLevelData));
+          }
+          if (houseData) {
+            setHouses(JSON.parse(houseData));
+          }
+          if (distancePerLapData) {
+            setDistancePerLap(parseFloat(distancePerLapData));
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, [isLoggedIn, user]);
 
   async function getRunners(): Promise<Runner[]> {
@@ -79,34 +135,16 @@ export default function Runner() {
             <div className="input-group input-group-sm">
               <div className="flex flex-row gap-3 w-full">
                 <select className="select select-bordered select-sm grow">
-                  <option selected value={""}>
-                    Klasse
-                  </option>
-                  <option>5</option>
-                  <option>6</option>
-                  <option>7</option>
-                  <option>8</option>
-                  <option>9</option>
-                  <option>10A</option>
-                  <option>10B</option>
-                  <option>10C</option>
-                  <option>Q1</option>
-                  <option>Q2</option>
+                  <option value={""}>Klasse</option>
+                  {gradeLevels.map((gradeLevel) => (
+                    <option key={gradeLevel}>{gradeLevel}</option>
+                  ))}
                 </select>
                 <select className="select select-bordered select-sm grow">
-                  <option selected value={""}>
-                    Haus
-                  </option>
-                  <option>5</option>
-                  <option>6</option>
-                  <option>7</option>
-                  <option>8</option>
-                  <option>9</option>
-                  <option>10A</option>
-                  <option>10B</option>
-                  <option>10C</option>
-                  <option>Q1</option>
-                  <option>Q2</option>
+                  <option value={""}>Haus</option>
+                  {houses.map((house) => (
+                    <option key={house}>{house}</option>
+                  ))}
                 </select>
                 <input
                   type="text"

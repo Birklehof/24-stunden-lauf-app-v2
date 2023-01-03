@@ -1,4 +1,3 @@
-import Title from "../components/Title";
 import Login from "../components/Login";
 import Head from "../components/Head";
 import Loading from "../components/Loading";
@@ -6,14 +5,18 @@ import useAuth from "../hooks/useAuth";
 import { User } from "../interfaces/user";
 import { getDoc, doc } from "firebase/firestore";
 import router from "next/router";
-import { useEffect } from "react";
-import { db } from "../firebase";
+import { useEffect, useState } from "react";
+import { db, app } from "../firebase";
+import { getRemoteConfig, getString, getValue } from "@firebase/remote-config";
 
 export default function Home() {
   const { isLoggedIn, user } = useAuth();
+  const [name, setName] = useState("24 Stunden Lauf");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      setName(getString(getRemoteConfig(app), "name"));
+
       if (isLoggedIn && user) {
         redirect(user).then((path) => {
           router.push(path);
@@ -40,7 +43,7 @@ export default function Home() {
     return role;
   }
 
-  if ((isLoggedIn && user) || 1 === 1) {
+  if (isLoggedIn && user) {
     return <Loading />;
   }
 
@@ -50,15 +53,13 @@ export default function Home() {
       <main className="hero min-h-screen bg-base-200">
         <div className="hero-content w-full flex justify-around">
           <div className="hidden lg:block">
-            <h1 className="text-5xl text-right font-bold">
-              <Title />
-            </h1>
+            <h1 className="text-5xl text-right font-bold">{name}</h1>
           </div>
           <div className="w-full max-w-sm lg:max-w-md">
             <div className="card w-full shadow-2xl bg-base-100">
               <div className="card-body">
                 <h1 className="text-xl text-center font-bold mb-3 lg:hidden">
-                  <Title />
+                  {name}
                 </h1>
                 <Login />
               </div>
