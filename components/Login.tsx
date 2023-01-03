@@ -16,13 +16,7 @@ const Auth = () => {
     });
   };
 
-  const handleAdminAuth = async () => {
-    signInWithPopup(auth, githubOAuthProvider).catch((error) => {
-      console.log(error);
-    });
-  };
-
-  const handleAssistantAuth = async () => {
+  const handleStaffAuth = async () => {
     signInWithPopup(auth, githubOAuthProvider).catch((error) => {
       console.log(error);
     });
@@ -33,8 +27,7 @@ const Auth = () => {
       <h1>Anmelden</h1>
       <div>
         <button onClick={() => handleRunnerAuth()}>Läufer</button>
-        <button onClick={() => handleAssistantAuth()}>Assistent</button>
-        <button onClick={() => handleAdminAuth()}>Admin</button>
+        <button onClick={() => handleStaffAuth()}>Organisatoren</button>
       </div>
     </div>
   );
