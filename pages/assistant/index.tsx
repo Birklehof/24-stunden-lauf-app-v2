@@ -1,3 +1,5 @@
+import Head from "../../components/Head";
+
 export default function AssistantIndex() {
   // This is the page for the assistants, it should:
   // - have a from to add a new runner
@@ -6,6 +8,7 @@ export default function AssistantIndex() {
 
   return (
     <>
+      <Head title="Assistent" />
       <main>
         <h1>Assistant</h1>
       </main>

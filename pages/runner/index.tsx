@@ -10,6 +10,8 @@ import { db } from "../../firebase";
 import { useEffect, useState } from "react";
 import { type Runner } from "../../interfaces/runner";
 import Link from "next/link";
+import Loading from "../../components/Loading";
+import Head from "../../components/Head";
 
 export default function Runner() {
   const { isLoggedIn, user, logout } = useAuth();
@@ -26,14 +28,7 @@ export default function Runner() {
   }, [isLoggedIn, user]);
 
   if (!isLoggedIn || !user) {
-    return (
-      <>
-        <main>
-          <h1>Runner</h1>
-          <p>Loading ...</p>
-        </main>
-      </>
-    );
+    return <Loading />;
   }
 
   const getRunner = async () => {
@@ -57,6 +52,7 @@ export default function Runner() {
 
   return (
     <>
+      <Head title="Läufer" />
       <main>
         <h1>Läufer</h1>
         <div>
