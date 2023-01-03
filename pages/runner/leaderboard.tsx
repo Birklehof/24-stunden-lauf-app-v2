@@ -17,6 +17,7 @@ import {
   fetchAndActivate,
   getString,
 } from "firebase/remote-config";
+import RunnerMenu from "../../components/RunnerMenu";
 
 export default function Runner() {
   const { isLoggedIn, user } = useAuth();
@@ -118,18 +119,7 @@ export default function Runner() {
     <>
       <Head title="Läufer" />
       <main className="hero flex flex-col min-h-screen bg-base-200">
-        <Menu
-          navItems={[
-            { name: "Start", href: "/runner", icon: "HomeIcon" },
-            {
-              name: "Leaderboard",
-              href: "/runner/leaderboard",
-              icon: "TrendingUpIcon",
-            },
-            { name: "Graphen", href: "/runner/graphs", icon: "ChartBarIcon" },
-            { name: "Account", href: "/runner/account", icon: "UserIcon" },
-          ]}
-        />
+        <RunnerMenu />
         <div className="my-10 w-full max-w-2xl mx-3">
           <div className="form-control">
             <div className="input-group input-group-sm">

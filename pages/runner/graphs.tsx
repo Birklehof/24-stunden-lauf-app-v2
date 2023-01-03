@@ -13,6 +13,7 @@ import router from "next/router";
 import Link from "next/link";
 import Loading from "../../components/Loading";
 import Head from "../../components/Head";
+import RunnerMenu from "../../components/RunnerMenu";
 
 export default function Runner() {
   const { isLoggedIn, user, logout } = useAuth();
@@ -54,17 +55,14 @@ export default function Runner() {
   return (
     <>
       <Head title="Läufer Details" />
-      <main>
-        <h1>Mehr Details</h1>
+      <main className="hero flex flex-col min-h-screen bg-base-200">
+        <RunnerMenu />
         {/*
         Show detailed information about the runner
         - number of laps over time (graph)
         - number of laps in reference to the time of day (graph)
         - progress towards different goals (like in houses or groups)
         */}
-        <div>
-          <Link href="/runner">Back to overview</Link>
-        </div>
       </main>
     </>
   );

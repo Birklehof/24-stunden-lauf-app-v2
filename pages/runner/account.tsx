@@ -14,6 +14,7 @@ import Link from "next/link";
 import Loading from "../../components/Loading";
 import Head from "../../components/Head";
 import Menu from "../../components/Menu";
+import RunnerMenu from "../../components/RunnerMenu";
 
 export default function Runner() {
   const { isLoggedIn, user, logout } = useAuth();
@@ -49,13 +50,7 @@ export default function Runner() {
     <>
       <Head title="Läufer Details" />
       <main className="hero min-h-screen bg-base-200">
-        <Menu
-          navItems={[
-            { name: "Start", href: "/runner", icon: "HomeIcon" },
-            { name: "Graphen", href: "/runner/graphs", icon: "ChartBarIcon" },
-            { name: "Account", href: "/runner/account", icon: "UserIcon" },
-          ]}
-        />
+        <RunnerMenu />
         <div className="hero-content flex-col">
           <div className="avatar z-10">
             <div className="w-24 mask mask-squircle">
