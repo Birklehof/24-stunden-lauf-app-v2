@@ -13,6 +13,7 @@ import Loading from "../../components/Loading";
 import Head from "../../components/Head";
 import Menu from "../../components/Menu";
 import { getRemoteConfig, getString } from "firebase/remote-config";
+import RunnerMenu from "../../components/RunnerMenu";
 
 export default function Runner() {
   const { isLoggedIn, user } = useAuth();
@@ -33,7 +34,7 @@ export default function Runner() {
     });
   }, [isLoggedIn, user]);
 
-  const getRunner = async () => {
+  async function getRunner() {
     const q = query(
       collection(db, "runners"),
       where("email", "==", user?.email)
@@ -44,13 +45,13 @@ export default function Runner() {
     const data = querySnapshot.docs[0].data();
     const runner = { id, ...data } as Runner;
     await setRunner(runner);
-  };
+  }
 
-  const getLapCount = async (runnerId: string) => {
+  async function getLapCount(runnerId: string) {
     const q = query(collection(db, "laps"), where("runnerId", "==", runnerId));
     const lapCount = await getCountFromServer(q);
     setLaps(lapCount.data().count);
-  };
+  }
 
   if (!isLoggedIn || !user || !runner) {
     return <Loading />;
@@ -60,18 +61,7 @@ export default function Runner() {
     <>
       <Head title="Läufer" />
       <main className="hero min-h-screen bg-base-200">
-        <Menu
-          navItems={[
-            { name: "Start", href: "/runner", icon: "HomeIcon" },
-            {
-              name: "Leaderboard",
-              href: "/runner/leaderboard",
-              icon: "TrendingUpIcon",
-            },
-            { name: "Graphen", href: "/runner/graphs", icon: "ChartBarIcon" },
-            { name: "Account", href: "/runner/account", icon: "UserIcon" },
-          ]}
-        />
+        <RunnerMenu />
         <div className="flex w-full justify-center">
           <div className="flex flex-col lg:flex-row lg:justify-evenly lg:w-1/2">
             <div>
