@@ -24,10 +24,22 @@ const Auth = () => {
 
   return (
     <div>
-      <h1>Anmelden</h1>
       <div>
-        <button onClick={() => handleRunnerAuth()}>Läufer</button>
-        <button onClick={() => handleStaffAuth()}>Organisatoren</button>
+        <button
+          className="btn btn-primary w-full"
+          onClick={() => handleRunnerAuth()}
+        >
+          Läufer
+        </button>
+        <div className="divider">
+          <p className="font-bold text-sm text-gray-300 tracking-wider">ODER</p>
+        </div>
+        <button
+          className="btn btn-primary w-full"
+          onClick={() => handleStaffAuth()}
+        >
+          Organisator
+        </button>
       </div>
     </div>
   );

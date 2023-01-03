@@ -47,10 +47,25 @@ export default function Home() {
   return (
     <>
       <Head title="Anmeldung" />
-      <main>
-        <Title />
-        <Login />
-      </main>
+      <div className="hero min-h-screen bg-base-200">
+        <div className="hero-content w-full flex justify-around">
+          <div className="hidden lg:block">
+            <h1 className="text-5xl text-right font-bold">
+              <Title />
+            </h1>
+          </div>
+          <div className="w-full max-w-sm lg:max-w-md">
+            <div className="card w-full shadow-2xl bg-base-100">
+              <div className="card-body">
+                <h1 className="text-xl text-center font-bold mb-3 lg:hidden">
+                  <Title />
+                </h1>
+                <Login />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

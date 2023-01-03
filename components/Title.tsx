@@ -26,7 +26,7 @@ const Title = () => {
     }
   });
 
-  return <h1>{title}</h1>;
+  return <>{title}</>;
 };
 
 export default Title;
