@@ -40,7 +40,7 @@ export default function Home() {
     return role;
   }
 
-  if (isLoggedIn && user) {
+  if ((isLoggedIn && user) || 1 === 1) {
     return <Loading />;
   }
 

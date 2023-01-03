@@ -3,3 +3,8 @@
 @tailwind utilities;
 
 /* Inspiration: https://merakiui.gumroad.com/l/fdsmt */
+
+/* Hide scroll bar */
+::-webkit-scrollbar {
+  display: none;
+}

@@ -9,13 +9,12 @@ import {
 import { db } from "../../firebase";
 import { useEffect, useState } from "react";
 import { type Runner } from "../../interfaces/runner";
-import Link from "next/link";
 import Loading from "../../components/Loading";
 import Head from "../../components/Head";
-import router from "next/router";
+import Menu from "../../components/Menu";
 
 export default function Runner() {
-  const { isLoggedIn, user, logout } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const [laps, setLaps] = useState(0);
   const [position, setPosition] = useState(0);
   const [distancePerLap, setDistancePerLap] = useState(100);
@@ -57,8 +56,20 @@ export default function Runner() {
     <>
       <Head title="Läufer" />
       <main className="hero min-h-screen bg-base-200">
+        <Menu
+          navItems={[
+            { name: "Start", href: "/runner", icon: "HomeIcon" },
+            {
+              name: "Leaderboard",
+              href: "/runner/leaderboard",
+              icon: "TrendingUpIcon",
+            },
+            { name: "Graphen", href: "/runner/graphs", icon: "ChartBarIcon" },
+            { name: "Account", href: "/runner/account", icon: "UserIcon" },
+          ]}
+        />
         <div className="flex w-full justify-center">
-          <div className="flex flex-col md:flex-row md:justify-evenly md:w-2/3">
+          <div className="flex flex-col lg:flex-row lg:justify-evenly lg:w-1/2">
             <div>
               <h1 className="text-5xl text-center font-bold">
                 {runner.number}
@@ -67,21 +78,21 @@ export default function Runner() {
                 Startnummer
               </h2>
             </div>
-            <div className="divider divider-vertical md:divider-horizontal" />
+            <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
               <h1 className="text-5xl text-center font-bold">{laps}</h1>
               <h2 className="text-xl text-center font-bold text-gray-500">
                 {laps === 1 ? "Runde" : "Runden"}
               </h2>
             </div>
-            <div className="divider divider-vertical md:divider-horizontal" />
+            <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
               <h1 className="text-5xl text-center font-bold">{position}</h1>
               <h2 className="text-xl text-center font-bold text-gray-500">
                 Platz
               </h2>
             </div>
-            <div className="divider divider-vertical md:divider-horizontal" />
+            <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
               <h1 className="text-5xl text-center font-bold">
                 {laps * distancePerLap}
@@ -92,35 +103,6 @@ export default function Runner() {
             </div>
           </div>
         </div>
-        {/* <h1>Läufer</h1>
-        <div>
-          <p>ID: {runner?.id}</p>
-          <p>Number: {runner?.number}</p>
-          <p>Name: {runner?.name}</p>
-          {runner?.email && <p>Email: {runner?.email}</p>}
-          {runner?.studentId && <p>Student ID: {runner?.studentId}</p>}
-          <p>Laps: {laps}</p>
-        </div> */}
-        {/*
-        <div> Next to each other
-          <div>
-            Laps
-          </div>
-          <div>
-            Place
-          </div>
-          <div>
-            Total distance
-          </div>
-          <div>
-            Progress (e.g. progress towards a personal goal)
-          </div>
-        </div>
-        */}
-        {/* <div>
-          <Link href={`/runner/detailed`}>Details</Link>
-          <button onClick={() => logout()}>Logout</button>
-        </div> */}
       </main>
     </>
   );

@@ -434,6 +434,11 @@
     protobufjs "^7.0.0"
     yargs "^16.2.0"
 
+"@heroicons/react@^1.0.5":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-1.0.6.tgz#35dd26987228b39ef2316db3b1245c42eb19e324"
+  integrity sha512-JJCXydOFWMDpCP4q13iEplA503MQO3xLoZiKum+955ZCtHINWnx26CUxVxxFQu/uLb4LW3ge15ZpzIkXKkJ8oQ==
+
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"
@@ -1723,6 +1728,14 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
+heroicons-lookup@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/heroicons-lookup/-/heroicons-lookup-1.3.2.tgz#d1e73f7cea13460d5d02bcc1c7ec79931aa2b51d"
+  integrity sha512-Irab7l3YmTJolLTfKdLOwHCS/iLYEdoKydu+3xIjrBDtsP18nMHLb9FU5fNBVBBs+HqJp/ZAuJu9/QCtLSK11g==
+  dependencies:
+    "@heroicons/react" "^1.0.5"
+    react "^17.0.2"
+
 http-parser-js@>=0.5.1:
   version "0.5.8"
   resolved "https://registry.yarnpkg.com/http-parser-js/-/http-parser-js-0.5.8.tgz#af23090d9ac4e24573de6f6aecc9d84a48bf20e3"
@@ -2417,6 +2430,14 @@ react@18.2.0:
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
   dependencies:
     loose-envify "^1.1.0"
+
+react@^17.0.2:
+  version "17.0.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
+  integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
 
 read-cache@^1.0.0:
   version "1.0.0"
