@@ -47,7 +47,7 @@ export default function Home() {
   return (
     <>
       <Head title="Anmeldung" />
-      <div className="hero min-h-screen bg-base-200">
+      <main className="hero min-h-screen bg-base-200">
         <div className="hero-content w-full flex justify-around">
           <div className="hidden lg:block">
             <h1 className="text-5xl text-right font-bold">
@@ -65,7 +65,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

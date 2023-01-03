@@ -17,6 +17,8 @@ import router from "next/router";
 export default function Runner() {
   const { isLoggedIn, user, logout } = useAuth();
   const [laps, setLaps] = useState(0);
+  const [position, setPosition] = useState(0);
+  const [distancePerLap, setDistancePerLap] = useState(100);
   const [runner, setRunner] = useState<Runner | null>(null);
 
   useEffect(() => {
@@ -54,8 +56,43 @@ export default function Runner() {
   return (
     <>
       <Head title="Läufer" />
-      <main>
-        <h1>Läufer</h1>
+      <main className="hero min-h-screen bg-base-200">
+        <div className="flex w-full justify-center">
+          <div className="flex flex-col md:flex-row md:justify-evenly md:w-2/3">
+            <div>
+              <h1 className="text-5xl text-center font-bold">
+                {runner.number}
+              </h1>
+              <h2 className="text-xl text-center font-bold text-gray-500">
+                Startnummer
+              </h2>
+            </div>
+            <div className="divider divider-vertical md:divider-horizontal" />
+            <div>
+              <h1 className="text-5xl text-center font-bold">{laps}</h1>
+              <h2 className="text-xl text-center font-bold text-gray-500">
+                {laps === 1 ? "Runde" : "Runden"}
+              </h2>
+            </div>
+            <div className="divider divider-vertical md:divider-horizontal" />
+            <div>
+              <h1 className="text-5xl text-center font-bold">{position}</h1>
+              <h2 className="text-xl text-center font-bold text-gray-500">
+                Platz
+              </h2>
+            </div>
+            <div className="divider divider-vertical md:divider-horizontal" />
+            <div>
+              <h1 className="text-5xl text-center font-bold">
+                {laps * distancePerLap}
+              </h1>
+              <h2 className="text-xl text-center font-bold text-gray-500">
+                km gelaufen
+              </h2>
+            </div>
+          </div>
+        </div>
+        {/* <h1>Läufer</h1>
         <div>
           <p>ID: {runner?.id}</p>
           <p>Number: {runner?.number}</p>
@@ -63,7 +100,7 @@ export default function Runner() {
           {runner?.email && <p>Email: {runner?.email}</p>}
           {runner?.studentId && <p>Student ID: {runner?.studentId}</p>}
           <p>Laps: {laps}</p>
-        </div>
+        </div> */}
         {/*
         <div> Next to each other
           <div>
@@ -80,10 +117,10 @@ export default function Runner() {
           </div>
         </div>
         */}
-        <div>
+        {/* <div>
           <Link href={`/runner/detailed`}>Details</Link>
           <button onClick={() => logout()}>Logout</button>
-        </div>
+        </div> */}
       </main>
     </>
   );
