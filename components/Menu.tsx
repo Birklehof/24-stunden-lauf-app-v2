@@ -18,7 +18,7 @@ export default function Menu({ navItems }: MenuProps) {
 
   return (
     <>
-      <ul className="menu menu-horizontal lg:menu-vertical bg-base-100 p-2 rounded-box z-50 absolute bottom-5 lg:top-5 lg:left-5 lg:gap-2 shadow-2xl">
+      <ul className="menu menu-horizontal lg:menu-vertical bg-base-100 p-2 rounded-box z-40 absolute bottom-5 lg:top-5 lg:left-5 lg:gap-2 shadow-2xl">
         {navItems.map((item) => (
           <li key={item.name}>
             <Link href={item.href}>

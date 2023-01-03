@@ -5,19 +5,20 @@ import {
   where,
   getDocs,
   getCountFromServer,
+  onSnapshot,
 } from "@firebase/firestore";
 import { app, db } from "../../firebase";
 import { useEffect, useState } from "react";
 import { type Runner } from "../../interfaces/runner";
 import Loading from "../../components/Loading";
 import Head from "../../components/Head";
-import Menu from "../../components/Menu";
 import { getRemoteConfig, getString } from "firebase/remote-config";
 import RunnerMenu from "../../components/RunnerMenu";
+import NewLapOverlay from "../../components/NewLapOverlay";
 
 export default function Runner() {
   const { isLoggedIn, user } = useAuth();
-  const [laps, setLaps] = useState(0);
+  const [laps, setLaps] = useState<number>(0);
   const [position, setPosition] = useState(0);
   const [distancePerLap, setDistancePerLap] = useState(660);
   const [runner, setRunner] = useState<Runner | null>(null);
@@ -51,6 +52,10 @@ export default function Runner() {
     const q = query(collection(db, "laps"), where("runnerId", "==", runnerId));
     const lapCount = await getCountFromServer(q);
     setLaps(lapCount.data().count);
+
+    onSnapshot(q, (query) => {
+      setLaps(query.docs.length);
+    });
   }
 
   if (!isLoggedIn || !user || !runner) {
@@ -61,6 +66,7 @@ export default function Runner() {
     <>
       <Head title="Läufer" />
       <main className="hero min-h-screen bg-base-200">
+        <NewLapOverlay laps={laps} />
         <RunnerMenu />
         <div className="flex w-full justify-center">
           <div className="flex flex-col lg:flex-row lg:justify-evenly lg:w-1/2">
