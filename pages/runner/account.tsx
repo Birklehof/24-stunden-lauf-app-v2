@@ -65,6 +65,11 @@ export default function Runner() {
               {runner.email && (
                 <h2 className="text-md text-center">{runner.email}</h2>
               )}
+              {/* 
+              On this page:
+              - let the user set a personal goal and show the progress
+              - let the user create or join a team and show the progress of the team goal
+              */}
               {/* <p>ID: {runner.id}</p>
               <p>Number: {runner.number}</p>
               {runner?.studentId && <p>Student ID: {runner?.studentId}</p>} */}
