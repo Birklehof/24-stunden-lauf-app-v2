@@ -5,7 +5,7 @@ export default function Document() {
   return (
     <Html lang="de">
       <Head />
-      <body>
+      <body className="max-h-screen overflow-hidden">
         <Main />
         <NextScript />
       </body>

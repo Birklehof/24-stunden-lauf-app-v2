@@ -95,7 +95,7 @@ export default function Runner() {
             <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
               <h1 className="text-5xl text-center font-bold">
-                {laps * distancePerLap}
+                {((laps * distancePerLap) / 1000).toFixed(2)}
               </h1>
               <h2 className="text-xl text-center font-bold text-gray-500">
                 km gelaufen

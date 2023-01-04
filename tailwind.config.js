@@ -24,7 +24,7 @@ module.exports = {
     extend: {
       keyframes: {
         grow: {
-          "0%": { transform: "scale(0)" },
+          "0%": { transform: "scale(0)", opacity: 0 },
           "5%": { transform: "scale(0.01)", opacity: 1 },
           "25%": { transform: "scale(1)", opacity: 1 },
           "95%": { transform: "scale(1)", opacity: 1 },
