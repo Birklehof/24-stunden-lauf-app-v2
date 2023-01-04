@@ -24,7 +24,7 @@ export default function NewLapOverlay({ laps }: NewRoundOverlayProps) {
 
   return (
     <>
-      <div className="hidden flex grow opacity-0 z-50 absolute w-[200vw] h-[200vw] bg-success justify-center items-center rounded-full">
+      <div className="hidden flex grow opacity-0 z-50 absolute w-[max(200vw,200vh)] h-[max(200vw,200vh)] bg-success justify-center items-center rounded-full">
         <h1 className="text-5xl text-white font-bold animate-[showText_1s_ease-in-out]">
           {laps}. Runde
         </h1>
