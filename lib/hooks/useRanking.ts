@@ -8,7 +8,7 @@ import {
   getCountFromServer,
 } from "@firebase/firestore";
 import { db } from "lib/firebase";
-import { onSnapshot } from "firebase/firestore";
+import { getDoc, onSnapshot } from "firebase/firestore";
 
 interface LapCountByRunnerId {
   runnerId: string;

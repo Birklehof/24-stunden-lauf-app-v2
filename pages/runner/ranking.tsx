@@ -67,86 +67,42 @@ export default function Runner() {
           <div className="flex flex-col w-full gap-3">
             {lapCountByRunnerId.map((lapCountWithRunnerId, position) => (
               <div
-                className="stats shadow"
+                className="shadow bg-base-100 rounded-xl flex flex-row justify-between items-center"
                 key={
                   runners.find(
                     (runner) => runner.id == lapCountWithRunnerId.runnerId
                   )?.id
                 }
               >
-                <div className="stat">
-                  <div className="stat-title">Startnummer</div>
+                <div className="stat w-2/12">
                   <div className="stat-value text-center">
-                    {
-                      runners.find(
-                        (runner) => runner.id == lapCountWithRunnerId.runnerId
-                      )?.number
-                    }
+                    {(position + 1).toString().padStart(3, "0")}.
                   </div>
                 </div>
-                <div className="stat">
-                  <div className="stat-title">Name</div>
+                <div className="stat w-1/2">
                   <div className="stat-value">
-                    {
-                      runners.find(
+                    {runners
+                      .find(
                         (runner) => runner.id == lapCountWithRunnerId.runnerId
-                      )?.name
-                    }
+                      )
+                      ?.name.padEnd(20, " ")}
                   </div>
                 </div>
-                <div className="stat">
-                  <div className="stat-title">
-                    {lapCountWithRunnerId.lapCount == 1 ? "Runde" : "Runden"}
-                  </div>
+                <div className="stat w-2/12">
                   <div className="stat-value text-center">
-                    {lapCountWithRunnerId.lapCount}
+                    {lapCountWithRunnerId.lapCount.toString().padStart(3, "0")}
                   </div>
                 </div>
-                <div className="stat">
-                  <div className="stat-title">Platz</div>
-                  <div className="stat-value text-center">{position + 1}.</div>
-                </div>
-                <div className="stat">
-                  <div className="stat-title">Strecke</div>
+                <div className="stat w-2/12">
                   <div className="stat-value text-center">
                     {(
-                      (lapCountWithRunnerId.lapCount / 1000) *
-                      distancePerLap
+                      (lapCountWithRunnerId.lapCount * distancePerLap) /
+                      1000
                     ).toFixed(2)}
                   </div>
                 </div>
               </div>
             ))}
-            {/* {runners.map((runner, position) => (
-              <div className="stats shadow" key={runner.id}>
-                <div className="stat">
-                  <div className="stat-title">Startnummer</div>
-                  <div className="stat-value text-center">{runner.number}</div>
-                </div>
-                <div className="stat">
-                  <div className="stat-title">Name</div>
-                  <div className="stat-value">{runner.name}</div>
-                </div>
-                <div className="stat">
-                  <div className="stat-title">
-                    {runner.lapCount == 1 ? "Runde" : "Runden"}
-                  </div>
-                  <div className="stat-value text-center">
-                    {runner.lapCount}
-                  </div>
-                </div>
-                <div className="stat">
-                  <div className="stat-title">Platz</div>
-                  <div className="stat-value text-center">{position}.</div>
-                </div>
-                <div className="stat">
-                  <div className="stat-title">Strecke</div>
-                  <div className="stat-value text-center">
-                    {runner.lapCount || 0 * distancePerLap}
-                  </div>
-                </div>
-              </div>
-            ))} */}
           </div>
         </div>
       </main>
