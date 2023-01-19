@@ -19,7 +19,7 @@ import useRanking from "lib/hooks/useRanking";
 export default function Runner() {
   const { isLoggedIn, user } = useAuth();
   const { runner } = useRunner();
-  const { runners } = useRanking();
+  const { runners, lapCountByRunnerId } = useRanking();
   const { gradeLevels, houses, distancePerLap } = useRemoteConfig();
 
   useEffect(() => {
@@ -65,7 +65,59 @@ export default function Runner() {
         </div>
         <div className="flex flex-col max-w-2xl justify-center">
           <div className="flex flex-col w-full gap-3">
-            {runners.map((runner, position) => (
+            {lapCountByRunnerId.map((lapCountWithRunnerId, position) => (
+              <div
+                className="stats shadow"
+                key={
+                  runners.find(
+                    (runner) => runner.id == lapCountWithRunnerId.runnerId
+                  )?.id
+                }
+              >
+                <div className="stat">
+                  <div className="stat-title">Startnummer</div>
+                  <div className="stat-value text-center">
+                    {
+                      runners.find(
+                        (runner) => runner.id == lapCountWithRunnerId.runnerId
+                      )?.number
+                    }
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">Name</div>
+                  <div className="stat-value">
+                    {
+                      runners.find(
+                        (runner) => runner.id == lapCountWithRunnerId.runnerId
+                      )?.name
+                    }
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">
+                    {lapCountWithRunnerId.lapCount == 1 ? "Runde" : "Runden"}
+                  </div>
+                  <div className="stat-value text-center">
+                    {lapCountWithRunnerId.lapCount}
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">Platz</div>
+                  <div className="stat-value text-center">{position + 1}.</div>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">Strecke</div>
+                  <div className="stat-value text-center">
+                    {(
+                      (lapCountWithRunnerId.lapCount / 1000) *
+                      distancePerLap
+                    ).toFixed(2)}
+                  </div>
+                </div>
+              </div>
+            ))}
+            {/* {runners.map((runner, position) => (
               <div className="stats shadow" key={runner.id}>
                 <div className="stat">
                   <div className="stat-title">Startnummer</div>
@@ -94,7 +146,7 @@ export default function Runner() {
                   </div>
                 </div>
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
       </main>
