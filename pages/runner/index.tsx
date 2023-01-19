@@ -4,23 +4,20 @@ import { useEffect, useState } from "react";
 import { type Runner } from "lib/interfaces/runner";
 import Loading from "components/Loading";
 import Head from "components/Head";
-import { getRemoteConfig, getString } from "firebase/remote-config";
 import RunnerMenu from "components/RunnerMenu";
 import NewLapOverlay from "components/NewLapOverlay";
 import useRunner from "lib/hooks/useRunner";
+import useRemoteConfig from "lib/hooks/useRemoteConfig";
 
 export default function Runner() {
   const { isLoggedIn, user } = useAuth();
   const { runner, laps, position } = useRunner();
-  const [distancePerLap, setDistancePerLap] = useState(660);
+  const { distancePerLap } = useRemoteConfig();
 
   useEffect(() => {
     if (!isLoggedIn || !user) {
       return;
     }
-    setDistancePerLap(
-      parseFloat(getString(getRemoteConfig(app), "distancePerLap"))
-    );
   }, [isLoggedIn, user]);
 
   if (!isLoggedIn || !user || !runner) {

@@ -11,48 +11,20 @@ import { useEffect, useState } from "react";
 import { type Runner } from "lib/interfaces/runner";
 import Loading from "components/Loading";
 import Head from "components/Head";
-import {
-  getRemoteConfig,
-  fetchAndActivate,
-  getString,
-} from "firebase/remote-config";
 import RunnerMenu from "components/RunnerMenu";
+import useRemoteConfig from "lib/hooks/useRemoteConfig";
+import useRunner from "lib/hooks/useRunner";
 
 export default function Runner() {
   const { isLoggedIn, user } = useAuth();
-  const [gradeLevels, setGradeLevels] = useState<string[]>([
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-  ]);
-  const [houses, setHouses] = useState<string[]>([
-    "Extern (Kollegium)",
-    "Extern (Schüler)",
-    "Ab",
-    "Kh",
-    "Nb",
-    "NHO",
-    "NHW",
-    "Pb",
-    "Sb",
-    "St",
-    "Uh",
-    "WobS",
-    "WobN",
-  ]);
-  const [distancePerLap, setDistancePerLap] = useState(660);
+  const { runner } = useRunner();
+  const { gradeLevels, houses, distancePerLap } = useRemoteConfig();
   const [runners, setRunners] = useState<Runner[] | null>(null);
 
   useEffect(() => {
     if (!isLoggedIn || !user) {
       return;
     }
-    const remoteConfig = getRemoteConfig(app);
-    setGradeLevels(JSON.parse(getString(remoteConfig, "gradeLevels")));
-    setHouses(JSON.parse(getString(remoteConfig, "houses")));
-    setDistancePerLap(parseFloat(getString(remoteConfig, "distancePerLap")));
 
     getRunners()
       .then((runners) => {
@@ -61,33 +33,6 @@ export default function Runner() {
       .catch((error) => {
         console.log("Error getting documents: ", error);
       });
-    if (typeof window !== "undefined") {
-      const remoteConfig = getRemoteConfig(app);
-      remoteConfig.settings.minimumFetchIntervalMillis = 3600000;
-
-      fetchAndActivate(remoteConfig)
-        .then(() => {
-          console.log(remoteConfig);
-          const gradeLevelData = getString(remoteConfig, "gradeLevels");
-          const houseData = getString(remoteConfig, "houses");
-          const distancePerLapData = getString(remoteConfig, "distancePerLap");
-          console.log(gradeLevelData);
-          console.log(houseData);
-          console.log(distancePerLapData);
-          if (gradeLevelData) {
-            setGradeLevels(JSON.parse(gradeLevelData));
-          }
-          if (houseData) {
-            setHouses(JSON.parse(houseData));
-          }
-          if (distancePerLapData) {
-            setDistancePerLap(parseFloat(distancePerLapData));
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
   }, [isLoggedIn, user]);
 
   async function getRunners(): Promise<Runner[]> {
