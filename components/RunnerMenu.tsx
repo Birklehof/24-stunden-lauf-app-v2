@@ -7,8 +7,8 @@ export default function RunnerMenu() {
         navItems={[
           { name: "Start", href: "/runner", icon: "HomeIcon" },
           {
-            name: "Leaderboard",
-            href: "/runner/leaderboard",
+            name: "Ranking",
+            href: "/runner/ranking",
             icon: "TrendingUpIcon",
           },
           { name: "Graphen", href: "/runner/graphs", icon: "ChartBarIcon" },

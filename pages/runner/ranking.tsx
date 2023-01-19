@@ -14,49 +14,19 @@ import Head from "components/Head";
 import RunnerMenu from "components/RunnerMenu";
 import useRemoteConfig from "lib/hooks/useRemoteConfig";
 import useRunner from "lib/hooks/useRunner";
+import useRanking from "lib/hooks/useRanking";
 
 export default function Runner() {
   const { isLoggedIn, user } = useAuth();
   const { runner } = useRunner();
+  const { runners } = useRanking();
   const { gradeLevels, houses, distancePerLap } = useRemoteConfig();
-  const [runners, setRunners] = useState<Runner[] | null>(null);
 
   useEffect(() => {
     if (!isLoggedIn || !user) {
       return;
     }
-
-    getRunners()
-      .then((runners) => {
-        setRunners(runners);
-      })
-      .catch((error) => {
-        console.log("Error getting documents: ", error);
-      });
   }, [isLoggedIn, user]);
-
-  async function getRunners(): Promise<Runner[]> {
-    const q = query(collection(db, "/apps/24-stunden-lauf/runners"));
-    const querySnapshot = await getDocs(q);
-    const runners = querySnapshot.docs.map(async (doc) => {
-      const id = doc.id;
-      const data = doc.data();
-      const runner = { id, ...data } as Runner;
-      runner.lapCount = await getLapCount(id);
-      return runner;
-    });
-    const runnersWithLapCount = await Promise.all(runners);
-    return runnersWithLapCount;
-  }
-
-  async function getLapCount(runnerId: string): Promise<number> {
-    const q = query(
-      collection(db, "/apps/24-stunden-lauf/laps"),
-      where("runnerId", "==", runnerId)
-    );
-    const lapCount = await getCountFromServer(q);
-    return lapCount.data().count;
-  }
 
   if (!isLoggedIn || !user || !runners) {
     return <Loading />;

@@ -8,10 +8,12 @@ import RunnerMenu from "components/RunnerMenu";
 import NewLapOverlay from "components/NewLapOverlay";
 import useRunner from "lib/hooks/useRunner";
 import useRemoteConfig from "lib/hooks/useRemoteConfig";
+import useRanking from "lib/hooks/useRanking";
 
 export default function Runner() {
   const { isLoggedIn, user } = useAuth();
-  const { runner, laps, position } = useRunner();
+  const { runner, laps } = useRunner();
+  const { getPosition } = useRanking();
   const { distancePerLap } = useRemoteConfig();
 
   useEffect(() => {
@@ -49,7 +51,9 @@ export default function Runner() {
             </div>
             <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
-              <h1 className="text-5xl text-center font-bold">{position}</h1>
+              <h1 className="text-5xl text-center font-bold">
+                {getPosition(runner)}.
+              </h1>
               <h2 className="text-xl text-center font-bold text-gray-500">
                 Platz
               </h2>

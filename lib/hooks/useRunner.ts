@@ -8,7 +8,6 @@ import {
   doc,
   getDoc,
 } from "@firebase/firestore";
-import { async } from "@firebase/util";
 import { app, db } from "lib/firebase";
 import { Runner } from "lib/interfaces/runner";
 import { User } from "lib/interfaces/user";
@@ -19,7 +18,6 @@ export default function useUser() {
   const { user, role } = useAuth();
   const [runner, setRunner] = useState<Runner>();
   const [laps, setLaps] = useState<number>(0);
-  const [position, setPosition] = useState<number>(0);
 
   useEffect(() => {
     if (user) {
@@ -90,5 +88,5 @@ export default function useUser() {
     });
   }
 
-  return { runner, laps, position };
+  return { runner, laps };
 }
