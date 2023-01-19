@@ -10,7 +10,7 @@ import { db, app } from "lib/firebase";
 import { getRemoteConfig, getString, getValue } from "@firebase/remote-config";
 
 export default function Home() {
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, role } = useAuth();
   const defaultAppName = "24 Stunden Lauf";
   const [name, setName] = useState(defaultAppName);
 
@@ -30,21 +30,13 @@ export default function Home() {
   }, [isLoggedIn, user]);
 
   async function redirect(user: User): Promise<string> {
-    const userRole = await getUserRole(user.email);
-
-    if (userRole === "admin") {
+    if (role === "admin") {
       return "/admin";
-    } else if (userRole === "assistant") {
+    } else if (role === "assistant") {
       return "/assistant";
     } else {
       return "/runner";
     }
-  }
-
-  async function getUserRole(email: string): Promise<string> {
-    const userRole = await getDoc(doc(db, "user-roles", email));
-    const role = userRole.data()?.role || "";
-    return role;
   }
 
   if (isLoggedIn && user) {

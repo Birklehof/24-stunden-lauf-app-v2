@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { type Runner } from "lib/interfaces/runner";
 import Loading from "components/Loading";
 import Head from "components/Head";
-import Menu from "components/Menu";
 import {
   getRemoteConfig,
   fetchAndActivate,
@@ -92,7 +91,7 @@ export default function Runner() {
   }, [isLoggedIn, user]);
 
   async function getRunners(): Promise<Runner[]> {
-    const q = query(collection(db, "runners"));
+    const q = query(collection(db, "/apps/24-stunden-lauf/runners"));
     const querySnapshot = await getDocs(q);
     const runners = querySnapshot.docs.map(async (doc) => {
       const id = doc.id;
@@ -106,7 +105,10 @@ export default function Runner() {
   }
 
   async function getLapCount(runnerId: string): Promise<number> {
-    const q = query(collection(db, "laps"), where("runnerId", "==", runnerId));
+    const q = query(
+      collection(db, "/apps/24-stunden-lauf/laps"),
+      where("runnerId", "==", runnerId)
+    );
     const lapCount = await getCountFromServer(q);
     return lapCount.data().count;
   }

@@ -1,26 +1,41 @@
 import router from "next/router";
 import { useEffect, useState } from "react";
-import { auth } from "lib/firebase";
+import { auth, db } from "lib/firebase";
 import { User } from "lib/interfaces/user";
+import { doc, getDoc } from "firebase/firestore";
 
-const useAuth = () => {
+function useAuth() {
   const [user, setUser] = useState<User>();
+  const [role, setRole] = useState<string>("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     auth.onAuthStateChanged((authenticatedUser) => {
       if (user !== authenticatedUser) {
         if (authenticatedUser && authenticatedUser.uid) {
-          console.log("authenticatedUser", authenticatedUser);
           const newUser = authenticatedUser as User;
           setUser(newUser);
+          getUserRole(newUser).then((role) => {
+            setRole(role);
+          });
           setIsLoggedIn(true);
         }
       }
     });
   }, []);
 
-  const logout = async () => {
+  async function getUserRole(user: User): Promise<string> {
+    if (!user || !user.email) {
+      return "";
+    }
+    const userRole = await getDoc(
+      doc(db, "/apps/24-stunden-lauf/userRoles", user.email)
+    );
+    const role = userRole.data()?.role || "";
+    return role;
+  }
+
+  async function logout() {
     return auth
       .signOut()
       .then(() => {
@@ -29,9 +44,9 @@ const useAuth = () => {
       .catch((e) => {
         console.error(e);
       });
-  };
+  }
 
-  return { user, isLoggedIn, logout };
-};
+  return { user, role, isLoggedIn, logout };
+}
 
 export default useAuth;

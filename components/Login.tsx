@@ -6,9 +6,11 @@ import {
   microsoftOAuthProvider,
 } from "lib/firebase";
 import useAuth from "lib/hooks/useAuth";
+import useRunner from "lib/hooks/useRunner";
 
 const Auth = () => {
   const { isLoggedIn, user } = useAuth();
+  const { runner } = useRunner();
 
   if (isLoggedIn && user) {
     return <></>;
