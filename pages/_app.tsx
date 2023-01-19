@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { Montserrat } from "@next/font/google";
-import { app } from "../firebase";
+import { app } from "lib/firebase";
 import { fetchAndActivate, getRemoteConfig } from "firebase/remote-config";
 import { useEffect } from "react";
 

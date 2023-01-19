@@ -1,4 +1,4 @@
-import useAuth from "../../hooks/useAuth";
+import useAuth from "lib/hooks/useAuth";
 import {
   collection,
   query,
@@ -7,14 +7,14 @@ import {
   getCountFromServer,
   onSnapshot,
 } from "@firebase/firestore";
-import { app, db } from "../../firebase";
+import { app, db } from "lib/firebase";
 import { useEffect, useState } from "react";
-import { type Runner } from "../../interfaces/runner";
-import Loading from "../../components/Loading";
-import Head from "../../components/Head";
+import { type Runner } from "lib/interfaces/runner";
+import Loading from "components/Loading";
+import Head from "components/Head";
 import { getRemoteConfig, getString } from "firebase/remote-config";
-import RunnerMenu from "../../components/RunnerMenu";
-import NewLapOverlay from "../../components/NewLapOverlay";
+import RunnerMenu from "components/RunnerMenu";
+import NewLapOverlay from "components/NewLapOverlay";
 
 export default function Runner() {
   const { isLoggedIn, user } = useAuth();
@@ -49,7 +49,10 @@ export default function Runner() {
   }
 
   async function getLapCount(runnerId: string) {
-    const q = query(collection(db, "laps"), where("runnerId", "==", runnerId));
+    const q = query(
+      collection(db, "/apps/24-stunden-lauf/laps"),
+      where("runnerId", "==", runnerId)
+    );
     const lapCount = await getCountFromServer(q);
     setLaps(lapCount.data().count);
 
@@ -98,7 +101,7 @@ export default function Runner() {
                 {((laps * distancePerLap) / 1000).toFixed(2)}
               </h1>
               <h2 className="text-xl text-center font-bold text-gray-500">
-                km gelaufen
+                km
               </h2>
             </div>
           </div>

@@ -1,21 +1,25 @@
-import Login from "../components/Login";
-import Head from "../components/Head";
-import Loading from "../components/Loading";
-import useAuth from "../hooks/useAuth";
-import { User } from "../interfaces/user";
+import Login from "components/Login";
+import Head from "components/Head";
+import Loading from "components/Loading";
+import useAuth from "lib/hooks/useAuth";
+import { User } from "lib/interfaces/user";
 import { getDoc, doc } from "firebase/firestore";
 import router from "next/router";
 import { useEffect, useState } from "react";
-import { db, app } from "../firebase";
+import { db, app } from "lib/firebase";
 import { getRemoteConfig, getString, getValue } from "@firebase/remote-config";
 
 export default function Home() {
   const { isLoggedIn, user } = useAuth();
-  const [name, setName] = useState("24 Stunden Lauf");
+  const defaultAppName = "24 Stunden Lauf";
+  const [name, setName] = useState(defaultAppName);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setName(getString(getRemoteConfig(app), "name"));
+      setName(
+        getString(getRemoteConfig(app), "appName24StundenLauf") ||
+          defaultAppName
+      );
 
       if (isLoggedIn && user) {
         redirect(user).then((path) => {

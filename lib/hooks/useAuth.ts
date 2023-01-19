@@ -1,7 +1,7 @@
 import router from "next/router";
 import { useEffect, useState } from "react";
-import { auth } from "../firebase";
-import { User } from "../interfaces/user";
+import { auth } from "lib/firebase";
+import { User } from "lib/interfaces/user";
 
 const useAuth = () => {
   const [user, setUser] = useState<User>();

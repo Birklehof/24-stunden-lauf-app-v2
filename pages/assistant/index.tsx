@@ -1,8 +1,8 @@
 import router from "next/router";
 import { useEffect } from "react";
-import Head from "../../components/Head";
-import Loading from "../../components/Loading";
-import useAuth from "../../hooks/useAuth";
+import Head from "components/Head";
+import Loading from "components/Loading";
+import useAuth from "lib/hooks/useAuth";
 
 export default function AssistantIndex() {
   const { isLoggedIn, user, logout } = useAuth();

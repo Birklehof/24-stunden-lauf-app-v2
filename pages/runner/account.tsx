@@ -1,4 +1,4 @@
-import useAuth from "../../hooks/useAuth";
+import useAuth from "lib/hooks/useAuth";
 import {
   collection,
   query,
@@ -6,15 +6,15 @@ import {
   getDocs,
   getCountFromServer,
 } from "@firebase/firestore";
-import { db } from "../../firebase";
+import { db } from "lib/firebase";
 import { useEffect, useState } from "react";
-import { type Runner } from "../../interfaces/runner";
+import { type Runner } from "lib/interfaces/runner";
 import router from "next/router";
 import Link from "next/link";
-import Loading from "../../components/Loading";
-import Head from "../../components/Head";
-import Menu from "../../components/Menu";
-import RunnerMenu from "../../components/RunnerMenu";
+import Loading from "components/Loading";
+import Head from "components/Head";
+import Menu from "components/Menu";
+import RunnerMenu from "components/RunnerMenu";
 
 export default function Runner() {
   const { isLoggedIn, user, logout } = useAuth();

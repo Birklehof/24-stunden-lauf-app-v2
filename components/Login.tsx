@@ -1,7 +1,11 @@
 import React from "react";
 import { signInWithPopup } from "firebase/auth";
-import { auth, githubOAuthProvider, microsoftOAuthProvider } from "../firebase";
-import useAuth from "../hooks/useAuth";
+import {
+  auth,
+  githubOAuthProvider,
+  microsoftOAuthProvider,
+} from "lib/firebase";
+import useAuth from "lib/hooks/useAuth";
 
 const Auth = () => {
   const { isLoggedIn, user } = useAuth();
