@@ -30,7 +30,7 @@ export default function Runner() {
     <>
       <Head title="Läufer" />
       <main className="hero min-h-screen bg-base-200">
-        <NewLapOverlay laps={laps} />
+        <NewLapOverlay />
         <RunnerMenu />
         <div className="flex w-full justify-center">
           <div className="flex flex-col lg:flex-row lg:justify-evenly lg:w-1/2">

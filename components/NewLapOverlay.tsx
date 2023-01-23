@@ -1,17 +1,10 @@
-import { useEffect } from "react";
+import useRunner from "lib/hooks/useRunner";
 
-interface NewRoundOverlayProps {
-  laps: number;
-}
-
-export default function NewLapOverlay({ laps }: NewRoundOverlayProps) {
-  useEffect(() => {
-    if (laps > 0) {
-      animateGrow();
-    }
-  }, [laps]);
+export default function NewLapOverlay() {
+  const { laps } = useRunner();
 
   function animateGrow() {
+    // Animation currently not working because of there is no way to call the animation when the value of laps changes
     const grow = document.querySelector(".grow");
     grow?.classList.remove("hidden");
     grow?.classList.add("animate-[grow_4s_linear]");
