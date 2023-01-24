@@ -10,7 +10,7 @@ import useRunner from "lib/hooks/useRunner";
 import useRemoteConfig from "lib/hooks/useRemoteConfig";
 import useRanking from "lib/hooks/useRanking";
 
-export default function Runner() {
+export default function RunnerIndex() {
   const { isLoggedIn, user } = useAuth();
   const { runner, laps } = useRunner();
   const { getPosition } = useRanking();

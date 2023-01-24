@@ -15,7 +15,7 @@ import Loading from "components/Loading";
 import Head from "components/Head";
 import Menu from "components/Menu";
 
-export default function Runner() {
+export default function AdminAccount() {
   const { isLoggedIn, user } = useAuth();
 
   useEffect(() => {

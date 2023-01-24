@@ -16,7 +16,7 @@ import useRemoteConfig from "lib/hooks/useRemoteConfig";
 import useRunner from "lib/hooks/useRunner";
 import useRanking from "lib/hooks/useRanking";
 
-export default function Runner() {
+export default function RunnerRanking() {
   const { isLoggedIn, user } = useAuth();
   const { runners, lapCountByRunnerId } = useRanking();
   const { gradeLevels, houses, distancePerLap } = useRemoteConfig();

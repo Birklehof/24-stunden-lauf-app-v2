@@ -6,7 +6,7 @@ import Head from "components/Head";
 import RunnerMenu from "components/RunnerMenu";
 import useRunner from "lib/hooks/useRunner";
 
-export default function Runner() {
+export default function RunnerAccount() {
   const { isLoggedIn, user } = useAuth();
   const { runner } = useRunner();
 
