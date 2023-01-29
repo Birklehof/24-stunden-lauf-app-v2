@@ -22,20 +22,26 @@ export default function useRanking() {
   >([]);
 
   useEffect(() => {
-    getRunners().then((runners) => {
-      setRunners(runners);
-    });
+    syncRunners();
     syncLapsByRunnerId();
   }, []);
 
-  async function getRunners(): Promise<Runner[]> {
+  async function syncRunners() {
     const q = query(collection(db, "/apps/24-stunden-lauf/runners"));
     const querySnapshot = await getDocs(q);
     const runners = querySnapshot.docs.map((doc) => {
       const data = doc.data();
       return { id: doc.id, ...data } as Runner;
     });
-    return runners;
+    setRunners(runners);
+
+    onSnapshot(q, (query) => {
+      const runners = query.docs.map((doc) => {
+        const data = doc.data();
+        return { id: doc.id, ...data } as Runner;
+      });
+      setRunners(runners);
+    });
   }
 
   async function syncLapsByRunnerId() {

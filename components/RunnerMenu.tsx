@@ -11,8 +11,6 @@ export default function RunnerMenu() {
             href: "/runner/ranking",
             icon: "TrendingUpIcon",
           },
-          { name: "Graphen", href: "/runner/graphs", icon: "ChartBarIcon" },
-          { name: "Account", href: "/runner/account", icon: "UserIcon" },
         ]}
       />
     </>

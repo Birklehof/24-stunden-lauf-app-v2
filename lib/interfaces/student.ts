@@ -1,10 +1,9 @@
 export interface Student {
-  // Not used
   id: string;
-  studentId: number;
-  fistName: string;
+  number: number;
+  firstName: string;
   lastName: string;
   email: string;
   house: string;
-  class: string;
+  gradeLevel: string;
 }

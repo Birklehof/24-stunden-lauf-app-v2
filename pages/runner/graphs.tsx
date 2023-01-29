@@ -1,6 +1,5 @@
 import useAuth from "lib/hooks/useAuth";
 import { useEffect } from "react";
-import { type Runner } from "lib/interfaces/runner";
 import Loading from "components/Loading";
 import Head from "components/Head";
 import RunnerMenu from "components/RunnerMenu";

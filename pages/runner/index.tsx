@@ -1,7 +1,5 @@
 import useAuth from "lib/hooks/useAuth";
-import { app, db } from "lib/firebase";
-import { useEffect, useState } from "react";
-import { type Runner } from "lib/interfaces/runner";
+import { useEffect } from "react";
 import Loading from "components/Loading";
 import Head from "components/Head";
 import RunnerMenu from "components/RunnerMenu";
@@ -32,38 +30,55 @@ export default function RunnerIndex() {
       <main className="hero min-h-screen bg-base-200">
         <NewLapOverlay />
         <RunnerMenu />
-        <div className="flex w-full justify-center">
+        <div className="flex w-full justify-center pb-20 lg:pb-0">
           <div className="flex flex-col lg:flex-row lg:justify-evenly lg:w-1/2">
             <div>
-              <h1 className="text-5xl text-center font-bold">
-                {runner.number}
+              <h1 className="text-3xl sm:text-5xl text-center font-bold">
+                <div className="inline text-base-300">
+                  {"0".repeat(3 - runner.number.toString().length)}
+                </div>
+                {runner.number.toString()}
               </h1>
-              <h2 className="text-xl text-center font-bold text-gray-500">
-                Startnummer
+              <h2 className="text-sm sm:text-xl text-center font-bold text-gray-500">
+                Nr.
               </h2>
             </div>
             <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
-              <h1 className="text-5xl text-center font-bold">{laps}</h1>
-              <h2 className="text-xl text-center font-bold text-gray-500">
+              <h1 className="text-3xl sm:text-5xl text-center font-bold">
+                <div className="inline text-base-300">
+                  {"0".repeat(3 - laps.toString().length)}
+                </div>
+                {laps}
+              </h1>
+              <h2 className="text-sm sm:text-xl text-center font-bold text-gray-500">
                 {laps === 1 ? "Runde" : "Runden"}
               </h2>
             </div>
             <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
-              <h1 className="text-5xl text-center font-bold">
-                {getPosition(runner)}.
+              <h1 className="text-3xl sm:text-5xl text-center font-bold">
+                <div className="inline text-base-300">
+                  {"0".repeat(3 - getPosition(runner).toString().length)}
+                </div>
+                {getPosition(runner)}
               </h1>
-              <h2 className="text-xl text-center font-bold text-gray-500">
+              <h2 className="text-sm sm:text-xl text-center font-bold text-gray-500">
                 Platz
               </h2>
             </div>
             <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
-              <h1 className="text-5xl text-center font-bold">
-                {((laps * distancePerLap) / 1000).toFixed(2)}
+              <h1 className="text-3xl sm:text-5xl text-center font-bold">
+                {((laps * distancePerLap) / 1000).toFixed(
+                  (laps * distancePerLap) / 1000 < 10
+                    ? 2
+                    : (laps * distancePerLap) / 1000 < 100
+                    ? 1
+                    : 0
+                )}
               </h1>
-              <h2 className="text-xl text-center font-bold text-gray-500">
+              <h2 className="text-sm sm:text-xl text-center font-bold text-gray-500">
                 km
               </h2>
             </div>

@@ -5,11 +5,10 @@ import {
   getDocs,
   getCountFromServer,
   onSnapshot,
-  doc,
-  getDoc,
 } from "@firebase/firestore";
 import { app, db } from "lib/firebase";
 import { Runner } from "lib/interfaces/runner";
+import { Student } from "lib/interfaces/student";
 import { User } from "lib/interfaces/user";
 import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
@@ -42,10 +41,13 @@ export default function useUser() {
         where("email", "==", user.email)
       );
       const querySnapshot = await getDocs(q);
-      const studentRef = querySnapshot.docs[0].ref;
+      const student = {
+        id: querySnapshot.docs[0].id,
+        ...querySnapshot.docs[0].data(),
+      } as Student;
       const q2 = query(
         collection(db, "/apps/24-stunden-lauf/runners"),
-        where("student", "==", studentRef)
+        where("studentId", "==", student.id)
       );
       const querySnapshot2 = await getDocs(q2);
       if (querySnapshot2.docs.length == 0) {
@@ -54,10 +56,7 @@ export default function useUser() {
       const id = querySnapshot2.docs[0].id;
       const data = querySnapshot2.docs[0].data();
       const runner = { id, ...data } as Runner;
-      runner.name =
-        querySnapshot.docs[0].data().firstName +
-        " " +
-        querySnapshot.docs[0].data().lastName;
+      runner.name = student.firstName + " " + student.lastName;
       return runner;
     } else {
       const q = query(
