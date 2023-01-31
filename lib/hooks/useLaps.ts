@@ -49,7 +49,6 @@ export default function useLaps() {
       collection(db, "apps/24-stunden-lauf/laps"),
       lap
     );
-    console.log("Document written with ID: ", docRef.id);
   }
 
   return { laps, createLap };

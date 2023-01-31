@@ -27,16 +27,18 @@ export default function AssistantIndex() {
   }
 
   async function createNewLapHandler() {
+    const number_buffer = number;
+    setNumber(0);
     try {
-      await createLap(number);
+      await createLap(number_buffer);
     } catch (e: any) {
       if (e instanceof Error) {
         alert(e.message);
+        setNumber(number_buffer);
         return;
       }
       throw e;
     }
-    setNumber(0);
   }
 
   return (
@@ -82,7 +84,10 @@ export default function AssistantIndex() {
                   );
                 })
                 .map((lap) => (
-                  <div className="alert shadow py-2 px-3 rounded-full bg-base-100">
+                  <div
+                    key={lap.id}
+                    className="alert shadow py-2 px-3 rounded-full bg-base-100"
+                  >
                     <div className="w-20 md:w-48 whitespace-nowrap overflow-hidden">
                       <span className="text-success">
                         <Icon name="PlusCircleIcon" />
@@ -90,11 +95,11 @@ export default function AssistantIndex() {
                       <span className="overflow-hidden text-ellipsis">
                         <span className="font-bold">
                           {"0".repeat(
-                            3 - runners[lap.runnerId].number.toString().length
+                            3 - runners[lap.runnerId]?.number.toString().length
                           )}
-                          {runners[lap.runnerId].number}
+                          {runners[lap.runnerId]?.number}
                           <span className="hidden md:inline">
-                            , {runners[lap.runnerId].name}
+                            , {runners[lap.runnerId]?.name}
                           </span>
                         </span>
                       </span>

@@ -6,10 +6,12 @@ import {
   getCountFromServer,
   onSnapshot,
 } from "@firebase/firestore";
+import { addDoc } from "firebase/firestore";
 import { app, db } from "lib/firebase";
 import { Runner } from "lib/interfaces/runner";
 import { Student } from "lib/interfaces/student";
 import { User } from "lib/interfaces/user";
+import AssistantCreateRunner from "pages/assistant/create-runner";
 import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
 

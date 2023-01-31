@@ -1,14 +1,8 @@
 import { Runner } from "lib/interfaces/runner";
 import { useEffect, useState } from "react";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  getCountFromServer,
-} from "@firebase/firestore";
+import { collection, query, getDocs } from "@firebase/firestore";
 import { db } from "lib/firebase";
-import { getDoc, onSnapshot } from "firebase/firestore";
+import { addDoc, onSnapshot } from "firebase/firestore";
 
 export default function useRunners() {
   const [runners, setRunners] = useState<{ [id: string]: Runner }>({});
@@ -39,5 +33,18 @@ export default function useRunners() {
     });
   }
 
-  return { runners };
+  async function createRunner(name: string): Promise<number> {
+    if (!name) {
+      throw new Error("Invalid name");
+    }
+    const new_number = Object.keys(runners).length + 1;
+    const new_runner = { name, number: new_number };
+    const docRef = await addDoc(
+      collection(db, "apps/24-stunden-lauf/runners"),
+      new_runner
+    );
+    return new_number;
+  }
+
+  return { runners, createRunner };
 }

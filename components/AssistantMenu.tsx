@@ -8,7 +8,7 @@ export default function RunnerMenu() {
           { name: "Runde zählen", href: "/assistant", icon: "PlusCircleIcon" },
           {
             name: "Läufer hinzufügen",
-            href: "/assistant/add-runner",
+            href: "/assistant/create-runner",
             icon: "UserAddIcon",
           },
         ]}
