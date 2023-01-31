@@ -16,33 +16,13 @@ interface LapCountByRunnerId {
 }
 
 export default function useRanking() {
-  const [runners, setRunners] = useState<Runner[]>([]);
   const [lapCountByRunnerId, setLapCountByRunnerId] = useState<
     LapCountByRunnerId[]
   >([]);
 
   useEffect(() => {
-    syncRunners();
     syncLapsByRunnerId();
   }, []);
-
-  async function syncRunners() {
-    const q = query(collection(db, "/apps/24-stunden-lauf/runners"));
-    const querySnapshot = await getDocs(q);
-    const runners = querySnapshot.docs.map((doc) => {
-      const data = doc.data();
-      return { id: doc.id, ...data } as Runner;
-    });
-    setRunners(runners);
-
-    onSnapshot(q, (query) => {
-      const runners = query.docs.map((doc) => {
-        const data = doc.data();
-        return { id: doc.id, ...data } as Runner;
-      });
-      setRunners(runners);
-    });
-  }
 
   async function syncLapsByRunnerId() {
     const q = collection(db, "/apps/24-stunden-lauf/laps");
@@ -92,5 +72,5 @@ export default function useRanking() {
     return position + 1;
   }
 
-  return { runners, lapCountByRunnerId, getPosition };
+  return { lapCountByRunnerId, getPosition };
 }

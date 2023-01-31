@@ -13,18 +13,16 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (isLoggedIn && user) {
-        redirect(user).then((path) => {
+      if (isLoggedIn && user && role) {
+        redirect(role).then((path) => {
           router.push(path);
         });
       }
     }
-  }, [isLoggedIn, user]);
+  }, [isLoggedIn, user, role]);
 
-  async function redirect(user: User): Promise<string> {
-    if (role === "admin") {
-      return "/admin";
-    } else if (role === "assistant") {
+  async function redirect(role: string): Promise<string> {
+    if (role === "assistant") {
       return "/assistant";
     } else {
       return "/runner";

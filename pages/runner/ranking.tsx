@@ -9,10 +9,12 @@ import useRanking from "lib/hooks/useRanking";
 import Icon from "components/Icon";
 import Link from "next/link";
 import useStudent from "lib/hooks/useStudents";
+import useRunners from "lib/hooks/useRunners";
 
 export default function RunnerRanking() {
   const { isLoggedIn, user } = useAuth();
-  const { runners, lapCountByRunnerId } = useRanking();
+  const { lapCountByRunnerId } = useRanking();
+  const { runners } = useRunners();
   const { gradeLevels, houses, distancePerLap } = useRemoteConfig();
   const { getStudentById } = useStudent();
 
@@ -118,11 +120,8 @@ export default function RunnerRanking() {
             <div className="flex flex-col gap-3 w-full">
               {lapCountByRunnerId.map((lapCountWithRunnerId, position) => {
                 if (
-                  !runners.find(
-                    (runner) =>
-                      runner.id == lapCountWithRunnerId.runnerId &&
-                      filter(runner)
-                  )
+                  !runners[lapCountWithRunnerId.runnerId] ||
+                  !filter(runners[lapCountWithRunnerId.runnerId])
                 ) {
                   return null;
                 }
@@ -149,12 +148,7 @@ export default function RunnerRanking() {
                             {["🥇", "🥈", "🥉"][position]}
                           </span>
                         )}
-                        {
-                          runners.find(
-                            (runner) =>
-                              runner.id == lapCountWithRunnerId.runnerId
-                          )?.name
-                        }
+                        {runners[lapCountWithRunnerId.runnerId].name}
                       </div>
                     </div>
                     <div className="stat w-3/12 overflow-hidden py-0 px-0">
