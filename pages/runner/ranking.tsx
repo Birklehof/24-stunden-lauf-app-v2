@@ -16,7 +16,7 @@ export default function RunnerRanking() {
   const { lapCountByRunnerId } = useRanking();
   const { runners } = useRunners();
   const { gradeLevels, houses, distancePerLap } = useRemoteConfig();
-  const { getStudentById } = useStudent();
+  const { students } = useStudent();
 
   const [filterGradeLevel, setFilterGradeLevel] = useState("");
   const [filterHouse, setFilterHouse] = useState("");
@@ -25,7 +25,7 @@ export default function RunnerRanking() {
   function filter(runner: Runner): boolean {
     if (filterGradeLevel || filterHouse) {
       if (runner.studentId) {
-        const student = getStudentById(runner.studentId);
+        const student = students[runner.studentId];
         if (!student) {
           return false;
         }

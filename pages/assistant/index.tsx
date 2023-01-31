@@ -7,6 +7,8 @@ import { Roboto_Slab } from "@next/font/google";
 import useLaps from "lib/hooks/useLaps";
 import useRunners from "lib/hooks/useRunners";
 import Icon from "components/Icon";
+import useStaff from "lib/hooks/useStaff";
+import useStudents from "lib/hooks/useStudents";
 
 const roboto_slab = Roboto_Slab({ subsets: ["latin"] });
 
@@ -15,6 +17,8 @@ export default function AssistantIndex() {
   const { laps, createLap } = useLaps();
   const [number, setNumber] = useState(0);
   const { runners } = useRunners();
+  const { staff } = useStaff();
+  const { students } = useStudents();
 
   useEffect(() => {
     if (!isLoggedIn || !user) {
@@ -88,7 +92,7 @@ export default function AssistantIndex() {
                     key={lap.id}
                     className="alert shadow py-2 px-3 rounded-full bg-base-100"
                   >
-                    <div className="w-20 md:w-48 whitespace-nowrap overflow-hidden">
+                    <div className="w-20 md:w-60 whitespace-nowrap overflow-hidden">
                       <span className="text-success">
                         <Icon name="PlusCircleIcon" />
                       </span>
@@ -100,6 +104,22 @@ export default function AssistantIndex() {
                           {runners[lap.runnerId]?.number}
                           <span className="hidden md:inline">
                             , {runners[lap.runnerId]?.name}
+                            {students[
+                              runners[lap.runnerId]?.studentId || ""
+                            ]?.firstName
+                              .concat(" ")
+                              .concat(
+                                students[runners[lap.runnerId]?.studentId || ""]
+                                  ?.lastName
+                              )}
+                            {staff[
+                              runners[lap.runnerId]?.staffId || ""
+                            ]?.firstName
+                              .concat(" ")
+                              .concat(
+                                staff[runners[lap.runnerId]?.staffId || ""]
+                                  ?.lastName
+                              )}
                           </span>
                         </span>
                       </span>

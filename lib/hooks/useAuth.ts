@@ -31,7 +31,7 @@ function useAuth() {
     const userRole = await getDoc(
       doc(db, "/apps/24-stunden-lauf/userRoles", user.email)
     );
-    const role = userRole.data()?.role || "";
+    const role = userRole.data()?.role || "runner";
     return role;
   }
 

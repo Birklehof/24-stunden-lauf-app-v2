@@ -6,12 +6,11 @@ import {
   getCountFromServer,
   onSnapshot,
 } from "@firebase/firestore";
-import { addDoc } from "firebase/firestore";
-import { app, db } from "lib/firebase";
+import { db } from "lib/firebase";
 import { Runner } from "lib/interfaces/runner";
+import Staff from "lib/interfaces/staff";
 import { Student } from "lib/interfaces/student";
 import { User } from "lib/interfaces/user";
-import AssistantCreateRunner from "pages/assistant/create-runner";
 import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
 
@@ -22,7 +21,7 @@ export default function useUser() {
 
   useEffect(() => {
     if (user) {
-      getRunner(user, role).then((runner) => {
+      getRunner(user).then((runner) => {
         setRunner(runner);
         if (runner) {
           syncLapCount(runner);
@@ -31,48 +30,63 @@ export default function useUser() {
     }
   }, [user, role]);
 
-  async function getRunner(
-    user: User,
-    role: string
-  ): Promise<Runner | undefined> {
+  async function getRunner(user: User): Promise<Runner | undefined> {
     if (!user) {
       return;
-    } else if (role == "student") {
-      const q = query(
-        collection(db, "students"),
-        where("email", "==", user.email)
-      );
-      const querySnapshot = await getDocs(q);
-      const student = {
-        id: querySnapshot.docs[0].id,
-        ...querySnapshot.docs[0].data(),
-      } as Student;
-      const q2 = query(
-        collection(db, "/apps/24-stunden-lauf/runners"),
-        where("studentId", "==", student.id)
-      );
-      const querySnapshot2 = await getDocs(q2);
-      if (querySnapshot2.docs.length == 0) {
-        return;
-      }
-      const id = querySnapshot2.docs[0].id;
-      const data = querySnapshot2.docs[0].data();
-      const runner = { id, ...data } as Runner;
-      runner.name = student.firstName + " " + student.lastName;
-      return runner;
     } else {
-      const q = query(
-        collection(db, "/apps/24-stunden-lauf/runners"),
-        where("email", "==", user.email)
-      );
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.docs.length == 0) {
-        return;
+      if (user.email.endsWith("s.@birklehof.de")) {
+        const q = query(
+          collection(db, "students"),
+          where("email", "==", user.email)
+        );
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.docs.length == 0) {
+          throw new Error("Student not found");
+        }
+        const student = {
+          id: querySnapshot.docs[0].id,
+          ...querySnapshot.docs[0].data(),
+        } as Student;
+        const q2 = query(
+          collection(db, "/apps/24-stunden-lauf/runners"),
+          where("studentId", "==", student.id)
+        );
+        const querySnapshot2 = await getDocs(q2);
+        if (querySnapshot2.docs.length == 0) {
+          return;
+        }
+        const id = querySnapshot2.docs[0].id;
+        const data = querySnapshot2.docs[0].data();
+        const runner = { id, ...data } as Runner;
+        runner.name = student.firstName + " " + student.lastName;
+        return runner;
+      } else {
+        const q = query(
+          collection(db, "staff"),
+          where("email", "==", user.email)
+        );
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.docs.length == 0) {
+          throw new Error("Staff member not found");
+        }
+        const staff = {
+          id: querySnapshot.docs[0].id,
+          ...querySnapshot.docs[0].data(),
+        } as Staff;
+        const q2 = query(
+          collection(db, "/apps/24-stunden-lauf/runners"),
+          where("staffId", "==", staff.id)
+        );
+        const querySnapshot2 = await getDocs(q2);
+        if (querySnapshot2.docs.length == 0) {
+          return;
+        }
+        const id = querySnapshot2.docs[0].id;
+        const data = querySnapshot2.docs[0].data();
+        const runner = { id, ...data } as Runner;
+        runner.name = staff.firstName + " " + staff.lastName;
+        return runner;
       }
-      const id = querySnapshot.docs[0].id;
-      const data = querySnapshot.docs[0].data();
-      const runner = { id, ...data } as Runner;
-      return runner;
     }
   }
 

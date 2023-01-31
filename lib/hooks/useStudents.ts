@@ -11,7 +11,7 @@ import { db } from "lib/firebase";
 import { Student } from "lib/interfaces/student";
 
 export default function useStudents() {
-  const [students, setStudents] = useState<Student[]>([]);
+  const [students, setStudents] = useState<{ [id: string]: Student }>({});
 
   useEffect(() => {
     syncStudents();
@@ -20,26 +20,24 @@ export default function useStudents() {
   async function syncStudents() {
     const q = query(collection(db, "/students"));
     const querySnapshot = await getDocs(q);
+    const new_students: { [id: string]: Student } = {};
     const students = querySnapshot.docs.map((doc) => {
       const data = doc.data();
-      return { id: doc.id, ...data } as Student;
+      const new_student = { id: doc.id, ...data } as Student;
+      new_students[doc.id] = new_student;
     });
-    setStudents(students);
+    setStudents(new_students);
 
-    onSnapshot(q, (query) => {
-      const students = query.docs.map((doc) => {
+    onSnapshot(q, (querySnapshot) => {
+      const new_students: { [id: string]: Student } = {};
+      const students = querySnapshot.docs.map((doc) => {
         const data = doc.data();
-        return { id: doc.id, ...data } as Student;
+        const new_student = { id: doc.id, ...data } as Student;
+        new_students[doc.id] = new_student;
       });
-      console.log("students", students);
-
-      setStudents(students);
+      setStudents(new_students);
     });
   }
 
-  function getStudentById(id: string): Student | undefined {
-    return students?.find((student) => student.id == id);
-  }
-
-  return { students, getStudentById };
+  return { students };
 }
