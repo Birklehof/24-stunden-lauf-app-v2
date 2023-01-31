@@ -34,7 +34,7 @@ export default function useUser() {
     if (!user) {
       return;
     } else {
-      if (user.email.endsWith("s.@birklehof.de")) {
+      if (user.email.endsWith("@s.birklehof.de")) {
         const q = query(
           collection(db, "students"),
           where("email", "==", user.email)

@@ -41,7 +41,7 @@ export default function AssistantCreateRunner() {
       <main className="flex bg-base-200 justify-center h-screen items-center">
         <AssistantMenu />
         <div className="flex flex-row h-1/5 items-center gap-2 lg:w-1/2 justify-around">
-          <div className="card max-w-sm w-full shadow-lg bg-base-100 ml-2">
+          <div className="card max-w-sm w-full shadow-lg bg-base-100 mx-2">
             <div className="card-body gap-3">
               {number != 0 ? (
                 <>
