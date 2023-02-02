@@ -10,11 +10,13 @@ import Icon from "components/Icon";
 import Link from "next/link";
 import useStudent from "lib/hooks/useStudents";
 import useRunners from "lib/hooks/useRunners";
+import useStaff from "lib/hooks/useStaff";
 
 export default function RunnerRanking() {
   const { isLoggedIn, user } = useAuth();
   const { lapCountByRunnerId } = useRanking();
   const { runners } = useRunners();
+  const { staff } = useStaff();
   const { gradeLevels, houses, distancePerLap } = useRemoteConfig();
   const { students } = useStudent();
 
@@ -148,7 +150,28 @@ export default function RunnerRanking() {
                             {["🥇", "🥈", "🥉"][position]}
                           </span>
                         )}
-                        {runners[lapCountWithRunnerId.runnerId].name}
+                        {runners[lapCountWithRunnerId.runnerId]?.name}
+                        {students[
+                          runners[lapCountWithRunnerId.runnerId]?.studentId ||
+                            ""
+                        ]?.firstName
+                          .concat(" ")
+                          .concat(
+                            students[
+                              runners[lapCountWithRunnerId.runnerId]
+                                ?.studentId || ""
+                            ]?.lastName
+                          )}
+                        {staff[
+                          runners[lapCountWithRunnerId.runnerId]?.staffId || ""
+                        ]?.firstName
+                          .concat(" ")
+                          .concat(
+                            staff[
+                              runners[lapCountWithRunnerId.runnerId]?.staffId ||
+                                ""
+                            ]?.lastName
+                          )}
                       </div>
                     </div>
                     <div className="stat w-3/12 overflow-hidden py-0 px-0">
