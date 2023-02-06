@@ -1,5 +1,8 @@
 export default interface Lap {
   id: string;
   runnerId: string;
-  timestamp: Date;
+  timestamp: {
+    nanoseconds: number;
+    seconds: number;
+  };
 }
