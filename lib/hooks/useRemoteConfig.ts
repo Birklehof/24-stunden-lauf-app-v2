@@ -17,17 +17,17 @@ export default function useRemoteConfig() {
   const [houses, setHouses] = useState<string[]>([
     "Extern (Kollegium)",
     "Extern (Schüler)",
-    "Ab",
-    "Kh",
-    "Nb",
-    "NHO",
-    "NHW",
-    "Pb",
-    "Sb",
-    "St",
-    "Uh",
-    "WobS",
-    "WobN",
+    "Altbirkle",
+    "Kopphaus",
+    "Neubirkle",
+    "Neuen Hirschen Ost",
+    "Neuen Hirschen West",
+    "Petersbau",
+    "Saalbau",
+    "Studio",
+    "Unterhaus",
+    "Wolfsburg Süd",
+    "Wolfsburg Nord",
   ]);
   const [distancePerLap, setDistancePerLap] = useState(660);
   const [appName, setAppName] = useState("24 Stunden Lauf");
@@ -47,7 +47,7 @@ export default function useRemoteConfig() {
             setGradeLevels(JSON.parse(gradeLevelData));
           }
           if (houseData) {
-            setHouses(JSON.parse(houseData));
+            setHouses(JSON.parse(houseData).sort());
           }
           if (distancePerLapData) {
             setDistancePerLap(parseFloat(distancePerLapData));
