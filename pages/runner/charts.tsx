@@ -17,7 +17,7 @@ import {
   Filler,
 } from "chart.js";
 import useLaps from "lib/hooks/useLaps";
-import { Lap } from "lib/interfaces/lap";
+import Lap from "lib/interfaces/lap";
 
 export default function RunnerGraphs() {
   const { isLoggedIn, user } = useAuth();

@@ -10,7 +10,7 @@ import Icon from "components/Icon";
 import useStaff from "lib/hooks/useStaff";
 import useStudents from "lib/hooks/useStudents";
 
-const roboto_slab = Roboto_Slab({ subsets: ["latin"] });
+const roboto_slab = Roboto_Slab({ subsets: ["latin"], display: "swap" });
 
 export default function AssistantIndex() {
   const { isLoggedIn, user } = useAuth();
@@ -57,7 +57,7 @@ export default function AssistantIndex() {
                 name={"number"}
                 className={
                   roboto_slab.className +
-                  " box-border input input-bordered w-full max-w-xs text-center text-5xl md:text-8xl tracking-widest h-full"
+                  "font-medium font-serif box-border input input-bordered w-full max-w-xs text-center text-5xl md:text-8xl tracking-widest h-full"
                 }
                 autoFocus
                 onChange={(e) => {
