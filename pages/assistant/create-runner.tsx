@@ -3,9 +3,7 @@ import Head from "components/Head";
 import Loading from "components/Loading";
 import useAuth from "lib/hooks/useAuth";
 import AssistantMenu from "components/AssistantMenu";
-import useLaps from "lib/hooks/useLaps";
 import useRunners from "lib/hooks/useRunners";
-import Icon from "components/Icon";
 
 export default function AssistantCreateRunner() {
   const { isLoggedIn, user } = useAuth();
