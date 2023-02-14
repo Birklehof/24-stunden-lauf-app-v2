@@ -15,12 +15,12 @@ import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
 
 export default function useUser() {
-  const { user, role } = useAuth();
+  const { isLoggedIn, user, role } = useAuth();
   const [runner, setRunner] = useState<Runner>();
   const [laps, setLaps] = useState<number>(0);
 
   useEffect(() => {
-    if (user) {
+    if (isLoggedIn && user) {
       getRunner(user).then((runner) => {
         setRunner(runner);
         if (runner) {
@@ -28,7 +28,7 @@ export default function useUser() {
         }
       });
     }
-  }, [user, role]);
+  }, [isLoggedIn, user, role]);
 
   async function getRunner(user: User): Promise<Runner | undefined> {
     if (!user) {

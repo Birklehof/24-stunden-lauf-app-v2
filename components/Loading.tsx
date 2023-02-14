@@ -1,6 +1,16 @@
+import router from "next/router";
+import { useEffect } from "react";
 import Head from "./Head";
 
 export default function Loading() {
+  useEffect(() => {
+    // Redirect to home after 5 seconds
+    const timeout = setTimeout(() => {
+      router.push("/");
+    }, 10000);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <>
       <Head title="Lädt ..." />

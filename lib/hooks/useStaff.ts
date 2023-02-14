@@ -2,13 +2,16 @@ import { useEffect, useState } from "react";
 import { collection, query, getDocs, onSnapshot } from "@firebase/firestore";
 import { db } from "lib/firebase";
 import Staff from "lib/interfaces/staff";
+import useAuth from "./useAuth";
 
 export default function useStudents() {
+  const { isLoggedIn, user } = useAuth();
   const [staff, setStaff] = useState<{ [id: string]: Staff }>({});
 
   useEffect(() => {
+    if (!isLoggedIn || !user) return;
     syncStudents();
-  }, []);
+  }, [isLoggedIn, user]);
 
   async function syncStudents() {
     const q = query(collection(db, "/staff"));

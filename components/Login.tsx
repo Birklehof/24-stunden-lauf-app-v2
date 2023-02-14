@@ -6,15 +6,9 @@ import {
   microsoftOAuthProvider,
 } from "lib/firebase";
 import useAuth from "lib/hooks/useAuth";
-import useRunner from "lib/hooks/useRunner";
 
-const Auth = () => {
-  const { isLoggedIn, user } = useAuth();
-  const { runner } = useRunner();
-
-  if (isLoggedIn && user) {
-    return <></>;
-  }
+export default function Login() {
+  const { isLoggedIn } = useAuth();
 
   const handleRunnerAuth = async () => {
     signInWithPopup(auth, microsoftOAuthProvider).catch((error) => {
@@ -29,26 +23,28 @@ const Auth = () => {
   };
 
   return (
-    <div>
-      <div>
-        <button
-          className="btn btn-primary w-full"
-          onClick={() => handleRunnerAuth()}
-        >
-          Läufer
-        </button>
-        <div className="divider">
-          <p className="font-bold text-sm text-gray-300 tracking-wider">ODER</p>
-        </div>
-        <button
-          className="btn btn-primary w-full"
-          onClick={() => handleStaffAuth()}
-        >
-          Organisator
-        </button>
+    <>
+      <button
+        className={`btn btn-primary w-full ${
+          isLoggedIn ? "btn-disabled loading" : ""
+        }`}
+        onClick={() => handleRunnerAuth()}
+        disabled={isLoggedIn}
+      >
+        Läufer
+      </button>
+      <div className="divider">
+        <p className="font-bold text-sm text-gray-300 tracking-wider">ODER</p>
       </div>
-    </div>
+      <button
+        className={`btn btn-primary w-full ${
+          isLoggedIn ? "btn-disabled loading" : ""
+        }`}
+        onClick={() => handleStaffAuth()}
+        disabled={isLoggedIn}
+      >
+        Organisator
+      </button>
+    </>
   );
-};
-
-export default Auth;
+}

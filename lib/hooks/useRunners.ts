@@ -3,13 +3,16 @@ import { useEffect, useState } from "react";
 import { collection, query, getDocs } from "@firebase/firestore";
 import { db } from "lib/firebase";
 import { addDoc, onSnapshot } from "firebase/firestore";
+import useAuth from "./useAuth";
 
 export default function useRunners() {
+  const { isLoggedIn, user } = useAuth();
   const [runners, setRunners] = useState<{ [id: string]: Runner }>({});
 
   useEffect(() => {
+    if (!isLoggedIn || !user) return;
     syncRunners();
-  }, []);
+  }, [isLoggedIn, user]);
 
   async function syncRunners() {
     const q = query(collection(db, "/apps/24-stunden-lauf/runners"));

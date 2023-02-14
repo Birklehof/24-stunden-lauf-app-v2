@@ -25,12 +25,12 @@ export default function RunnerGraphs() {
   const { laps } = useLaps();
 
   useEffect(() => {
-    if (!isLoggedIn || !user) {
+    if (!isLoggedIn) {
       return;
     }
-  }, [isLoggedIn, user]);
+  }, [isLoggedIn]);
 
-  if (!isLoggedIn || !user || !runner) {
+  if (!user || !runner || !laps) {
     return <Loading />;
   }
 

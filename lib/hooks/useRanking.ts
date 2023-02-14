@@ -9,6 +9,7 @@ import {
 } from "@firebase/firestore";
 import { db } from "lib/firebase";
 import { getDoc, onSnapshot } from "firebase/firestore";
+import useAuth from "./useAuth";
 
 interface LapCountByRunnerId {
   runnerId: string;
@@ -16,13 +17,15 @@ interface LapCountByRunnerId {
 }
 
 export default function useRanking() {
+  const { isLoggedIn, user } = useAuth();
   const [lapCountByRunnerId, setLapCountByRunnerId] = useState<
     LapCountByRunnerId[]
   >([]);
 
   useEffect(() => {
+    if (!isLoggedIn || !user) return;
     syncLapsByRunnerId();
-  }, []);
+  }, [isLoggedIn, user]);
 
   async function syncLapsByRunnerId() {
     const q = collection(db, "/apps/24-stunden-lauf/laps");

@@ -14,12 +14,12 @@ export default function AssistantCreateRunner() {
   const { createRunner } = useRunners();
 
   useEffect(() => {
-    if (!isLoggedIn || !user) {
+    if (!isLoggedIn) {
       return;
     }
-  }, [isLoggedIn, user]);
+  }, [isLoggedIn]);
 
-  if (!isLoggedIn || !user) {
+  if (!user) {
     return <Loading />;
   }
 

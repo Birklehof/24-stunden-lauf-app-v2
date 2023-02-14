@@ -4,14 +4,17 @@ import { db } from "lib/firebase";
 import { addDoc, onSnapshot } from "firebase/firestore";
 import Lap from "lib/interfaces/lap";
 import useRunners from "./useRunners";
+import useAuth from "./useAuth";
 
 export default function useLaps() {
-  const [laps, setLaps] = useState<Lap[]>([]);
   const { runners } = useRunners();
+  const { isLoggedIn, user } = useAuth();
+  const [laps, setLaps] = useState<Lap[]>([]);
 
   useEffect(() => {
+    if (!isLoggedIn || !user) return;
     syncLaps();
-  }, []);
+  }, [isLoggedIn, user]);
 
   async function syncLaps() {
     const q = collection(db, "/apps/24-stunden-lauf/laps");

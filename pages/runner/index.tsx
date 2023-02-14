@@ -15,12 +15,12 @@ export default function RunnerIndex() {
   const { distancePerLap } = useRemoteConfig();
 
   useEffect(() => {
-    if (!isLoggedIn || !user) {
+    if (!isLoggedIn) {
       return;
     }
-  }, [isLoggedIn, user]);
+  }, [isLoggedIn]);
 
-  if (!isLoggedIn || !user || !runner) {
+  if (!user || !runner || !laps) {
     return <Loading />;
   }
 

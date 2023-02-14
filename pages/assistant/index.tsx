@@ -21,12 +21,12 @@ export default function AssistantIndex() {
   const { students } = useStudents();
 
   useEffect(() => {
-    if (!isLoggedIn || !user) {
+    if (!isLoggedIn) {
       return;
     }
-  }, [isLoggedIn, user]);
+  }, [isLoggedIn]);
 
-  if (!isLoggedIn || !user) {
+  if (!user || !laps || !runners || !staff || !students) {
     return <Loading />;
   }
 

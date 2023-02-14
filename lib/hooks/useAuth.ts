@@ -12,6 +12,7 @@ function useAuth() {
   useEffect(() => {
     auth.onAuthStateChanged((authenticatedUser) => {
       if (user !== authenticatedUser) {
+        setIsLoggedIn(false);
         if (authenticatedUser && authenticatedUser.uid) {
           const newUser = authenticatedUser as User;
           setUser(newUser);

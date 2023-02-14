@@ -55,12 +55,12 @@ export default function RunnerRanking() {
   }
 
   useEffect(() => {
-    if (!isLoggedIn || !user) {
+    if (!isLoggedIn) {
       return;
     }
-  }, [isLoggedIn, user]);
+  }, [isLoggedIn]);
 
-  if (!isLoggedIn || !user || !runners) {
+  if (!user || !runners || !staff || !students || !lapCountByRunnerId) {
     return <Loading />;
   }
 

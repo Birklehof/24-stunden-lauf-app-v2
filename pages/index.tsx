@@ -1,8 +1,6 @@
 import Login from "components/Login";
 import Head from "components/Head";
-import Loading from "components/Loading";
 import useAuth from "lib/hooks/useAuth";
-import { User } from "lib/interfaces/user";
 import router from "next/router";
 import { useEffect } from "react";
 import useRemoteConfig from "lib/hooks/useRemoteConfig";
@@ -12,12 +10,10 @@ export default function Home() {
   const { appName } = useRemoteConfig();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (isLoggedIn && user && role) {
-        redirect(role).then((path) => {
-          router.push(path);
-        });
-      }
+    if (isLoggedIn && user && role) {
+      redirect(role).then((path) => {
+        router.push(path);
+      });
     }
   }, [isLoggedIn, user, role]);
 
@@ -27,10 +23,6 @@ export default function Home() {
     } else {
       return "/runner";
     }
-  }
-
-  if (isLoggedIn && user) {
-    return <Loading />;
   }
 
   return (

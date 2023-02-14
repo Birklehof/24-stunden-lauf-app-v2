@@ -9,13 +9,16 @@ import {
 } from "@firebase/firestore";
 import { db } from "lib/firebase";
 import { Student } from "lib/interfaces/student";
+import useAuth from "./useAuth";
 
 export default function useStudents() {
+  const { isLoggedIn, user } = useAuth();
   const [students, setStudents] = useState<{ [id: string]: Student }>({});
 
   useEffect(() => {
+    if (!isLoggedIn || !user) return;
     syncStudents();
-  }, []);
+  }, [isLoggedIn, user]);
 
   async function syncStudents() {
     const q = query(collection(db, "/students"));
