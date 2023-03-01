@@ -24,7 +24,7 @@ export default function useRemoteConfig() {
     "Wolfsburg Nord",
   ]);
   const [distancePerLap, setDistancePerLap] = useState(660);
-  const [appName, setAppName] = useState("24 Stunden Lauf");
+  const [appName, setAppName] = useState("24 Stunden Lauf App");
 
   useEffect(() => {
     const remoteConfig = getRemoteConfig(app);
