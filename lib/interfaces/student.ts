@@ -5,5 +5,5 @@ export interface Student {
   lastName: string;
   email: string;
   house: string;
-  gradeLevel: string;
+  class: string;
 }

@@ -17,30 +17,28 @@ export default function RunnerRanking() {
   const { lapCountByRunnerId } = useRanking();
   const { runners } = useRunners();
   const { staff } = useStaff();
-  const { gradeLevels, houses, distancePerLap } = useRemoteConfig();
+  const { classes, houses, distancePerLap } = useRemoteConfig();
   const { students } = useStudent();
 
-  const [filterGradeLevel, setFilterGradeLevel] = useState("");
+  const [filterClasses, setFilterClasses] = useState("");
   const [filterHouse, setFilterHouse] = useState("");
   const [filterName, setFilterName] = useState("");
 
   function filter(runner: Runner): boolean {
-    if (filterGradeLevel || filterHouse) {
+    if (filterClasses || filterHouse) {
       if (runner.studentId) {
         const student = students[runner.studentId];
         if (!student) {
           return false;
         }
-        if (filterGradeLevel && student.gradeLevel !== filterGradeLevel) {
+        if (filterClasses && student.class !== filterClasses) {
           return false;
         }
         if (filterHouse && student.house !== filterHouse) {
           return false;
         }
       } else {
-        return (
-          false || (filterHouse == "Extern (Kollegium)" && !filterGradeLevel)
-        );
+        return false || (filterHouse == "Extern (Kollegium)" && !filterClasses);
       }
     }
 
@@ -95,12 +93,12 @@ export default function RunnerRanking() {
                 >
                   <select
                     className="select select-bordered select-sm grow"
-                    onChange={(e) => setFilterGradeLevel(e.target.value)}
-                    value={filterGradeLevel}
+                    onChange={(e) => setFilterClasses(e.target.value)}
+                    value={filterClasses}
                   >
                     <option value={""}>Alle Klassen</option>
-                    {gradeLevels.map((gradeLevel) => (
-                      <option key={gradeLevel}>{gradeLevel}</option>
+                    {classes.map((_class) => (
+                      <option key={_class}>{_class}</option>
                     ))}
                   </select>
 

@@ -7,13 +7,7 @@ import { app } from "lib/firebase";
 import { useEffect, useState } from "react";
 
 export default function useRemoteConfig() {
-  const [gradeLevels, setGradeLevels] = useState<string[]>([
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-  ]);
+  const [classes, setClasses] = useState<string[]>(["1", "2", "3", "4", "5"]);
   const [houses, setHouses] = useState<string[]>([
     "Extern (Kollegium)",
     "Extern (Schüler)",
@@ -39,12 +33,12 @@ export default function useRemoteConfig() {
 
       fetchAndActivate(remoteConfig)
         .then(() => {
-          const gradeLevelData = getString(remoteConfig, "gradeLevels");
+          const classesData = getString(remoteConfig, "classes");
           const houseData = getString(remoteConfig, "houses");
           const distancePerLapData = getString(remoteConfig, "distancePerLap");
           const appNameData = getString(remoteConfig, "appName24StundenLauf");
-          if (gradeLevelData) {
-            setGradeLevels(JSON.parse(gradeLevelData));
+          if (classesData) {
+            setClasses(JSON.parse(classesData));
           }
           if (houseData) {
             setHouses(JSON.parse(houseData).sort());
@@ -62,5 +56,5 @@ export default function useRemoteConfig() {
     }
   }, []);
 
-  return { gradeLevels, houses, distancePerLap, appName };
+  return { classes: classes, houses, distancePerLap, appName };
 }
