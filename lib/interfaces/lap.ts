@@ -1,8 +1,7 @@
+import { Timestamp } from "firebase/firestore";
+
 export default interface Lap {
   id: string;
   runnerId: string;
-  timestamp: {
-    nanoseconds: number;
-    seconds: number;
-  };
+  timestamp: Timestamp;
 }

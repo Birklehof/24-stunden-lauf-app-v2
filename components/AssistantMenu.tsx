@@ -7,6 +7,11 @@ export default function RunnerMenu() {
         navItems={[
           { name: "Runde zählen", href: "/assistant", icon: "PlusCircleIcon" },
           {
+            name: "Runde löschen",
+            href: "/assistant/delete-lap",
+            icon: "MinusCircleIcon",
+          },
+          {
             name: "Läufer hinzufügen",
             href: "/assistant/create-runner",
             icon: "UserAddIcon",

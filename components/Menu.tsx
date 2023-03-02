@@ -29,11 +29,13 @@ export default function Menu({ navItems }: MenuProps) {
           ))}
         </ul>
         <div className="divider divider-horizontal lg:divider-vertical !m-0" />
-        {isLoggedIn && (
-          <button onClick={logout} className="text-error btn btn-ghost">
-            <Icon name="LogoutIcon" />
-          </button>
-        )}
+        <button
+          disabled={!isLoggedIn}
+          onClick={logout}
+          className="text-error btn btn-ghost"
+        >
+          <Icon name="LogoutIcon" />
+        </button>
       </div>
     </>
   );

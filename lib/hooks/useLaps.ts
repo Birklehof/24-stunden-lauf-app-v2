@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "@firebase/firestore";
 import { db } from "lib/firebase";
-import { addDoc, onSnapshot } from "firebase/firestore";
+import { addDoc, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import Lap from "lib/interfaces/lap";
 import useRunners from "./useRunners";
 import useAuth from "./useAuth";
@@ -54,5 +54,9 @@ export default function useLaps() {
     );
   }
 
-  return { laps, createLap };
+  async function deleteLap(lapId: string) {
+    await deleteDoc(doc(db, "apps/24-stunden-lauf/laps", lapId));
+  }
+
+  return { laps, createLap, deleteLap };
 }
