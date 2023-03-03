@@ -25,6 +25,8 @@ export default function RunnerRanking() {
   const [filterName, setFilterName] = useState("");
 
   function filter(runner: Runner): boolean {
+    // Filter runners by class, house and name (true = show runner)
+
     if (filterClasses || filterHouse) {
       if (runner.studentId) {
         const student = students[runner.studentId];

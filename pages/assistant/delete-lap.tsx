@@ -31,6 +31,14 @@ export default function AssistantDeleteRound() {
   }
 
   function filter(lap: Lap): boolean {
+    // Filter laps by runner name, if the filterName is a number, filter by runner number (true = show lap)
+
+    if (!filterName) {
+      return true;
+    } else if (!isNaN(Number(filterName))) {
+      return !filterName || runners[lap.runnerId]?.number == Number(filterName);
+    }
+
     return (
       !filterName ||
       getRunnerName(lap.runnerId)
@@ -71,7 +79,7 @@ export default function AssistantDeleteRound() {
               />
             </div>
           </div>
-          <div className="verticalList gap-2">
+          <div className="verticalList !gap-2">
             {laps
               .sort((a, b) => {
                 return (
@@ -86,43 +94,45 @@ export default function AssistantDeleteRound() {
                 return (
                   <div
                     key={lap.id}
-                    className="alert shadow py-2 px-3 rounded-full bg-base-100"
+                    className="alert shadow py-1 rounded-full bg-base-100 flex flex-row justify-between"
                   >
                     <div className="whitespace-nowrap overflow-hidden">
-                      <button
-                        className="btn btn-ghost btn-circle btn-sm text-error"
-                        onClick={() => deleteLapHandler(lap.id)}
-                      >
-                        <Icon name="XCircleIcon" />
-                      </button>
                       <span className="overflow-hidden text-ellipsis">
-                        <span className="font-bold">
+                        <span>
+                          Nr.{" "}
                           {"0".repeat(
                             3 - runners[lap.runnerId]?.number.toString().length
                           )}
-                          {runners[lap.runnerId]?.number}
-                          <span>
-                            , {getRunnerName(lap.runnerId)},{" "}
-                            {lap.timestamp.toDate().getHours().toString() +
-                              ":" +
+                          {runners[lap.runnerId]?.number},{" "}
+                        </span>
+                        <span className="font-bold">
+                          {getRunnerName(lap.runnerId)},{" "}
+                        </span>
+                        <span>
+                          {lap.timestamp.toDate().getDay() ==
+                            new Date().getDay() &&
+                          lap.timestamp.toDate().getMonth() ==
+                            new Date().getMonth() &&
+                          lap.timestamp.toDate().getFullYear() ==
+                            new Date().getFullYear()
+                            ? "heute"
+                            : "am " +
                               lap.timestamp
                                 .toDate()
-                                .getMinutes()
-                                .toString()}{" "}
-                            {lap.timestamp.toDate().getDay() ==
-                              new Date().getDay() &&
-                            lap.timestamp.toDate().getMonth() ==
-                              new Date().getMonth() &&
-                            lap.timestamp.toDate().getFullYear() ==
-                              new Date().getFullYear()
-                              ? "heute"
-                              : lap.timestamp
-                                  .toDate()
-                                  .toLocaleDateString("de-DE")}
-                          </span>
+                                .toLocaleDateString("de-DE")}{" "}
+                          {lap.timestamp.toDate().getHours().toString() +
+                            ":" +
+                            lap.timestamp.toDate().getMinutes().toString()}{" "}
                         </span>
                       </span>
                     </div>
+                    <button
+                      className="btn btn-ghost btn-circle btn-sm text-error"
+                      aria-details="Runde löschen"
+                      onClick={() => deleteLapHandler(lap.id)}
+                    >
+                      <Icon name="TrashIcon" />
+                    </button>
                   </div>
                 );
               })}
