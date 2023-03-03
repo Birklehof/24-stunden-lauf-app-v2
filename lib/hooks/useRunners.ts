@@ -4,9 +4,13 @@ import { collection, query, getDocs } from "@firebase/firestore";
 import { db } from "lib/firebase";
 import { addDoc, onSnapshot } from "firebase/firestore";
 import useAuth from "./useAuth";
+import useStaff from "./useStaff";
+import useStudents from "./useStudents";
 
 export default function useRunners() {
   const { isLoggedIn, user } = useAuth();
+  const { students } = useStudents();
+  const { staff } = useStaff();
   const [runners, setRunners] = useState<{ [id: string]: Runner }>({});
 
   useEffect(() => {
@@ -49,5 +53,29 @@ export default function useRunners() {
     return new_number;
   }
 
-  return { runners, createRunner };
+  function getRunnerName(runnerId: string): string {
+    const runner = runners[runnerId];
+
+    if (!runner) {
+      return "Unbekannt";
+    }
+
+    if (runner.name) {
+      return runner.name;
+    } else if (runner.studentId) {
+      const student = students[runner.studentId];
+      if (student) {
+        return student.firstName.concat(" ").concat(student.lastName);
+      }
+    } else if (runner.staffId) {
+      const staffMember = staff[runner.staffId];
+      if (staffMember) {
+        return staffMember.firstName.concat(" ").concat(staffMember.lastName);
+      }
+    }
+
+    return "Unbekannt";
+  }
+
+  return { runners, createRunner, getRunnerName };
 }

@@ -75,7 +75,7 @@ export default function AssistantIndex() {
             </div>
           </div>
           <div className="flex flex-start h-screen pr-2 pt-2 lg:px-0 w-1/2 justify-center">
-            <div className="flex flex-col flex-start gap-1 stack">
+            <div className="flex flex-col flex-start gap-1 stack w-full">
               {laps
                 .sort((a, b) => {
                   return (

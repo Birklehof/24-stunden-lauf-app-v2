@@ -15,7 +15,7 @@ import useStaff from "lib/hooks/useStaff";
 export default function RunnerRanking() {
   const { isLoggedIn, user } = useAuth();
   const { lapCountByRunnerId } = useRanking();
-  const { runners } = useRunners();
+  const { runners, getRunnerName } = useRunners();
   const { staff } = useStaff();
   const { classes, houses, distancePerLap } = useRemoteConfig();
   const { students } = useStudent();
@@ -44,7 +44,7 @@ export default function RunnerRanking() {
 
     if (
       filterName &&
-      !runner.name.toLowerCase().includes(filterName.toLowerCase())
+      !getRunnerName(runner.id).toLowerCase().includes(filterName.toLowerCase())
     ) {
       return false;
     }
@@ -70,9 +70,9 @@ export default function RunnerRanking() {
           <RunnerMenu />
         </div>
         <div className="flex gap-3 flex-col h-screen justify-center items-center lg:items-start w-full lg:w-[42rem]">
-          <div className="menu menu-horizontal bg-base-100 p-2 rounded-full z-40 lg:block top-3 shadow-2xl absolute w-[calc(100%-1rem)] lg:w-[42rem]">
-            <div className="form-control flex flex-row gap-3 justify-between w-full">
-              <button className="btn btn-circle btn-ghost btn-sm rounded-full lg:hidden">
+          <div className="searchbox">
+            <div className="inputElementsContainer">
+              <button className="homeButton">
                 <Link href={"/runner"}>
                   <Icon name="HomeIcon" />
                 </Link>
@@ -80,7 +80,6 @@ export default function RunnerRanking() {
               <input
                 type="text"
                 placeholder="Suchen..."
-                className="input input-bordered input-sm rounded-full grow w-10"
                 onChange={(e) => setFilterName(e.target.value)}
               />
               <div className="dropdown dropdown-bottom dropdown-end">
@@ -116,18 +115,18 @@ export default function RunnerRanking() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-start overflow-y-auto h-screen px-2 lg:px-0 w-full pt-20 pb-3">
-            <div className="flex flex-col gap-3 w-full">
-              {lapCountByRunnerId.map((lapCountWithRunnerId, position) => {
-                if (
-                  !runners[lapCountWithRunnerId.runnerId] ||
-                  !filter(runners[lapCountWithRunnerId.runnerId])
-                ) {
-                  return null;
-                }
+          <div className="verticalList">
+            {lapCountByRunnerId
+              .filter((lapCountWithRunnerId) => {
+                return (
+                  runners[lapCountWithRunnerId.runnerId] &&
+                  filter(runners[lapCountWithRunnerId.runnerId])
+                );
+              })
+              .map((lapCountWithRunnerId, position) => {
                 return (
                   <div
-                    className="shadow-md bg-base-100 rounded-xl flex flex-row justify-around items-center h-16 lg:h-16"
+                    className="shadow-md bg-base-100 rounded-xl flex flex-row justify-around items-center h-16 lg:h-16 w-full"
                     key={lapCountWithRunnerId.runnerId}
                   >
                     <div className="stat w-[12%] overflow-hidden py-0 px-0 grow">
@@ -148,28 +147,7 @@ export default function RunnerRanking() {
                             {["🥇", "🥈", "🥉"][position]}
                           </span>
                         )}
-                        {runners[lapCountWithRunnerId.runnerId]?.name}
-                        {students[
-                          runners[lapCountWithRunnerId.runnerId]?.studentId ||
-                            ""
-                        ]?.firstName
-                          .concat(" ")
-                          .concat(
-                            students[
-                              runners[lapCountWithRunnerId.runnerId]
-                                ?.studentId || ""
-                            ]?.lastName
-                          )}
-                        {staff[
-                          runners[lapCountWithRunnerId.runnerId]?.staffId || ""
-                        ]?.firstName
-                          .concat(" ")
-                          .concat(
-                            staff[
-                              runners[lapCountWithRunnerId.runnerId]?.staffId ||
-                                ""
-                            ]?.lastName
-                          )}
+                        {getRunnerName(lapCountWithRunnerId.runnerId)}
                       </div>
                     </div>
                     <div className="stat w-3/12 overflow-hidden py-0 px-0">
@@ -200,7 +178,6 @@ export default function RunnerRanking() {
                   </div>
                 );
               })}
-            </div>
             <div className="pt-3 w-full text-sm text-center">
               Keine weiteren Läufer
             </div>

@@ -20,14 +20,13 @@ export default function useUser() {
   const [laps, setLaps] = useState<number>(0);
 
   useEffect(() => {
-    if (isLoggedIn && user) {
-      getRunner(user).then((runner) => {
-        setRunner(runner);
-        if (runner) {
-          syncLapCount(runner);
-        }
-      });
-    }
+    if (!isLoggedIn || !user) return;
+    getRunner(user).then((runner) => {
+      setRunner(runner);
+      if (runner) {
+        syncLapCount(runner);
+      }
+    });
   }, [isLoggedIn, user, role]);
 
   async function getRunner(user: User): Promise<Runner | undefined> {
