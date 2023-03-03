@@ -13,7 +13,7 @@ export default function AssistantIndex() {
   const { isLoggedIn, user } = useAuth();
   const { laps, createLap } = useLaps();
   const [number, setNumber] = useState(0);
-  const { runners } = useRunners();
+  const { runners, getRunnerName } = useRunners();
   const { staff } = useStaff();
   const { students } = useStudents();
 
@@ -74,9 +74,10 @@ export default function AssistantIndex() {
               />
             </div>
           </div>
-          <div className="flex flex-start h-screen pr-2 pt-2 lg:px-0 w-1/2 justify-center">
-            <div className="flex flex-col flex-start gap-1 stack w-full">
+          <div className="flex flex-start h-screen pr-2 lg:px-0 w-1/2 justify-center">
+            <div className="verticalList !gap-2">
               {laps
+                .slice(0, 30)
                 .sort((a, b) => {
                   return (
                     // @ts-ignore
@@ -89,39 +90,23 @@ export default function AssistantIndex() {
                     className="alert shadow py-2 px-3 rounded-full bg-base-100"
                   >
                     <div className="whitespace-nowrap overflow-hidden">
-                      <span className="text-success">
-                        <Icon name="PlusCircleIcon" />
-                      </span>
                       <span className="overflow-hidden text-ellipsis">
+                        {"0".repeat(
+                          3 - runners[lap.runnerId]?.number.toString().length
+                        )}
                         <span className="font-bold">
-                          {"0".repeat(
-                            3 - runners[lap.runnerId]?.number.toString().length
-                          )}
-                          {runners[lap.runnerId]?.number}
+                          {runners[lap.runnerId]?.number}{" "}
                           <span className="hidden md:inline">
-                            , {runners[lap.runnerId]?.name}
-                            {students[
-                              runners[lap.runnerId]?.studentId || ""
-                            ]?.firstName
-                              .concat(" ")
-                              .concat(
-                                students[runners[lap.runnerId]?.studentId || ""]
-                                  ?.lastName
-                              )}
-                            {staff[
-                              runners[lap.runnerId]?.staffId || ""
-                            ]?.firstName
-                              .concat(" ")
-                              .concat(
-                                staff[runners[lap.runnerId]?.staffId || ""]
-                                  ?.lastName
-                              )}
+                            {getRunnerName(lap.runnerId)}
                           </span>
                         </span>
                       </span>
                     </div>
                   </div>
                 ))}
+              <div className="w-full text-sm text-center">
+                Neuesten 30 Runden
+              </div>
             </div>
           </div>
         </div>

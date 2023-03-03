@@ -18,11 +18,11 @@ export default function Menu({ navItems }: MenuProps) {
 
   return (
     <>
-      <div className="menu menu-horizontal lg:menu-vertical bg-base-100 p-2 rounded-box z-40 absolute bottom-3 lg:bottom-1/2 lg:translate-y-1/2 lg:left-3 lg:gap-2 shadow-2xl">
+      <div className="menu menu-horizontal lg:menu-vertical bg-base-100 p-2 rounded-full z-40 absolute bottom-3 lg:bottom-1/2 lg:translate-y-1/2 lg:left-3 lg:gap-2 shadow-2xl">
         <ul className="flex flex-row lg:flex-col gap-2">
           {navItems.map((item) => (
             <li key={item.name}>
-              <Link href={item.href}>
+              <Link href={item.href} className="btn !btn-ghost !btn-circle">
                 <Icon name={item.icon} />
               </Link>
             </li>
@@ -32,7 +32,7 @@ export default function Menu({ navItems }: MenuProps) {
         <button
           disabled={!isLoggedIn}
           onClick={logout}
-          className="text-error btn btn-ghost"
+          className="text-error btn btn-ghost btn-circle"
         >
           <Icon name="LogoutIcon" />
         </button>

@@ -63,12 +63,14 @@ export default function AssistantDeleteRound() {
     <>
       <Head title="Assistent" />
       <main className="flex bg-base-200 justify-center h-screen items-center">
-        <AssistantMenu />
+        <div className="hidden lg:flex">
+          <AssistantMenu />
+        </div>
         <div className="flex gap-3 flex-col h-screen justify-center items-center lg:items-start w-full lg:w-[42rem]">
           <div className="searchbox">
             <div className="inputElementsContainer">
-              <button className="homeButton">
-                <Link href={"/runner"}>
+              <button className="btn btn-circle btn-ghost btn-sm lg:hidden">
+                <Link href={"/assistant"}>
                   <Icon name="HomeIcon" />
                 </Link>
               </button>
@@ -79,7 +81,7 @@ export default function AssistantDeleteRound() {
               />
             </div>
           </div>
-          <div className="verticalList !gap-2">
+          <div className="verticalList !pt-20 !gap-2">
             {laps
               .sort((a, b) => {
                 return (
@@ -99,13 +101,12 @@ export default function AssistantDeleteRound() {
                     <div className="whitespace-nowrap overflow-hidden">
                       <span className="overflow-hidden text-ellipsis">
                         <span>
-                          Nr.{" "}
                           {"0".repeat(
                             3 - runners[lap.runnerId]?.number.toString().length
                           )}
-                          {runners[lap.runnerId]?.number},{" "}
                         </span>
                         <span className="font-bold">
+                          {runners[lap.runnerId]?.number}{" "}
                           {getRunnerName(lap.runnerId)},{" "}
                         </span>
                         <span>

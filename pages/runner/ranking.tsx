@@ -74,7 +74,7 @@ export default function RunnerRanking() {
         <div className="flex gap-3 flex-col h-screen justify-center items-center lg:items-start w-full lg:w-[42rem]">
           <div className="searchbox">
             <div className="inputElementsContainer">
-              <button className="homeButton">
+              <button className="btn btn-circle btn-ghost btn-sm lg:hidden">
                 <Link href={"/runner"}>
                   <Icon name="HomeIcon" />
                 </Link>
@@ -117,7 +117,7 @@ export default function RunnerRanking() {
               </div>
             </div>
           </div>
-          <div className="verticalList">
+          <div className="verticalList !pt-20">
             {lapCountByRunnerId
               .filter((lapCountWithRunnerId) => {
                 return (
@@ -133,7 +133,7 @@ export default function RunnerRanking() {
                   >
                     <div className="stat w-[12%] overflow-hidden py-0 px-0 grow">
                       <div className="stat-value text-center text-2xl lg:text-3xl">
-                        <div className="inline text-base-300">
+                        <div className="inline text-base-200">
                           {"0".repeat(3 - (position + 1).toString().length)}
                         </div>
                         {(position + 1).toString()}
@@ -149,7 +149,10 @@ export default function RunnerRanking() {
                             {["🥇", "🥈", "🥉"][position]}
                           </span>
                         )}
-                        {getRunnerName(lapCountWithRunnerId.runnerId)}
+                        {getRunnerName(lapCountWithRunnerId.runnerId)}{" "}
+                        <span className="inline-block text-xl -translate-y-1">
+                          ({runners[lapCountWithRunnerId.runnerId].number})
+                        </span>
                       </div>
                     </div>
                     <div className="stat w-3/12 overflow-hidden py-0 px-0">
@@ -180,7 +183,7 @@ export default function RunnerRanking() {
                   </div>
                 );
               })}
-            <div className="pt-3 w-full text-sm text-center">
+            <div className="w-full text-sm text-center">
               Keine weiteren Läufer
             </div>
           </div>

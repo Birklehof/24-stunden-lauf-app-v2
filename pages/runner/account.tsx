@@ -4,10 +4,12 @@ import Loading from "components/Loading";
 import Head from "components/Head";
 import RunnerMenu from "components/RunnerMenu";
 import useRunner from "lib/hooks/useRunner";
+import useRunners from "lib/hooks/useRunners";
 
 export default function RunnerAccount() {
   const { isLoggedIn, user } = useAuth();
   const { runner } = useRunner();
+  const { getRunnerName } = useRunners();
 
   useEffect(() => {
     if (!isLoggedIn || !user) {
@@ -34,7 +36,9 @@ export default function RunnerAccount() {
           </div>
           <div className="card max-w-md shadow-2xl bg-base-100 -mt-12">
             <div className="card-body mt-3">
-              <h1 className="font-bold text-lg text-center">{runner.name}</h1>
+              <h1 className="font-bold text-lg text-center">
+                {getRunnerName(runner.id)}
+              </h1>
               {user.email && (
                 <h2 className="text-md text-center">{user.email}</h2>
               )}
