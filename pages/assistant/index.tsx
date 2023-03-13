@@ -5,7 +5,6 @@ import useAuth from "lib/hooks/useAuth";
 import AssistantMenu from "components/AssistantMenu";
 import useLaps from "lib/hooks/useLaps";
 import useRunners from "lib/hooks/useRunners";
-import Icon from "components/Icon";
 import useStaff from "lib/hooks/useStaff";
 import useStudents from "lib/hooks/useStudents";
 
@@ -77,13 +76,13 @@ export default function AssistantIndex() {
           <div className="flex flex-start h-screen pr-2 lg:px-0 w-1/2 justify-center">
             <div className="verticalList !gap-2">
               {laps
-                .slice(0, 30)
                 .sort((a, b) => {
                   return (
                     // @ts-ignore
                     b.timestamp - a.timestamp
                   );
                 })
+                .slice(0, 30)
                 .map((lap) => (
                   <div
                     key={lap.id}

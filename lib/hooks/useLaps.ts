@@ -47,11 +47,15 @@ export default function useLaps() {
       throw new Error("Runner not found");
     }
 
-    const lap = { runnerId, timestamp: new Date() };
-    const docRef = await addDoc(
-      collection(db, "apps/24-stunden-lauf/laps"),
-      lap
-    );
+    // Make api request to /api/createLap
+    const res = await fetch("/api/createLap", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: user?.accessToken || "",
+      },
+      body: JSON.stringify({ runnerId }),
+    });
   }
 
   async function deleteLap(lapId: string) {
