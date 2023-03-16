@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { auth, db } from "lib/firebase/firebase-admin";
+import Lap from "lib/interfaces/lap";
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,6 +24,26 @@ export default async function handler(
 
   if (!runnerId) {
     return res.status(400).json({ error: "Missing runnerId" });
+  }
+
+  // Get last lap of runner
+  const querySnapshot = await db
+    .collection("apps/24-stunden-lauf/laps")
+    .where("runnerId", "==", runnerId)
+    .orderBy("timestamp", "desc")
+    .limit(1)
+    .get();
+
+  if (!querySnapshot.empty) {
+    const lastLapOfRunner = querySnapshot.docs[0].data() as Lap;
+    const lastLapDate = lastLapOfRunner.timestamp.toDate();
+
+    const now = new Date();
+
+    // Check if last lap was less than 2 minutes ago
+    if (now.getTime() - lastLapDate.getTime() < 2 * 60 * 1000) {
+      return res.status(400).json({ error: "Too many laps" });
+    }
   }
 
   const lap = { runnerId, timestamp: new Date() };
