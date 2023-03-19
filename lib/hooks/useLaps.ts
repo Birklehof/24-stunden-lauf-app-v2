@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "@firebase/firestore";
 import { db } from "lib/firebase";
-import { addDoc, deleteDoc, doc, onSnapshot } from "firebase/firestore";
+import { deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import Lap from "lib/interfaces/lap";
 import useRunners from "./useRunners";
 import useAuth from "./useAuth";
