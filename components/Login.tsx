@@ -4,8 +4,8 @@ import {
   auth,
   githubOAuthProvider,
   microsoftOAuthProvider,
-} from "lib/firebase";
-import useAuth from "lib/hooks/useAuth";
+} from "@/lib/firebase";
+import useAuth from "@/lib/hooks/useAuth";
 
 export default function Login() {
   const { isLoggedIn } = useAuth();

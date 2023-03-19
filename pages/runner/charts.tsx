@@ -1,9 +1,9 @@
-import useAuth from "lib/hooks/useAuth";
+import useAuth from "@/lib/hooks/useAuth";
 import { useEffect } from "react";
-import Loading from "components/Loading";
-import Head from "components/Head";
-import RunnerMenu from "components/RunnerMenu";
-import useRunner from "lib/hooks/useRunner";
+import Loading from "@/components/Loading";
+import Head from "@/components/Head";
+import RunnerMenu from "@/components/RunnerMenu";
+import useRunner from "@/lib/hooks/useRunner";
 import { Line } from "react-chartjs-2";
 import {
   Chart,
@@ -16,8 +16,8 @@ import {
   Legend,
   Filler,
 } from "chart.js";
-import useLaps from "lib/hooks/useLaps";
-import Lap from "lib/interfaces/lap";
+import useLaps from "@/lib/hooks/useLaps";
+import Lap from "@/lib/interfaces/lap";
 
 export default function RunnerGraphs() {
   const { isLoggedIn, user } = useAuth();

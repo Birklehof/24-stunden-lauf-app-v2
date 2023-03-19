@@ -6,11 +6,11 @@ import {
   getCountFromServer,
   onSnapshot,
 } from "@firebase/firestore";
-import { db } from "lib/firebase";
-import { Runner } from "lib/interfaces/runner";
-import Staff from "lib/interfaces/staff";
-import { Student } from "lib/interfaces/student";
-import { User } from "lib/interfaces/user";
+import { db } from "@/lib/firebase";
+import { Runner } from "@/lib/interfaces/runner";
+import Staff from "@/lib/interfaces/staff";
+import { Student } from "@/lib/interfaces/student";
+import { User } from "@/lib/interfaces/user";
 import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
 

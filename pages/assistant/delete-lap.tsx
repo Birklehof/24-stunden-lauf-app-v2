@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import Head from "components/Head";
-import Loading from "components/Loading";
-import useAuth from "lib/hooks/useAuth";
-import AssistantMenu from "components/AssistantMenu";
-import useLaps from "lib/hooks/useLaps";
-import useRunners from "lib/hooks/useRunners";
-import Icon from "components/Icon";
-import useStaff from "lib/hooks/useStaff";
-import useStudents from "lib/hooks/useStudents";
+import Head from "@/components/Head";
+import Loading from "@/components/Loading";
+import useAuth from "@/lib/hooks/useAuth";
+import AssistantMenu from "@/components/AssistantMenu";
+import useLaps from "@/lib/hooks/useLaps";
+import useRunners from "@/lib/hooks/useRunners";
+import Icon from "@/components/Icon";
+import useStaff from "@/lib/hooks/useStaff";
+import useStudents from "@/lib/hooks/useStudents";
 import Link from "next/link";
-import Lap from "lib/interfaces/lap";
+import Lap from "@/lib/interfaces/lap";
 
 export default function AssistantDeleteRound() {
   const { isLoggedIn, user } = useAuth();

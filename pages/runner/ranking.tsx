@@ -1,16 +1,16 @@
-import useAuth from "lib/hooks/useAuth";
+import useAuth from "@/lib/hooks/useAuth";
 import { useEffect, useState } from "react";
-import { type Runner } from "lib/interfaces/runner";
-import Loading from "components/Loading";
-import Head from "components/Head";
-import RunnerMenu from "components/RunnerMenu";
-import useRemoteConfig from "lib/hooks/useRemoteConfig";
-import useRanking from "lib/hooks/useRanking";
-import Icon from "components/Icon";
+import { type Runner } from "@/lib/interfaces/runner";
+import Loading from "@/components/Loading";
+import Head from "@/components/Head";
+import RunnerMenu from "@/components/RunnerMenu";
+import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
+import useRanking from "@/lib/hooks/useRanking";
+import Icon from "@/components/Icon";
 import Link from "next/link";
-import useStudent from "lib/hooks/useStudents";
-import useRunners from "lib/hooks/useRunners";
-import useStaff from "lib/hooks/useStaff";
+import useStudent from "@/lib/hooks/useStudents";
+import useRunners from "@/lib/hooks/useRunners";
+import useStaff from "@/lib/hooks/useStaff";
 
 export default function RunnerRanking() {
   const { isLoggedIn, user } = useAuth();

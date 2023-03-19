@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { auth, db } from "lib/firebase/firebase-admin";
-import Lap from "lib/interfaces/lap";
+import { auth, db } from "@/lib/firebase/firebase-admin";
+import Lap from "@/lib/interfaces/lap";
 
 export default async function handler(
   req: NextApiRequest,

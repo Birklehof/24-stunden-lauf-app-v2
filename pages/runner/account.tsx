@@ -1,10 +1,10 @@
-import useAuth from "lib/hooks/useAuth";
+import useAuth from "@/lib/hooks/useAuth";
 import { useEffect } from "react";
-import Loading from "components/Loading";
-import Head from "components/Head";
-import RunnerMenu from "components/RunnerMenu";
-import useRunner from "lib/hooks/useRunner";
-import useRunners from "lib/hooks/useRunners";
+import Loading from "@/components/Loading";
+import Head from "@/components/Head";
+import RunnerMenu from "@/components/RunnerMenu";
+import useRunner from "@/lib/hooks/useRunner";
+import useRunners from "@/lib/hooks/useRunners";
 
 export default function RunnerAccount() {
   const { isLoggedIn, user } = useAuth();

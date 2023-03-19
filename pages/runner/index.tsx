@@ -1,12 +1,12 @@
-import useAuth from "lib/hooks/useAuth";
+import useAuth from "@/lib/hooks/useAuth";
 import { useEffect } from "react";
-import Loading from "components/Loading";
-import Head from "components/Head";
-import RunnerMenu from "components/RunnerMenu";
-import NewLapOverlay from "components/NewLapOverlay";
-import useRunner from "lib/hooks/useRunner";
-import useRemoteConfig from "lib/hooks/useRemoteConfig";
-import useRanking from "lib/hooks/useRanking";
+import Loading from "@/components/Loading";
+import Head from "@/components/Head";
+import RunnerMenu from "@/components/RunnerMenu";
+import NewLapOverlay from "@/components/NewLapOverlay";
+import useRunner from "@/lib/hooks/useRunner";
+import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
+import useRanking from "@/lib/hooks/useRanking";
 
 export default function RunnerIndex() {
   const { isLoggedIn, user } = useAuth();

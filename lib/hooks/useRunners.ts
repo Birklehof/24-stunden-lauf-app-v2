@@ -1,7 +1,7 @@
-import { Runner } from "lib/interfaces/runner";
+import { Runner } from "@/lib/interfaces/runner";
 import { useEffect, useState } from "react";
 import { collection, query, getDocs } from "@firebase/firestore";
-import { db } from "lib/firebase";
+import { db } from "@/lib/firebase";
 import { addDoc, onSnapshot } from "firebase/firestore";
 import useAuth from "./useAuth";
 import useStaff from "./useStaff";

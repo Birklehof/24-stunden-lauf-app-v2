@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import Head from "components/Head";
-import Loading from "components/Loading";
-import useAuth from "lib/hooks/useAuth";
-import AssistantMenu from "components/AssistantMenu";
-import useRunners from "lib/hooks/useRunners";
+import Head from "@/components/Head";
+import Loading from "@/components/Loading";
+import useAuth from "@/lib/hooks/useAuth";
+import AssistantMenu from "@/components/AssistantMenu";
+import useRunners from "@/lib/hooks/useRunners";
 
 export default function AssistantCreateRunner() {
   const { isLoggedIn, user } = useAuth();

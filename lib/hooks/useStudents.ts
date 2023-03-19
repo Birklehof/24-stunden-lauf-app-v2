@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, query, getDocs, onSnapshot } from "@firebase/firestore";
-import { db } from "lib/firebase";
-import { Student } from "lib/interfaces/student";
+import { db } from "@/lib/firebase";
+import { Student } from "@/lib/interfaces/student";
 import useAuth from "./useAuth";
 
 export default function useStudents() {

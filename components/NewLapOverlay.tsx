@@ -1,4 +1,4 @@
-import useRunner from "lib/hooks/useRunner";
+import useRunner from "@/lib/hooks/useRunner";
 
 export default function NewLapOverlay() {
   const { laps } = useRunner();

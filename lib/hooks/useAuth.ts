@@ -1,7 +1,7 @@
 import router from "next/router";
 import { useEffect, useState } from "react";
-import { auth, db } from "lib/firebase";
-import { User } from "lib/interfaces/user";
+import { auth, db } from "@/lib/firebase";
+import { User } from "@/lib/interfaces/user";
 import { doc, getDoc } from "firebase/firestore";
 
 function useAuth() {
@@ -32,7 +32,7 @@ function useAuth() {
       return "";
     }
     const userRole = await getDoc(
-      doc(db, "/apps/24-stunden-lauf/userRoles", user.email)
+      doc(db, "/apps/24-stunden-lauf/roles", user.email)
     );
     const role = userRole.data()?.role || "runner";
     return role;

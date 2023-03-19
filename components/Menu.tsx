@@ -1,7 +1,7 @@
 import { PossibleIcons } from "heroicons-lookup";
 import Link from "next/link";
-import useAuth from "lib/hooks/useAuth";
-import Icon from "components/Icon";
+import useAuth from "@/lib/hooks/useAuth";
+import Icon from "@/components/Icon";
 
 interface MenuProps {
   navItems: NavItem[];
