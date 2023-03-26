@@ -54,6 +54,14 @@ export default function RunnerRanking() {
     return true;
   }
 
+  function getPosition(runnerId: string): number {
+    // Get position of runner in ranking
+    const position = lapCountByRunnerId.findIndex(
+      (lapCountWithRunnerId) => lapCountWithRunnerId.runnerId === runnerId
+    );
+    return position;
+  }
+
   useEffect(() => {
     if (!isLoggedIn) {
       return;
@@ -125,7 +133,7 @@ export default function RunnerRanking() {
                   filter(runners[lapCountWithRunnerId.runnerId])
                 );
               })
-              .map((lapCountWithRunnerId, position) => {
+              .map((lapCountWithRunnerId) => {
                 return (
                   <div
                     className="shadow-md bg-base-100 rounded-xl flex flex-row justify-around items-center h-16 lg:h-16 w-full"
@@ -134,19 +142,30 @@ export default function RunnerRanking() {
                     <div className="stat w-[12%] overflow-hidden py-0 px-0 grow">
                       <div className="stat-value text-center text-2xl lg:text-3xl">
                         <div className="inline text-base-200">
-                          {"0".repeat(3 - (position + 1).toString().length)}
+                          {"0".repeat(
+                            3 -
+                              (
+                                getPosition(lapCountWithRunnerId.runnerId) + 1
+                              ).toString().length
+                          )}
                         </div>
-                        {(position + 1).toString()}
+                        {(
+                          getPosition(lapCountWithRunnerId.runnerId) + 1
+                        ).toString()}
                       </div>
                     </div>
                     <div className="stat w-6/12 py-0 px-0 grow">
                       <div className="stat-value overflow-hidden text-ellipsis text-2xl lg:text-3xl">
-                        {position < 3 && (
+                        {getPosition(lapCountWithRunnerId.runnerId) < 3 && (
                           <span
                             aria-label="Erster Platz"
                             className="inline-block text-sm lg:text-xl -translate-y-1"
                           >
-                            {["🥇", "🥈", "🥉"][position]}
+                            {
+                              ["🥇", "🥈", "🥉"][
+                                getPosition(lapCountWithRunnerId.runnerId)
+                              ]
+                            }
                           </span>
                         )}
                         {getRunnerName(lapCountWithRunnerId.runnerId)}{" "}

@@ -35,10 +35,18 @@
   @apply menu menu-horizontal bg-base-100 p-2 rounded-full z-40 lg:block top-3 shadow-2xl absolute w-[calc(100%-1rem)] lg:w-[42rem];
 }
 
-.searchbox .inputElementsContainer {
+.inputElementsContainer {
   @apply form-control flex flex-row gap-3 justify-between w-full;
 }
 
-.searchbox input[type="text"] {
+.inputElementsContainer input[type="text"] {
   @apply input input-bordered input-sm rounded-full grow w-10;
+}
+
+.alert {
+  @apply px-1 py-1 pl-3;
+}
+
+.alert > :not([hidden]) ~ :not([hidden]) {
+  @apply mt-0;
 }
