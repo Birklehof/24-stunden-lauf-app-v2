@@ -69,11 +69,11 @@ export default function AssistantDeleteRound() {
         <div className="flex gap-3 flex-col h-screen justify-center items-center lg:items-start w-full lg:w-[42rem]">
           <div className="searchbox">
             <div className="inputElementsContainer">
-              <button className="btn btn-circle btn-ghost btn-sm lg:hidden">
-                <Link href={"/assistant"}>
+              <div className="btn btn-circle btn-ghost btn-sm lg:hidden">
+                <Link href={"/assistant"} aria-label="Home">
                   <Icon name="HomeIcon" />
                 </Link>
-              </button>
+              </div>
               <input
                 type="text"
                 placeholder="Suchen..."
@@ -129,7 +129,7 @@ export default function AssistantDeleteRound() {
                     </div>
                     <button
                       className="btn btn-ghost btn-circle btn-sm text-error"
-                      aria-details="Runde löschen"
+                      aria-label="Runde löschen"
                       onClick={() => deleteLapHandler(lap.id)}
                     >
                       <Icon name="TrashIcon" />

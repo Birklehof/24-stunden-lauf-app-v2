@@ -22,7 +22,11 @@ export default function Menu({ navItems }: MenuProps) {
         <ul className="flex flex-row lg:flex-col gap-2">
           {navItems.map((item) => (
             <li key={item.name}>
-              <Link href={item.href} className="btn !btn-ghost !btn-circle">
+              <Link
+                href={item.href}
+                className="btn !btn-ghost !btn-circle"
+                aria-label={item.name}
+              >
                 <Icon name={item.icon} />
               </Link>
             </li>
@@ -33,6 +37,7 @@ export default function Menu({ navItems }: MenuProps) {
           disabled={!isLoggedIn}
           onClick={logout}
           className="text-error btn btn-ghost btn-circle"
+          aria-label="Logout"
         >
           <Icon name="LogoutIcon" />
         </button>

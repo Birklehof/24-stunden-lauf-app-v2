@@ -7,6 +7,7 @@ import useRunners from "@/lib/hooks/useRunners";
 
 export default function AssistantCreateRunner() {
   const { isLoggedIn, user } = useAuth();
+  const [submitting, setSubmitting] = useState(false);
   const [name, setName] = useState("");
   const [number, setNumber] = useState(0);
   const { createRunner } = useRunners();
@@ -21,7 +22,13 @@ export default function AssistantCreateRunner() {
     return <Loading />;
   }
 
-  async function createNewLapHandler() {
+  async function addRunner() {
+    if (submitting) {
+      return;
+    }
+
+    setSubmitting(true);
+
     try {
       setNumber(await createRunner(name));
     } catch (e: any) {
@@ -31,6 +38,8 @@ export default function AssistantCreateRunner() {
       }
       throw e;
     }
+
+    setSubmitting(false);
   }
 
   return (
@@ -67,7 +76,7 @@ export default function AssistantCreateRunner() {
               ) : (
                 <>
                   <h1 className="text-center font-bold text-xl">
-                    Läufer erstellen
+                    Läufer hinzufügen
                   </h1>
                   <input
                     name={"text"}
@@ -84,9 +93,10 @@ export default function AssistantCreateRunner() {
                   />
                   <button
                     className="btn btn-primary"
-                    onClick={createNewLapHandler}
+                    onClick={addRunner}
+                    disabled={submitting || name.length == 0}
                   >
-                    Erstellen
+                    Hinzufügen
                   </button>
                 </>
               )}

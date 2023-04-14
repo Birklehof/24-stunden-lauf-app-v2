@@ -82,18 +82,22 @@ export default function RunnerRanking() {
         <div className="flex gap-3 flex-col h-screen justify-center items-center lg:items-start w-full lg:w-[42rem]">
           <div className="searchbox">
             <div className="inputElementsContainer">
-              <button className="btn btn-circle btn-ghost btn-sm lg:hidden">
-                <Link href={"/runner"}>
+              <div className="btn btn-circle btn-ghost btn-sm lg:hidden">
+                <Link href={"/runner"} aria-label="Home">
                   <Icon name="HomeIcon" />
                 </Link>
-              </button>
+              </div>
               <input
                 type="text"
                 placeholder="Suchen..."
                 onChange={(e) => setFilterName(e.target.value)}
               />
               <div className="dropdown dropdown-bottom dropdown-end">
-                <label tabIndex={0} className="btn btn-circle btn-ghost btn-sm">
+                <label
+                  tabIndex={0}
+                  className="btn btn-circle btn-ghost btn-sm"
+                  aria-label="Filtern"
+                >
                   <Icon name="AdjustmentsIcon" />
                 </label>
                 <div
