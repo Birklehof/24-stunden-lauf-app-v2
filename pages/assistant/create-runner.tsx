@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
+import { BaseSyntheticEvent, useEffect, useState } from "react";
 import Head from "@/components/Head";
 import Loading from "@/components/Loading";
 import useAuth from "@/lib/hooks/useAuth";
 import AssistantMenu from "@/components/AssistantMenu";
 import useRunners from "@/lib/hooks/useRunners";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export default function AssistantCreateRunner() {
   const { isLoggedIn, user } = useAuth();
   const [submitting, setSubmitting] = useState(false);
-  const [name, setName] = useState("");
   const [number, setNumber] = useState(0);
-  const { createRunner } = useRunners();
+  const { runners } = useRunners();
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -22,24 +23,27 @@ export default function AssistantCreateRunner() {
     return <Loading />;
   }
 
-  async function addRunner() {
+  async function createRunnerHandler(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
     if (submitting) {
       return;
     }
 
     setSubmitting(true);
 
-    try {
-      setNumber(await createRunner(name));
-    } catch (e: any) {
-      if (e instanceof Error) {
-        alert(e.message);
-        return;
-      }
-      throw e;
-    }
+    const formData = new FormData(e.target as HTMLFormElement);
+    const name = formData.get("name") as string;
+    const number = Object.keys(runners).length + 1;
+    const new_runner = { name, number };
 
-    setSubmitting(false);
+    await addDoc(collection(db, "apps/24-stunden-lauf/runners"), new_runner)
+      .then(() => {
+        setNumber(number);
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
   }
 
   return (
@@ -67,38 +71,39 @@ export default function AssistantCreateRunner() {
                     className="btn btn-primary"
                     onClick={() => {
                       setNumber(0);
-                      setName("");
                     }}
                   >
                     Okay!
                   </button>
                 </>
               ) : (
-                <>
+                <form
+                  onSubmit={createRunnerHandler}
+                  className="flex flex-col gap-3"
+                >
                   <h1 className="text-center font-bold text-xl">
                     Läufer hinzufügen
                   </h1>
                   <input
-                    name={"text"}
+                    id="name"
+                    name="name"
                     className="input input-bordered w-full max-w-xs"
                     placeholder="Name"
                     autoFocus
-                    onChange={(e) => {
-                      e.preventDefault();
-                      setName(e.target.value);
-                    }}
-                    type={"text"}
-                    value={name}
+                    type="text"
                     required
+                    minLength={3}
                   />
                   <button
-                    className="btn btn-primary"
-                    onClick={addRunner}
-                    disabled={submitting || name.length == 0}
+                    className={`btn btn-primary w-full ${
+                      submitting ? "btn-disabled loading" : ""
+                    }`}
+                    type="submit"
+                    disabled={submitting}
                   >
                     Hinzufügen
                   </button>
-                </>
+                </form>
               )}
             </div>
           </div>
