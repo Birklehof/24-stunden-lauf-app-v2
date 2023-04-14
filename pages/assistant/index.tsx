@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Head from "@/components/Head";
 import Loading from "@/components/Loading";
 import useAuth from "@/lib/hooks/useAuth";
@@ -15,6 +15,7 @@ export default function AssistantIndex() {
   const { runners, getRunnerName } = useRunners();
   const { staff } = useStaff();
   const { students } = useStudents();
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -27,18 +28,29 @@ export default function AssistantIndex() {
   }
 
   async function createNewLapHandler() {
-    const number_buffer = number;
-    setNumber(0);
+    if (submitting) {
+      return;
+    }
+
+    setSubmitting(true);
+
     try {
-      await createLap(number_buffer);
+      await createLap(number).then(() => {
+        setNumber(0);
+      });
     } catch (e: any) {
       if (e instanceof Error) {
         alert(e.message);
-        setNumber(number_buffer);
+        setSubmitting(false);
         return;
       }
       throw e;
     }
+
+    setSubmitting(false);
+
+    // Focus input
+    (document.getElementById("number") as HTMLInputElement).focus();
   }
 
   return (
@@ -47,30 +59,47 @@ export default function AssistantIndex() {
       <main className="flex bg-base-200 justify-center h-screen items-center">
         <AssistantMenu />
         <div className="flex flex-row h-1/5 items-center gap-2 lg:w-1/2 justify-around">
-          <div className="card max-w-md shadow-lg bg-base-100 ml-2 lg:p-0">
-            <div className="card-body p-2">
-              <input
-                name={"number"}
-                className={
-                  "font-medium font-serif box-border input input-bordered w-full max-w-xs text-center text-5xl md:text-8xl tracking-widest h-full"
-                }
-                autoFocus
-                onChange={(e) => {
-                  e.preventDefault();
-                  if (!isNaN(+e.target.value)) {
-                    setNumber(+e.target.value);
-                  }
-                }}
-                onKeyDown={async (e) => {
-                  if (e.key === "Enter") {
-                    await createNewLapHandler();
-                  }
-                }}
-                type={"text"}
-                value={Number(number).toString()}
-                min={0}
-                required
-              />
+          <div className="flex flex-col items-center justify-center gap-2">
+            <div className="card max-w-md shadow-lg bg-base-100 ml-2 lg:p-0">
+              <div className="card-body p-2">
+                <input
+                  id="number"
+                  name="number"
+                  className={`font-medium font-serif box-border input input-bordered w-full max-w-xs text-center text-5xl md:text-8xl tracking-widest h-full ${
+                    Object.values(runners).find(
+                      (runner) => runner.number == number
+                    ) != undefined
+                      ? "input-success"
+                      : "input-error"
+                  }`}
+                  autoFocus
+                  onChange={(e) => {
+                    e.preventDefault();
+                    if (submitting) {
+                      return;
+                    }
+                    if (!isNaN(+e.target.value)) {
+                      setNumber(+e.target.value);
+                    }
+                  }}
+                  onKeyDown={async (e) => {
+                    if (submitting) {
+                      return;
+                    }
+                    if (e.key === "Enter") {
+                      await createNewLapHandler();
+                    }
+                  }}
+                  type="text"
+                  value={Number(number).toString()}
+                  min={0}
+                  required
+                />
+              </div>
+            </div>
+            <div className="w-full text-sm text-center">
+              Drücke <kbd className="kbd kbd-sm">Enter</kbd>, um eine Runde zu
+              zählen
             </div>
           </div>
           <div className="flex flex-start h-screen pr-2 lg:px-0 w-1/2 justify-center">

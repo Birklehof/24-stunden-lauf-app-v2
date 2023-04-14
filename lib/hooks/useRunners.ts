@@ -44,13 +44,10 @@ export default function useRunners() {
     if (!name) {
       throw new Error("Invalid name");
     }
-    const new_number = Object.keys(runners).length + 1;
-    const new_runner = { name, number: new_number };
-    const docRef = await addDoc(
-      collection(db, "apps/24-stunden-lauf/runners"),
-      new_runner
-    );
-    return new_number;
+    const number = Object.keys(runners).length + 1;
+    const runner = { name, number };
+    await addDoc(collection(db, "apps/24-stunden-lauf/runners"), runner);
+    return number;
   }
 
   function getRunnerName(runnerId: string): string {

@@ -1,4 +1,4 @@
-import { BaseSyntheticEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "@/components/Head";
 import Loading from "@/components/Loading";
 import useAuth from "@/lib/hooks/useAuth";
@@ -11,7 +11,7 @@ export default function AssistantCreateRunner() {
   const { isLoggedIn, user } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const [number, setNumber] = useState(0);
-  const { runners } = useRunners();
+  const { createRunner } = useRunners();
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -34,16 +34,21 @@ export default function AssistantCreateRunner() {
 
     const formData = new FormData(e.target as HTMLFormElement);
     const name = formData.get("name") as string;
-    const number = Object.keys(runners).length + 1;
-    const new_runner = { name, number };
 
-    await addDoc(collection(db, "apps/24-stunden-lauf/runners"), new_runner)
-      .then(() => {
+    try {
+      await createRunner(name).then((number) => {
         setNumber(number);
-      })
-      .finally(() => {
-        setSubmitting(false);
       });
+    } catch (e: any) {
+      if (e instanceof Error) {
+        alert(e.message);
+        setSubmitting(false);
+        return;
+      }
+      throw e;
+    }
+
+    setSubmitting(false);
   }
 
   return (
