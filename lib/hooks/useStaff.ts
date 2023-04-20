@@ -4,7 +4,7 @@ import { db } from "@/lib/firebase";
 import Staff from "@/lib/interfaces/staff";
 import useAuth from "./useAuth";
 
-export default function useStudents() {
+export default function useStaff() {
   const { isLoggedIn, user } = useAuth();
   const [staff, setStaff] = useState<{ [id: string]: Staff }>({});
 

@@ -14,7 +14,7 @@ import { User } from "@/lib/interfaces/user";
 import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
 
-export default function useUser() {
+export default function useRunner() {
   const { isLoggedIn, user, role } = useAuth();
   const [runner, setRunner] = useState<Runner>();
   const [laps, setLaps] = useState<number>(0);

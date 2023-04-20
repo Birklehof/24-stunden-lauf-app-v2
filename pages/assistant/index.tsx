@@ -7,6 +7,7 @@ import useLaps from "@/lib/hooks/useLaps";
 import useRunners from "@/lib/hooks/useRunners";
 import useStaff from "@/lib/hooks/useStaff";
 import useStudents from "@/lib/hooks/useStudents";
+import Alerts from "@/components/Alerts";
 
 export default function AssistantIndex() {
   const { isLoggedIn, user } = useAuth();

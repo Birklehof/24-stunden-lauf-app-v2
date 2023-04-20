@@ -4,7 +4,7 @@ import { auth, db } from "@/lib/firebase";
 import { User } from "@/lib/interfaces/user";
 import { doc, getDoc } from "firebase/firestore";
 
-function useAuth() {
+export default function useAuth() {
   const [user, setUser] = useState<User>();
   const [role, setRole] = useState<string>("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -51,5 +51,3 @@ function useAuth() {
 
   return { user, role, isLoggedIn, logout };
 }
-
-export default useAuth;
