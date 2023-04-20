@@ -4,8 +4,6 @@ import Loading from "@/components/Loading";
 import useAuth from "@/lib/hooks/useAuth";
 import AssistantMenu from "@/components/AssistantMenu";
 import useRunners from "@/lib/hooks/useRunners";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 
 export default function AssistantCreateRunner() {
   const { isLoggedIn, user } = useAuth();

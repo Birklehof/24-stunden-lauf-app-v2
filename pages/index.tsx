@@ -5,7 +5,7 @@ import router from "next/router";
 import { useEffect } from "react";
 import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
 
-export default function Home() {
+export default function Index() {
   const { isLoggedIn, user, role } = useAuth();
   const { appName } = useRemoteConfig();
 

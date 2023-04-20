@@ -11,7 +11,7 @@ import useStudents from "@/lib/hooks/useStudents";
 import Link from "next/link";
 import Lap from "@/lib/interfaces/lap";
 
-export default function AssistantDeleteRound() {
+export default function AssistantDeleteLaps() {
   const { isLoggedIn, user } = useAuth();
   const { laps, deleteLap } = useLaps();
   const { runners, getRunnerName } = useRunners();
