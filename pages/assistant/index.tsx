@@ -7,6 +7,7 @@ import useLaps from "@/lib/hooks/useLaps";
 import useRunners from "@/lib/hooks/useRunners";
 import useStaff from "@/lib/hooks/useStaff";
 import useStudents from "@/lib/hooks/useStudents";
+import { toast } from "react-toastify";
 
 export default function AssistantIndex() {
   const { isLoggedIn, user } = useAuth();
@@ -34,18 +35,9 @@ export default function AssistantIndex() {
 
     setSubmitting(true);
 
-    try {
-      await createLap(number).then(() => {
-        setNumber(0);
-      });
-    } catch (e: any) {
-      if (e instanceof Error) {
-        alert(e.message);
-        setSubmitting(false);
-        return;
-      }
-      throw e;
-    }
+    await createLap(number).then(() => {
+      setNumber(0);
+    });
 
     setSubmitting(false);
 
@@ -87,7 +79,11 @@ export default function AssistantIndex() {
                       return;
                     }
                     if (e.key === "Enter") {
-                      await createNewLapHandler();
+                      toast.promise(createNewLapHandler, {
+                        pending: "Runde wird hinzugefügt",
+                        success: "Erfolgreich hinzugefügt 👌",
+                        error: "Fehler beim Hinzufügen 🤯",
+                      });
                     }
                   }}
                   type="text"
