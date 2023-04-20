@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "@/components/Head";
 import Loading from "@/components/Loading";
 import useAuth from "@/lib/hooks/useAuth";
@@ -7,7 +7,6 @@ import useLaps from "@/lib/hooks/useLaps";
 import useRunners from "@/lib/hooks/useRunners";
 import useStaff from "@/lib/hooks/useStaff";
 import useStudents from "@/lib/hooks/useStudents";
-import Alerts from "@/components/Alerts";
 
 export default function AssistantIndex() {
   const { isLoggedIn, user } = useAuth();

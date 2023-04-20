@@ -5,13 +5,11 @@ import { deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import Lap from "@/lib/interfaces/lap";
 import useRunners from "./useRunners";
 import useAuth from "./useAuth";
-import useAlerts from "./useAlerts";
 
 export default function useLaps() {
   const { runners } = useRunners();
   const { isLoggedIn, user } = useAuth();
   const [laps, setLaps] = useState<Lap[]>([]);
-  const { addAlert } = useAlerts();
 
   useEffect(() => {
     if (!isLoggedIn || !user) return;
@@ -38,9 +36,7 @@ export default function useLaps() {
 
   async function createLap(runnerNumber: number) {
     if (runnerNumber <= 0) {
-      await addAlert("Invalid runner number");
-      return;
-      // throw new Error("Invalid runner number");
+      throw new Error("Invalid runner number");
     }
 
     const runnerId = Object.values(runners).find(
