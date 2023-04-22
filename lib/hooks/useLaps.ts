@@ -36,7 +36,7 @@ export default function useLaps() {
 
   async function createLap(runnerNumber: number) {
     if (runnerNumber <= 0) {
-      throw new Error("Invalid runner number");
+      throw new Error("Ungültige Startnummer");
     }
 
     const runnerId = Object.values(runners).find(
@@ -44,7 +44,7 @@ export default function useLaps() {
     )?.id;
 
     if (!runnerId) {
-      throw new Error("Runner not found");
+      throw new Error("Kein Läufer mit dieser Startnummer");
     }
 
     // Make api request to /api/createLap
@@ -56,6 +56,24 @@ export default function useLaps() {
       },
       body: JSON.stringify({ runnerId }),
     });
+
+    if (res.status == 200) {
+      return;
+    }
+
+    const body = await res.text();
+
+    if (res.status == 401 || res.status == 403) {
+      throw new Error("Zugriff verweigert");
+    }
+
+    if (res.status == 400) {
+      if (JSON.parse(body).error == "Too many laps") {
+        throw new Error("Letzte Runde ist keine Zwei Minuten her");
+      }
+    }
+
+    throw new Error("Unbekannter Fehler");
   }
 
   async function deleteLap(lapId: string) {

@@ -50,3 +50,7 @@
 .alert > :not([hidden]) ~ :not([hidden]) {
   @apply mt-0;
 }
+
+.leading-zeros {
+  @apply text-base-content opacity-20;
+}

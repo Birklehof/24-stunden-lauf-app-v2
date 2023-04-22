@@ -39,7 +39,7 @@ export default function RunnerIndex() {
                 </div>
                 {runner.number.toString()}
               </h1>
-              <h2 className="text-sm sm:text-xl text-center font-bold text-gray-500">
+              <h2 className="text-sm sm:text-xl text-center font-bold text-base-400 opacity-80">
                 Nr.
               </h2>
             </div>
@@ -51,7 +51,7 @@ export default function RunnerIndex() {
                 </div>
                 {laps}
               </h1>
-              <h2 className="text-sm sm:text-xl text-center font-bold text-gray-500">
+              <h2 className="text-sm sm:text-xl text-center font-bold text-base-400 opacity-80">
                 {laps === 1 ? "Runde" : "Runden"}
               </h2>
             </div>
@@ -63,7 +63,7 @@ export default function RunnerIndex() {
                 </div>
                 {getPosition(runner)}
               </h1>
-              <h2 className="text-sm sm:text-xl text-center font-bold text-gray-500">
+              <h2 className="text-sm sm:text-xl text-center font-bold text-base-400 opacity-80">
                 Platz
               </h2>
             </div>
@@ -78,7 +78,7 @@ export default function RunnerIndex() {
                     : 0
                 )}
               </h1>
-              <h2 className="text-sm sm:text-xl text-center font-bold text-gray-500">
+              <h2 className="text-sm sm:text-xl text-center font-bold text-base-400 opacity-80">
                 km
               </h2>
             </div>

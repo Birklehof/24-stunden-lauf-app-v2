@@ -98,7 +98,7 @@ export default function AssistantCreateRunner() {
                     minLength={3}
                   />
                   <button
-                    className={`btn btn-primary w-full ${
+                    className={`btn btn-primary btn-outline w-full ${
                       submitting ? "btn-disabled loading" : ""
                     }`}
                     type="submit"

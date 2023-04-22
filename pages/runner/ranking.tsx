@@ -140,30 +140,30 @@ export default function RunnerRanking() {
               .map((lapCountWithRunnerId) => {
                 return (
                   <div
-                    className="shadow-md bg-base-100 rounded-xl flex flex-row justify-around items-center h-16 lg:h-16 w-full"
+                    className="alert shadow-md bg-base-100 rounded-box flex flex-row justify-around items-center w-full gap-0"
                     key={lapCountWithRunnerId.runnerId}
                   >
-                    <div className="stat w-[12%] overflow-hidden py-0 px-0 grow">
-                      <div className="stat-value text-center text-2xl lg:text-3xl">
-                        <div className="inline text-base-200">
+                    <div className="w-min pr-2 overflow-hidden py-0 px-0">
+                      <div className="text-center text-xl md:text-2xl font-semibold">
+                        <span className="inline leading-zeros">
                           {"0".repeat(
                             3 -
                               (
                                 getPosition(lapCountWithRunnerId.runnerId) + 1
                               ).toString().length
                           )}
-                        </div>
+                        </span>
                         {(
                           getPosition(lapCountWithRunnerId.runnerId) + 1
                         ).toString()}
                       </div>
                     </div>
-                    <div className="stat w-6/12 py-0 px-0 grow">
-                      <div className="stat-value overflow-hidden text-ellipsis text-2xl lg:text-3xl">
+                    <div className="w-8/12 grow p-0">
+                      <div className="w-full overflow-hidden text-ellipsis text-xl md:text-2xl font-semibold">
                         {getPosition(lapCountWithRunnerId.runnerId) < 3 && (
                           <span
                             aria-label="Erster Platz"
-                            className="inline-block text-sm lg:text-xl -translate-y-1"
+                            className="inline-block text-sm md:text-md -translate-y-1"
                           >
                             {
                               ["🥇", "🥈", "🥉"][
@@ -173,31 +173,31 @@ export default function RunnerRanking() {
                           </span>
                         )}
                         {getRunnerName(lapCountWithRunnerId.runnerId)}{" "}
-                        <span className="inline-block text-xl -translate-y-1">
+                        <span className="inline-block text-sm md:text-lg -translate-y-[0.15rem]">
                           ({runners[lapCountWithRunnerId.runnerId].number})
                         </span>
                       </div>
                     </div>
-                    <div className="stat w-3/12 overflow-hidden py-0 px-0">
+                    <div className="stat w-3/12 overflow-hidden p-0">
                       <div className="flex flex-row justify-around">
                         <div>
-                          <div className="stat-value text-center text-xl lg:text-2xl">
+                          <div className="stat-value text-center text-lg md:text-xl font-semibold">
                             {lapCountWithRunnerId.lapCount
                               .toString()
                               .padStart(3, "0")}
                           </div>
-                          <div className="stat-title text-center text-xs">
+                          <div className="stat-title text-center text-xs -mt-2">
                             Runden
                           </div>
                         </div>
                         <div className="hidden sm:block">
-                          <div className="stat-value text-center text-xl lg:text-2xl">
+                          <div className="stat-value text-center text-lg md:text-xl font-semibold">
                             {(
                               (lapCountWithRunnerId.lapCount * distancePerLap) /
                               1000
                             ).toFixed(2)}
                           </div>
-                          <div className="stat-title text-center text-xs">
+                          <div className="stat-title text-center text-xs -mt-2">
                             km
                           </div>
                         </div>

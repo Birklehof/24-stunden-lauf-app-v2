@@ -8,10 +8,11 @@ import useRunners from "@/lib/hooks/useRunners";
 import useStaff from "@/lib/hooks/useStaff";
 import useStudents from "@/lib/hooks/useStudents";
 import { toast } from "react-toastify";
+import Icon from "@/components/Icon";
 
 export default function AssistantIndex() {
   const { isLoggedIn, user } = useAuth();
-  const { laps, createLap } = useLaps();
+  const { laps, createLap, deleteLap } = useLaps();
   const [number, setNumber] = useState(0);
   const { runners, getRunnerName } = useRunners();
   const { staff } = useStaff();
@@ -35,14 +36,28 @@ export default function AssistantIndex() {
 
     setSubmitting(true);
 
-    await createLap(number).then(() => {
-      setNumber(0);
-    });
+    await createLap(number)
+      .then(() => {
+        setNumber(0);
+      })
+      .finally(() => {
+        setSubmitting(false);
 
-    setSubmitting(false);
+        // Focus input
+        (document.getElementById("number") as HTMLInputElement).focus();
+      });
+  }
 
-    // Focus input
-    (document.getElementById("number") as HTMLInputElement).focus();
+  async function deleteLapHandler(lapId: string) {
+    try {
+      await deleteLap(lapId);
+    } catch (e: any) {
+      if (e instanceof Error) {
+        alert(e.message);
+        return;
+      }
+      throw e;
+    }
   }
 
   return (
@@ -57,7 +72,7 @@ export default function AssistantIndex() {
                 <input
                   id="number"
                   name="number"
-                  className={`font-medium font-serif box-border input input-bordered w-full max-w-xs text-center text-5xl md:text-8xl tracking-widest h-full ${
+                  className={`font-medium font-serif box-border input input-bordered rounded-box w-full max-w-[18rem] text-center text-4xl md:text-7xl tracking-widest h-full ${
                     Object.values(runners).find(
                       (runner) => runner.number == number
                     ) != undefined
@@ -81,8 +96,14 @@ export default function AssistantIndex() {
                     if (e.key === "Enter") {
                       toast.promise(createNewLapHandler, {
                         pending: "Runde wird hinzugefügt",
-                        success: "Erfolgreich hinzugefügt 👌",
-                        error: "Fehler beim Hinzufügen 🤯",
+                        success: "Erfolgreich hinzugefügt",
+                        error: {
+                          render({ data }) {
+                            if (data instanceof Error) {
+                              return data.message;
+                            }
+                          },
+                        },
                       });
                     }
                   }}
@@ -111,21 +132,32 @@ export default function AssistantIndex() {
                 .map((lap) => (
                   <div
                     key={lap.id}
-                    className="alert shadow py-2 px-3 rounded-full bg-base-100"
+                    className="alert !pl-0 shadow rounded-box bg-base-100 text-lg"
                   >
                     <div className="whitespace-nowrap overflow-hidden">
-                      <span className="overflow-hidden text-ellipsis">
-                        {"0".repeat(
-                          3 - runners[lap.runnerId]?.number.toString().length
-                        )}
-                        <span className="font-bold">
-                          {runners[lap.runnerId]?.number}{" "}
-                          <span className="hidden md:inline">
-                            {getRunnerName(lap.runnerId)}
+                      <span className="overflow-hidden text-ellipsis font-semibold">
+                        <span className="px-2">
+                          <span className="leading-zeros">
+                            {"0".repeat(
+                              3 -
+                                runners[lap.runnerId]?.number.toString().length
+                            )}
                           </span>
+                          {runners[lap.runnerId]?.number}
+                        </span>
+
+                        <span className="hidden md:inline">
+                          {getRunnerName(lap.runnerId)}
                         </span>
                       </span>
                     </div>
+                    <button
+                      className="btn btn-outline btn-error btn-square btn-sm text-error hidden md:flex"
+                      aria-label="Runde löschen"
+                      onClick={() => deleteLapHandler(lap.id)}
+                    >
+                      <Icon name="TrashIcon" />
+                    </button>
                   </div>
                 ))}
               <div className="w-full text-sm text-center">

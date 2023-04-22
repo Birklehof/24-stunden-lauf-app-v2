@@ -9,7 +9,7 @@ export default function RunnerMenu() {
           {
             name: "Runde löschen",
             href: "/assistant/delete-lap",
-            icon: "MinusCircleIcon",
+            icon: "ViewListIcon",
           },
           {
             name: "Läufer hinzufügen",

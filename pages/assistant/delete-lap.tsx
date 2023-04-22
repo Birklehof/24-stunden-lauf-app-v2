@@ -96,20 +96,22 @@ export default function AssistantDeleteLaps() {
                 return (
                   <div
                     key={lap.id}
-                    className="alert shadow py-1 rounded-full bg-base-100 flex flex-row justify-between"
+                    className="alert !pl-0 shadow rounded-box bg-base-100 flex flex-row justify-between text-lg"
                   >
                     <div className="whitespace-nowrap overflow-hidden">
-                      <span className="overflow-hidden text-ellipsis">
-                        <span>
-                          {"0".repeat(
-                            3 - runners[lap.runnerId]?.number.toString().length
-                          )}
+                      <span className="overflow-hidden text-ellipsis font-semibold">
+                        <span className="px-2">
+                          <span className="leading-zeros">
+                            {"0".repeat(
+                              3 -
+                                runners[lap.runnerId]?.number.toString().length
+                            )}
+                          </span>
+                          {runners[lap.runnerId]?.number}
                         </span>
-                        <span className="font-bold">
-                          {runners[lap.runnerId]?.number}{" "}
-                          {getRunnerName(lap.runnerId)},{" "}
-                        </span>
-                        <span>
+
+                        {getRunnerName(lap.runnerId)}
+                        <span className="pl-2 font-thin">
                           {lap.timestamp.toDate().getDay() ==
                             new Date().getDay() &&
                           lap.timestamp.toDate().getMonth() ==
@@ -128,7 +130,7 @@ export default function AssistantDeleteLaps() {
                       </span>
                     </div>
                     <button
-                      className="btn btn-ghost btn-circle btn-sm text-error"
+                      className="btn btn-outline btn-error btn-square btn-sm text-error"
                       aria-label="Runde löschen"
                       onClick={() => deleteLapHandler(lap.id)}
                     >

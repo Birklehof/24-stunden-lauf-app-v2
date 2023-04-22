@@ -11,7 +11,7 @@ export default function useAuth() {
 
   useEffect(() => {
     auth.onAuthStateChanged((authenticatedUser) => {
-      console.log(authenticatedUser);
+      // console.log(authenticatedUser);
 
       if (user !== authenticatedUser) {
         setIsLoggedIn(false);
