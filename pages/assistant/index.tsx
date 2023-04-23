@@ -7,8 +7,8 @@ import useLaps from "@/lib/hooks/useLaps";
 import useRunners from "@/lib/hooks/useRunners";
 import useStaff from "@/lib/hooks/useStaff";
 import useStudents from "@/lib/hooks/useStudents";
-import { toast } from "react-toastify";
 import Icon from "@/components/Icon";
+import useToast from "@/lib/hooks/useToast";
 
 export default function AssistantIndex() {
   const { isLoggedIn, user } = useAuth();
@@ -18,6 +18,7 @@ export default function AssistantIndex() {
   const { staff } = useStaff();
   const { students } = useStudents();
   const [submitting, setSubmitting] = useState(false);
+  const { promiseToast } = useToast();
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -94,7 +95,7 @@ export default function AssistantIndex() {
                       return;
                     }
                     if (e.key === "Enter") {
-                      toast.promise(createNewLapHandler, {
+                      promiseToast(createNewLapHandler, {
                         pending: "Runde wird hinzugefügt",
                         success: "Erfolgreich hinzugefügt",
                         error: {

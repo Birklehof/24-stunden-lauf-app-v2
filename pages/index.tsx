@@ -4,7 +4,6 @@ import useAuth from "@/lib/hooks/useAuth";
 import router from "next/router";
 import { useEffect } from "react";
 import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
-import { toast } from "react-toastify";
 
 export default function Index() {
   const { isLoggedIn, user, role } = useAuth();
@@ -20,10 +19,8 @@ export default function Index() {
 
   async function redirect(role: string): Promise<string> {
     if (role === "assistant") {
-      toast.info("👋 Willkommen zurück!");
       return "/assistant";
     } else {
-      toast.info("👋 Willkommen zurück!");
       return "/runner";
     }
   }

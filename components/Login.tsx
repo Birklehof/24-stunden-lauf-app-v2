@@ -6,20 +6,44 @@ import {
   microsoftOAuthProvider,
 } from "@/lib/firebase";
 import useAuth from "@/lib/hooks/useAuth";
+import useToast from "@/lib/hooks/useToast";
 
 export default function Login() {
   const { isLoggedIn } = useAuth();
+  const { promiseToast } = useToast();
 
   const handleRunnerAuth = async () => {
-    signInWithPopup(auth, microsoftOAuthProvider).catch((error) => {
-      console.log(error);
+    promiseToast(signInWithPopup(auth, microsoftOAuthProvider), {
+      pending: "Anmeldung läuft...",
+      success: {
+        render: () => {
+          return "Willkommen zurück!";
+        },
+        icon: "👋",
+        type: "info",
+      },
+      error: "Fehler beim Anmelden!",
     });
+    // signInWithPopup(auth, microsoftOAuthProvider).catch((error) => {
+    //   console.log(error);
+    // });
   };
 
   const handleStaffAuth = async () => {
-    signInWithPopup(auth, githubOAuthProvider).catch((error) => {
-      console.log(error);
+    promiseToast(signInWithPopup(auth, githubOAuthProvider), {
+      pending: "Anmeldung läuft...",
+      success: {
+        render: () => {
+          return "Willkommen zurück!";
+        },
+        icon: "👋",
+        type: "info",
+      },
+      error: "Fehler beim Anmelden!",
     });
+    // signInWithPopup(auth, githubOAuthProvider).catch((error) => {
+    //   console.log(error);
+    // });
   };
 
   return (
@@ -28,7 +52,7 @@ export default function Login() {
         className={`btn btn-outline btn-primary w-full ${
           isLoggedIn ? "btn-disabled loading" : ""
         }`}
-        onClick={() => handleRunnerAuth()}
+        onClick={handleRunnerAuth}
         disabled={isLoggedIn}
       >
         Läufer
@@ -40,7 +64,7 @@ export default function Login() {
         className={`btn btn-outline btn-primary w-full ${
           isLoggedIn ? "btn-disabled loading" : ""
         }`}
-        onClick={() => handleStaffAuth()}
+        onClick={handleStaffAuth}
         disabled={isLoggedIn}
       >
         Assistent

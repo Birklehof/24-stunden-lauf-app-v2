@@ -54,3 +54,7 @@
 .leading-zeros {
   @apply text-base-content opacity-20;
 }
+
+:root {
+  --toastify-color-dark: #303236 !important;
+}
