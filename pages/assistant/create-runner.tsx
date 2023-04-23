@@ -4,12 +4,14 @@ import Loading from "@/components/Loading";
 import useAuth from "@/lib/hooks/useAuth";
 import AssistantMenu from "@/components/AssistantMenu";
 import useRunners from "@/lib/hooks/useRunners";
+import useToast from "@/lib/hooks/useToast";
 
 export default function AssistantCreateRunner() {
   const { isLoggedIn, user } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const [number, setNumber] = useState(0);
   const { createRunner } = useRunners();
+  const { promiseToast } = useToast();
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -33,20 +35,24 @@ export default function AssistantCreateRunner() {
     const formData = new FormData(e.target as HTMLFormElement);
     const name = formData.get("name") as string;
 
-    try {
-      await createRunner(name).then((number) => {
+    promiseToast(createRunner(name), {
+      pending: "Läufer wird erstellt...",
+      success: "Läufer wurde erstellt!",
+      error: {
+        render: (error) => {
+          if (error instanceof Error) {
+            return error.message;
+          }
+          return "Unbekannter Fehler";
+        },
+      },
+    })
+      .then((number) => {
         setNumber(number);
-      });
-    } catch (e: any) {
-      if (e instanceof Error) {
-        alert(e.message);
+      })
+      .finally(() => {
         setSubmitting(false);
-        return;
-      }
-      throw e;
-    }
-
-    setSubmitting(false);
+      });
   }
 
   return (

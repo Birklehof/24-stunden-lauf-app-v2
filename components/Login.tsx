@@ -19,7 +19,7 @@ export default function Login() {
         render: () => {
           return "Willkommen zurück!";
         },
-        icon: "👋",
+        icon: "👋", // TODO check if this still works
         type: "info",
       },
       error: "Fehler beim Anmelden!",
@@ -36,7 +36,7 @@ export default function Login() {
         render: () => {
           return "Willkommen zurück!";
         },
-        icon: "👋",
+        icon: "👋", // TODO check if this still works
         type: "info",
       },
       error: "Fehler beim Anmelden!",

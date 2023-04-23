@@ -9,12 +9,20 @@ export default function useToast() {
     { pending, error, success }: ToastPromiseParams<any, unknown, unknown>,
     options?: ToastOptions<{}> | undefined
   ) {
-    toast.promise(
+    return toast.promise(
       promise,
       {
         pending,
-        success,
-        error,
+        success: {
+          // @ts-ignore
+          ...success,
+          icon: "✅", // Maybe not a good idea
+        },
+        error: {
+          // @ts-ignore
+          ...error,
+          icon: "🔥",
+        },
       },
       {
         ...options,
