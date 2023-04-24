@@ -1,5 +1,6 @@
 import { ToastOptions, ToastPromiseParams, toast } from "react-toastify";
 import useTheme from "./useTheme";
+import { useEffect } from "react";
 
 export default function useToast() {
   const { theme } = useTheme();
@@ -13,20 +14,12 @@ export default function useToast() {
       promise,
       {
         pending,
-        success: {
-          // @ts-ignore
-          ...success,
-          icon: "✅", // Maybe not a good idea
-        },
-        error: {
-          // @ts-ignore
-          ...error,
-          icon: "🔥",
-        },
+        success,
+        error,
       },
       {
         ...options,
-        theme: theme === "light" ? "light" : "dark",
+        theme: theme === "dark" ? "dark" : "light",
       }
     );
   }

@@ -24,9 +24,6 @@ export default function Login() {
       },
       error: "Fehler beim Anmelden!",
     });
-    // signInWithPopup(auth, microsoftOAuthProvider).catch((error) => {
-    //   console.log(error);
-    // });
   };
 
   const handleStaffAuth = async () => {
@@ -41,9 +38,6 @@ export default function Login() {
       },
       error: "Fehler beim Anmelden!",
     });
-    // signInWithPopup(auth, githubOAuthProvider).catch((error) => {
-    //   console.log(error);
-    // });
   };
 
   return (

@@ -11,8 +11,8 @@ module.exports = {
     themes: [
       {
         mytheme: {
-          primary: "#0275d8",
-          secondary: "#e4f1de",
+          primary: "#A5C12A",
+          secondary: "#ff0000",
           accent: "#d9e5ec",
           neutral: "#ffffff",
           "base-100": "#FFFFFF",
@@ -33,8 +33,8 @@ module.exports = {
           "--tab-radius": "0.5rem", // border radius of tabs
         },
         dark: {
-          primary: "#0275d8",
-          secondary: "#e4f1de",
+          primary: "#A5C12A",
+          secondary: "#ff0000",
           accent: "#d9e5ec",
           neutral: "#303236",
           "base-100": "#303236",
