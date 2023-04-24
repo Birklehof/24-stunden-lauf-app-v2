@@ -7,10 +7,7 @@ import {
   onSnapshot,
 } from "@firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Runner } from "@/lib/interfaces/runner";
-import Staff from "@/lib/interfaces/staff";
-import { Student } from "@/lib/interfaces/student";
-import { User } from "@/lib/interfaces/user";
+import { User, Student, Runner, Staff } from "@/lib/interfaces";
 import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
 

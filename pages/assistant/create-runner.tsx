@@ -3,15 +3,21 @@ import Head from "@/components/Head";
 import Loading from "@/components/Loading";
 import useAuth from "@/lib/hooks/useAuth";
 import AssistantMenu from "@/components/AssistantMenu";
-import useRunners from "@/lib/hooks/useRunners";
 import useToast from "@/lib/hooks/useToast";
+import { createRunner } from "@/lib/firebaseUtils";
+import useCollectionAsDict from "@/lib/hooks/useCollectionAsDict";
+import { Runner } from "@/lib/interfaces";
 
 export default function AssistantCreateRunner() {
+  const [runners, runnersLoading, runnersError] = useCollectionAsDict<Runner>(
+    "apps/24-stunden-lauf/runners"
+  );
+
   const { isLoggedIn, user } = useAuth();
+  const { promiseToast } = useToast();
+
   const [submitting, setSubmitting] = useState(false);
   const [number, setNumber] = useState(0);
-  const { createRunner } = useRunners();
-  const { promiseToast } = useToast();
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -35,7 +41,7 @@ export default function AssistantCreateRunner() {
     const formData = new FormData(e.target as HTMLFormElement);
     const name = formData.get("name") as string;
 
-    promiseToast(createRunner(name), {
+    promiseToast(createRunner(name, runners), {
       pending: "Läufer wird erstellt...",
       success: "Läufer wurde erstellt!",
       error: {

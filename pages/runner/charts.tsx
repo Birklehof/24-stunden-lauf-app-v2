@@ -1,5 +1,5 @@
 import useAuth from "@/lib/hooks/useAuth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Loading from "@/components/Loading";
 import Head from "@/components/Head";
 import RunnerMenu from "@/components/RunnerMenu";
@@ -16,13 +16,16 @@ import {
   Legend,
   Filler,
 } from "chart.js";
-import useLaps from "@/lib/hooks/useLaps";
 import Lap from "@/lib/interfaces/lap";
+import useCollectionAsList from "@/lib/hooks/useCollectionAsList";
 
 export default function RunnerGraphs() {
+  const [laps, lapsLoading, lapsError] = useCollectionAsList<Lap>(
+    "apps/24-stunden-lauf/laps"
+  );
+
   const { isLoggedIn, user } = useAuth();
   const { runner } = useRunner();
-  const { laps } = useLaps();
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -30,7 +33,7 @@ export default function RunnerGraphs() {
     }
   }, [isLoggedIn]);
 
-  if (!user || !runner || !laps) {
+  if (!user || !runner || lapsLoading) {
     return <Loading />;
   }
 
@@ -93,7 +96,7 @@ export default function RunnerGraphs() {
   };
 
   const sortedGroupedLapsPersonal = groupLapsByHour(
-    laps.filter((lap) => lap.runnerId === runner.id)
+    laps.filter((lap: Lap) => lap.runnerId === runner.id)
   );
 
   let dataPersonal = {

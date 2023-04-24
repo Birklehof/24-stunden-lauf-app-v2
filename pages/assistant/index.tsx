@@ -3,22 +3,30 @@ import Head from "@/components/Head";
 import Loading from "@/components/Loading";
 import useAuth from "@/lib/hooks/useAuth";
 import AssistantMenu from "@/components/AssistantMenu";
-import useLaps from "@/lib/hooks/useLaps";
-import useRunners from "@/lib/hooks/useRunners";
-import useStaff from "@/lib/hooks/useStaff";
-import useStudents from "@/lib/hooks/useStudents";
 import Icon from "@/components/Icon";
 import useToast from "@/lib/hooks/useToast";
+import useCollectionAsList from "@/lib/hooks/useCollectionAsList";
+import useCollectionAsDict from "@/lib/hooks/useCollectionAsDict";
+import { Runner, Student, Lap, Staff } from "@/lib/interfaces";
+import { getRunnerName } from "@/lib/utils";
+import { createLap, deleteLap } from "@/lib/firebaseUtils";
 
 export default function AssistantIndex() {
+  const [laps, lapsLoading, lapsError] = useCollectionAsList<Lap>(
+    "apps/24-stunden-lauf/laps"
+  );
+  const [runners, runnersLoading, runnersError] = useCollectionAsDict<Runner>(
+    "apps/24-stunden-lauf/runners"
+  );
+  const [students, studentsLoading, studentsError] =
+    useCollectionAsDict<Student>("students");
+  const [staff, staffLoading, staffError] = useCollectionAsDict<Staff>("staff");
+
   const { isLoggedIn, user } = useAuth();
-  const { laps, createLap, deleteLap } = useLaps();
-  const [number, setNumber] = useState(0);
-  const { runners, getRunnerName } = useRunners();
-  const { staff } = useStaff();
-  const { students } = useStudents();
-  const [submitting, setSubmitting] = useState(false);
   const { promiseToast } = useToast();
+
+  const [number, setNumber] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -26,7 +34,7 @@ export default function AssistantIndex() {
     }
   }, [isLoggedIn]);
 
-  if (!user || !laps || !runners || !staff || !students) {
+  if (!user || lapsLoading || runnersLoading) {
     return <Loading />;
   }
 
@@ -37,7 +45,7 @@ export default function AssistantIndex() {
 
     setSubmitting(true);
 
-    await createLap(number)
+    await createLap(number, runners, user)
       .then(() => {
         setNumber(0);
       })
@@ -148,7 +156,12 @@ export default function AssistantIndex() {
                         </span>
 
                         <span className="hidden md:inline">
-                          {getRunnerName(lap.runnerId)}
+                          {getRunnerName(
+                            lap.runnerId,
+                            runners,
+                            students,
+                            staff
+                          )}
                         </span>
                       </span>
                     </div>

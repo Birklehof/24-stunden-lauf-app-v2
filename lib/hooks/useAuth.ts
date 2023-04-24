@@ -1,7 +1,7 @@
 import router from "next/router";
 import { useEffect, useState } from "react";
 import { auth, db } from "@/lib/firebase";
-import { User } from "@/lib/interfaces/user";
+import { User } from "@/lib/interfaces";
 import { doc, getDoc } from "firebase/firestore";
 
 export default function useAuth() {

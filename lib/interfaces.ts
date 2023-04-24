@@ -1,3 +1,11 @@
+import { Timestamp } from "firebase/firestore";
+
+export interface Lap {
+  id: string;
+  runnerId: string;
+  timestamp: Timestamp;
+}
+
 /**
  * @interface Runner
  * @property {string} id - unique ID (document ID in Firestore), automatically assigned by Firestore
@@ -6,11 +14,35 @@
  * @property {string} studentId - student ID of the runner, only for students, needed for further processing of the results, imported or manually entered
  * @property {string} staffId - staff ID of the runner, only for staff (teachers and others), needed for further processing of the results, imported or manually entered
  */
-
 export interface Runner {
   id: string;
   number: number;
   name: string;
   studentId?: string;
   staffId?: string;
+}
+
+export interface Staff {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface Student {
+  id: string;
+  number: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  house: string;
+  class: string;
+}
+
+export interface User {
+  photoURL?: string;
+  displayName?: string;
+  uid: string;
+  email: string;
+  accessToken?: string;
 }
