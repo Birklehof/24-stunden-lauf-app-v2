@@ -1,5 +1,5 @@
 import useAuth from "@/lib/hooks/useAuth";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Loading from "@/components/Loading";
 import Head from "@/components/Head";
 import RunnerMenu from "@/components/RunnerMenu";
@@ -16,7 +16,7 @@ import {
   Legend,
   Filler,
 } from "chart.js";
-import Lap from "@/lib/interfaces/lap";
+import { Lap } from "@/lib/interfaces";
 import useCollectionAsList from "@/lib/hooks/useCollectionAsList";
 
 export default function RunnerGraphs() {
@@ -163,7 +163,6 @@ export default function RunnerGraphs() {
     <>
       <Head title="Läufer Details" />
       <main className="hero flex flex-col min-h-screen bg-base-200 justify-center">
-        <RunnerMenu />
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body">
             <div className="flex flex-row gap-6">

@@ -29,7 +29,6 @@ export default function RunnerIndex() {
       <Head title="Läufer" />
       <main className="hero min-h-screen bg-base-200">
         <NewLapOverlay />
-        <RunnerMenu />
         <div className="flex w-full justify-center pb-20 lg:pb-0">
           <div className="flex flex-col lg:flex-row lg:justify-evenly lg:w-1/2">
             <div>

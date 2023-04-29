@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Head from "@/components/Head";
 import Loading from "@/components/Loading";
 import useAuth from "@/lib/hooks/useAuth";
-import AssistantMenu from "@/components/AssistantMenu";
 import Icon from "@/components/Icon";
 import Link from "next/link";
 import useCollectionAsList from "@/lib/hooks/useCollectionAsList";
@@ -11,7 +10,7 @@ import { Runner, Student, Lap, Staff } from "@/lib/interfaces";
 import { getRunnerName } from "@/lib/utils";
 import { deleteLap } from "@/lib/firebaseUtils";
 
-export default function AssistantDeleteLaps() {
+export default function AssistantViewLaps() {
   const [laps, lapsLoading, lapsError] = useCollectionAsList<Lap>(
     "apps/24-stunden-lauf/laps"
   );
@@ -75,9 +74,6 @@ export default function AssistantDeleteLaps() {
     <>
       <Head title="Assistent" />
       <main className="flex bg-base-200 justify-center h-screen items-center">
-        <div className="hidden lg:flex">
-          <AssistantMenu />
-        </div>
         <div className="flex gap-3 flex-col h-screen justify-center items-center lg:items-start w-full lg:w-[42rem]">
           <div className="searchbox">
             <div className="inputElementsContainer">

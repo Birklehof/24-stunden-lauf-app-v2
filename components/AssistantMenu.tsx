@@ -8,7 +8,7 @@ export default function RunnerMenu() {
           { name: "Runde zählen", href: "/assistant", icon: "PlusCircleIcon" },
           {
             name: "Runde löschen",
-            href: "/assistant/delete-lap",
+            href: "/assistant/view-laps",
             icon: "ViewListIcon",
           },
           {

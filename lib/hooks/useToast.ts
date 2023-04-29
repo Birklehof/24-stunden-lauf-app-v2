@@ -15,7 +15,10 @@ export default function useToast() {
       },
       {
         ...options,
-        theme: localStorage.getItem("theme") === "dark" ? "dark" : "light",
+        theme:
+          localStorage.getItem("usehooks-ts-dark-mode") === "dark"
+            ? "dark"
+            : "light",
       }
     );
   }

@@ -87,9 +87,6 @@ export default function RunnerRanking() {
     <>
       <Head title="Läufer" />
       <main className="flex bg-base-200 justify-center min-h-screen">
-        <div className="hidden lg:flex">
-          <RunnerMenu />
-        </div>
         <div className="flex gap-3 flex-col h-screen justify-center items-center lg:items-start w-full lg:w-[42rem]">
           <div className="searchbox">
             <div className="inputElementsContainer">
