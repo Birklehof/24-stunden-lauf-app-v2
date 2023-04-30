@@ -176,7 +176,7 @@ export default function RunnerGraphs() {
     <>
       <Head title="Läufer Details" />
       <main className="main">
-        <div className="verticalList">
+        <div className="vertical-list">
           <div className="large-card">
             <div className="card-body">
               <div className="flex flex-wrap items-center justify-evenly">

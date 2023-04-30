@@ -1,6 +1,7 @@
 import { Runner, Student, Staff } from "@/lib/interfaces";
+import { ToastOptions, ToastPromiseParams, toast } from "react-toastify";
 
-function getRunnerName(
+export function getRunnerName(
   runnerId: string,
   runners: { [id: string]: Runner },
   students: { [id: string]: Student },
@@ -29,4 +30,24 @@ function getRunnerName(
   return "Unbekannt";
 }
 
-export { getRunnerName };
+export function themedPromiseToast(
+  promise: Promise<any> | (() => Promise<any>),
+  { pending, error, success }: ToastPromiseParams<any, unknown, unknown>,
+  options?: ToastOptions<{}> | undefined
+) {
+  return toast.promise(
+    promise,
+    {
+      pending,
+      success,
+      error,
+    },
+    {
+      ...options,
+      theme:
+        localStorage.getItem("usehooks-ts-dark-mode") === "dark"
+          ? "dark"
+          : "light",
+    }
+  );
+}

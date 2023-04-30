@@ -6,20 +6,19 @@ import {
   microsoftOAuthProvider,
 } from "@/lib/firebase";
 import useAuth from "@/lib/hooks/useAuth";
-import useToast from "@/lib/hooks/useToast";
+import { themedPromiseToast } from "@/lib/utils";
 
 export default function Login() {
   const { isLoggedIn } = useAuth();
-  const { promiseToast } = useToast();
 
   const handleRunnerAuth = async () => {
-    promiseToast(signInWithPopup(auth, microsoftOAuthProvider), {
+    themedPromiseToast(signInWithPopup(auth, microsoftOAuthProvider), {
       pending: "Anmeldung läuft...",
       success: {
         render: () => {
           return "Willkommen zurück!";
         },
-        icon: "👋", // TODO check if this still works
+        icon: "👋",
         type: "info",
       },
       error: "Fehler beim Anmelden!",
@@ -27,13 +26,13 @@ export default function Login() {
   };
 
   const handleStaffAuth = async () => {
-    promiseToast(signInWithPopup(auth, githubOAuthProvider), {
+    themedPromiseToast(signInWithPopup(auth, githubOAuthProvider), {
       pending: "Anmeldung läuft...",
       success: {
         render: () => {
           return "Willkommen zurück!";
         },
-        icon: "👋", // TODO check if this still works
+        icon: "👋",
         type: "info",
       },
       error: "Fehler beim Anmelden!",

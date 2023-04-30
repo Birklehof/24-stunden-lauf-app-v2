@@ -88,7 +88,7 @@ export default function RunnerRanking() {
       <Head title="Läufer" />
       <main className="main">
         <div className="searchbox">
-          <div className="inputElementsContainer">
+          <div className="input-elements-container">
             <div className="btn btn-circle btn-ghost btn-sm lg:hidden">
               <Link href={"/runner"} aria-label="Home">
                 <Icon name="HomeIcon" />
@@ -136,7 +136,7 @@ export default function RunnerRanking() {
             </div>
           </div>
         </div>
-        <div className="verticalList !pt-20">
+        <div className="vertical-list !pt-20">
           {lapCountByRunnerId
             .filter((lapCountWithRunnerId) => {
               return (

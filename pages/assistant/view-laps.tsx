@@ -75,7 +75,7 @@ export default function AssistantViewLaps() {
       <Head title="Assistent" />
       <main className="main">
         <div className="searchbox">
-          <div className="inputElementsContainer">
+          <div className="input-elements-container">
             <input
               type="text"
               placeholder="Suchen..."
@@ -83,7 +83,7 @@ export default function AssistantViewLaps() {
             />
           </div>
         </div>
-        <div className="verticalList !pt-20 !gap-2">
+        <div className="vertical-list !pt-20 !gap-2">
           {laps
             .sort((a, b) => {
               return (
@@ -96,40 +96,38 @@ export default function AssistantViewLaps() {
             })
             .map((lap) => {
               return (
-                <div
-                  key={lap.id}
-                  className="alert max-w-xl shadow-md !pl-0 rounded-box bg-base-100 flex flex-row justify-between text-lg"
-                >
-                  <div className="whitespace-nowrap overflow-hidden">
+                <div key={lap.id} className="list-item">
+                  <span className="leading-zeros font-semibold">
+                    {"0".repeat(
+                      3 - runners[lap.runnerId]?.number.toString().length
+                    )}
+                  </span>
+                  <span className="pr-3 font-semibold">
+                    {runners[lap.runnerId]?.number}
+                  </span>
+                  <span className="whitespace-nowrap overflow-hidden pr-1">
                     <span className="overflow-hidden text-ellipsis font-semibold">
-                      <span className="px-2">
-                        <span className="leading-zeros">
-                          {"0".repeat(
-                            3 - runners[lap.runnerId]?.number.toString().length
-                          )}
-                        </span>
-                        {runners[lap.runnerId]?.number}
-                      </span>
-
                       {getRunnerName(lap.runnerId, runners, students, staff)}
-                      <span className="pl-2 font-thin">
-                        {lap.timestamp.toDate().getDay() ==
-                          new Date().getDay() &&
-                        lap.timestamp.toDate().getMonth() ==
-                          new Date().getMonth() &&
-                        lap.timestamp.toDate().getFullYear() ==
-                          new Date().getFullYear()
-                          ? "heute"
-                          : "am " +
-                            lap.timestamp
-                              .toDate()
-                              .toLocaleDateString("de-DE")}{" "}
-                        {lap.timestamp.toDate().getHours().toString() +
-                          ":" +
-                          lap.timestamp.toDate().getMinutes().toString()}{" "}
-                      </span>
                     </span>
-                  </div>
+                  </span>
+                  <span className="whitespace-nowrap overflow-hidden">
+                    <span className="overflow-hidden text-ellipsis">
+                      {lap.timestamp.toDate().getDay() == new Date().getDay() &&
+                      lap.timestamp.toDate().getMonth() ==
+                        new Date().getMonth() &&
+                      lap.timestamp.toDate().getFullYear() ==
+                        new Date().getFullYear()
+                        ? "heute"
+                        : "am " +
+                          lap.timestamp
+                            .toDate()
+                            .toLocaleDateString("de-DE")}{" "}
+                      {lap.timestamp.toDate().getHours().toString() +
+                        ":" +
+                        lap.timestamp.toDate().getMinutes().toString()}
+                    </span>
+                  </span>
+                  <div className="spacer" />
                   <button
                     className="btn btn-outline btn-error btn-square btn-sm text-error"
                     aria-label="Runde löschen"
