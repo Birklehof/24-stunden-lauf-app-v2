@@ -34,7 +34,7 @@ export default function Index() {
             <h1 className="text-5xl text-right font-bold">{appName}</h1>
           </div>
           <div className="w-full max-w-sm lg:max-w-md">
-            <div className="card w-full shadow-2xl bg-base-100">
+            <div className="card w-full shadow-xl bg-base-100">
               <div className="card-body">
                 <h1 className="text-xl text-center font-bold mb-3 lg:hidden">
                   {appName}

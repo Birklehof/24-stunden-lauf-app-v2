@@ -27,12 +27,24 @@
   background: #555;
 }
 
+.main {
+  @apply flex flex-col justify-center items-center bg-base-200 h-screen px-2;
+}
+
+.small-card {
+  @apply card w-full max-w-sm shadow-xl bg-base-100 mx-2;
+}
+
+.large-card {
+  @apply card w-full max-w-xl shadow-xl bg-base-100;
+}
+
 .verticalList {
-  @apply flex flex-col items-start overflow-y-auto h-screen px-2 lg:px-0 w-full pt-3 pb-3 gap-3;
+  @apply flex items-center flex-col overflow-y-auto h-screen w-full pt-2 pb-2 gap-2;
 }
 
 .searchbox {
-  @apply menu menu-horizontal bg-base-100 p-2 rounded-full z-40 lg:block top-3 shadow-2xl absolute w-[calc(100%-1rem)] lg:w-[42rem];
+  @apply menu menu-horizontal bg-base-100 p-2 rounded-full z-40 top-4 shadow-xl absolute w-[calc(100%-1rem)] max-w-xl;
 }
 
 .inputElementsContainer {

@@ -17,7 +17,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   return (
     <>
       <button
-        className="btn btn-square btn-ghost absolute top-3 left-3"
+        className="hidden md:flex btn btn-square btn-ghost absolute top-3 left-3"
         onClick={toggle}
       >
         {isDarkMode ? <Icon name="MoonIcon" /> : <Icon name="SunIcon" />}

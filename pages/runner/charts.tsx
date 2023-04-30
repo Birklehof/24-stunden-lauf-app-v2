@@ -2,7 +2,6 @@ import useAuth from "@/lib/hooks/useAuth";
 import { useEffect } from "react";
 import Loading from "@/components/Loading";
 import Head from "@/components/Head";
-import RunnerMenu from "@/components/RunnerMenu";
 import useRunner from "@/lib/hooks/useRunner";
 import { Line } from "react-chartjs-2";
 import {
@@ -18,14 +17,22 @@ import {
 } from "chart.js";
 import { Lap } from "@/lib/interfaces";
 import useCollectionAsList from "@/lib/hooks/useCollectionAsList";
+import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
+import useCollectionCount from "@/lib/hooks/useCollectionCount";
 
 export default function RunnerGraphs() {
   const [laps, lapsLoading, lapsError] = useCollectionAsList<Lap>(
     "apps/24-stunden-lauf/laps"
   );
+  const [runnerCount, runnerCountLoading, runnerCountError] =
+    useCollectionCount("apps/24-stunden-lauf/runners");
+  const [lapsCount, lapsCountLoading, lapsCountError] = useCollectionCount(
+    "apps/24-stunden-lauf/laps"
+  );
 
   const { isLoggedIn, user } = useAuth();
   const { runner } = useRunner();
+  const { classes, houses, distancePerLap } = useRemoteConfig();
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -33,7 +40,13 @@ export default function RunnerGraphs() {
     }
   }, [isLoggedIn]);
 
-  if (!user || !runner || lapsLoading) {
+  if (
+    !user ||
+    !runner ||
+    lapsLoading ||
+    runnerCountLoading ||
+    lapsCountLoading
+  ) {
     return <Loading />;
   }
 
@@ -162,21 +175,93 @@ export default function RunnerGraphs() {
   return (
     <>
       <Head title="Läufer Details" />
-      <main className="hero flex flex-col min-h-screen bg-base-200 justify-center">
-        <div className="card bg-base-100 shadow-xl">
-          <div className="card-body">
-            <div className="flex flex-row gap-6">
-              <div>
-                <h2 className="card-title">Runden pro Stunde (alle)</h2>
-                <Line data={dataAll} options={options} />
-              </div>
-              <div>
-                <h2 className="card-title">Runden pro Stunde (persönlich)</h2>
-                <Line data={dataPersonal} options={options} />
+      <main className="main">
+        <div className="verticalList">
+          <div className="large-card">
+            <div className="card-body">
+              <div className="flex flex-wrap items-center justify-evenly">
+                <div className="stat text-center w-full md:w-1/3">
+                  <div className="stat-value">{runnerCount}</div>
+                  <div className="stat-desc">Teilnehmer</div>
+                </div>
+                <div className="stat text-center w-full md:w-1/3">
+                  <div className="stat-value">{lapsCount}</div>
+                  <div className="stat-desc">Runden gesamt</div>
+                </div>
+                <div className="stat text-center w-full md:w-1/3">
+                  <div className="stat-value">
+                    {Math.floor(lapsCount / runnerCount)}
+                  </div>
+                  <div className="stat-desc">Runden pro Teilnehmer</div>
+                </div>
+                <div className="stat text-center w-full md:w-1/2">
+                  <div className="stat-value">
+                    {(
+                      ((lapsCount / runnerCount) * distancePerLap) /
+                      1000
+                    ).toFixed(2)}{" "}
+                    km
+                  </div>
+                  <div className="stat-desc">Strecke pro Teilnehmer</div>
+                </div>
+                <div className="stat text-center w-full md:w-1/2">
+                  <div className="stat-value">
+                    {((lapsCount * distancePerLap) / 1000).toFixed(2)} km
+                  </div>
+                  <div className="stat-desc">Gesamtstrecke</div>
+                </div>
               </div>
             </div>
           </div>
+          <div className="large-card">
+            <div className="card-body">
+              <h2 className="card-title">Persönlicher Fortschritt</h2>
+              <progress
+                className="progress progress-primary w-full bg-base-200 h-5 shadow-inner rounded-full"
+                value="40"
+                max="100"
+              ></progress>
+            </div>
+          </div>
+          <div className="large-card">
+            <div className="card-body">
+              <h2 className="card-title">Runden pro Stunde (alle)</h2>
+              <Line data={dataAll} options={options} />
+            </div>
+          </div>
+          <div className="large-card">
+            <div className="card-body">
+              <h2 className="card-title">Runden pro Stunde (persönlich)</h2>
+              <Line data={dataPersonal} options={options} />
+            </div>
+          </div>
         </div>
+
+        {/* <div className="flex flex-col items-start overflow-y-auto h-screen px-2 lg:px-0 pt-2 pb-2 gap-2">
+          <div className="card bg-base-100 shadow-xl w-full">
+            <div className="card-body">
+              <h2 className="card-title">Persönlicher Fortschritt</h2>
+              <progress
+                className="progress progress-primary w-full bg-base-200 h-5 shadow-inner rounded-full"
+                value="40"
+                max="100"
+              ></progress>
+            </div>
+          </div>
+
+          <div className="card bg-base-100 shadow-xl w-full">
+            <div className="card-body">
+              <h2 className="card-title">Runden pro Stunde (alle)</h2>
+              <Line data={dataAll} options={options} />
+            </div>
+          </div>
+          <div className="card bg-base-100 shadow-xl w-full">
+            <div className="card-body">
+              <h2 className="card-title">Runden pro Stunde (persönlich)</h2>
+              <Line data={dataPersonal} options={options} />
+            </div>
+          </div>
+        </div> */}
       </main>
     </>
   );

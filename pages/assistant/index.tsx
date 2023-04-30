@@ -72,10 +72,10 @@ export default function AssistantIndex() {
   return (
     <>
       <Head title="Assistent" />
-      <main className="flex bg-base-200 justify-center h-screen items-center">
+      <main className="main">
         <div className="flex flex-row h-1/5 items-center gap-2 lg:w-1/2 justify-around">
           <div className="flex flex-col items-center justify-center gap-2">
-            <div className="card max-w-md shadow-lg bg-base-100 ml-2 lg:p-0">
+            <div className="card max-w-md shadow-xl bg-base-100 ml-2 lg:p-0">
               <div className="card-body p-2">
                 <input
                   id="number"

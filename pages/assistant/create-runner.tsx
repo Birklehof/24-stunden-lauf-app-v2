@@ -64,62 +64,60 @@ export default function AssistantCreateRunner() {
   return (
     <>
       <Head title="Assistent" />
-      <main className="flex bg-base-200 justify-center h-screen items-center">
-        <div className="flex flex-row h-1/5 items-center gap-2 lg:w-1/2 justify-around">
-          <div className="card max-w-sm w-full shadow-lg bg-base-100 mx-2">
-            <div className="card-body gap-3">
-              {number != 0 ? (
-                <>
-                  <h1 className="text-center font-bold text-xl">
-                    Läufer erstellt
-                  </h1>
-                  <input
-                    name={"text"}
-                    className="input input-bordered w-full max-w-xs input-disabled"
-                    readOnly={true}
-                    type={"text"}
-                    value={"Startnummer: " + number}
-                    required
-                  />
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => {
-                      setNumber(0);
-                    }}
-                  >
-                    Okay!
-                  </button>
-                </>
-              ) : (
-                <form
-                  onSubmit={createRunnerHandler}
-                  className="flex flex-col gap-3"
+      <main className="main">
+        <div className="small-card">
+          <div className="card-body gap-3">
+            {number != 0 ? (
+              <>
+                <h1 className="text-center font-bold text-xl">
+                  Läufer erstellt
+                </h1>
+                <input
+                  name={"text"}
+                  className="input input-bordered w-full max-w-xs input-disabled"
+                  readOnly={true}
+                  type={"text"}
+                  value={"Startnummer: " + number}
+                  required
+                />
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setNumber(0);
+                  }}
                 >
-                  <h1 className="text-center font-bold text-xl">
-                    Läufer hinzufügen
-                  </h1>
-                  <input
-                    id="name"
-                    name="name"
-                    className="input input-bordered w-full max-w-xs"
-                    placeholder="Name"
-                    autoFocus
-                    type="text"
-                    required
-                    minLength={3}
-                  />
-                  <button
-                    className={`btn btn-primary btn-outline w-full ${
-                      submitting ? "btn-disabled loading" : ""
-                    }`}
-                    type="submit"
-                    disabled={submitting}
-                  >
-                    Hinzufügen
-                  </button>
-                </form>
-              )}
-            </div>
+                  Okay!
+                </button>
+              </>
+            ) : (
+              <form
+                onSubmit={createRunnerHandler}
+                className="flex flex-col gap-3"
+              >
+                <h1 className="text-center font-bold text-xl">
+                  Läufer hinzufügen
+                </h1>
+                <input
+                  id="name"
+                  name="name"
+                  className="input input-bordered w-full max-w-xs"
+                  placeholder="Name"
+                  autoFocus
+                  type="text"
+                  required
+                  minLength={3}
+                />
+                <button
+                  className={`btn btn-primary btn-outline w-full ${
+                    submitting ? "btn-disabled loading" : ""
+                  }`}
+                  type="submit"
+                  disabled={submitting}
+                >
+                  Hinzufügen
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </main>

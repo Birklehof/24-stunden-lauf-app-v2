@@ -73,81 +73,73 @@ export default function AssistantViewLaps() {
   return (
     <>
       <Head title="Assistent" />
-      <main className="flex bg-base-200 justify-center h-screen items-center">
-        <div className="flex gap-3 flex-col h-screen justify-center items-center lg:items-start w-full lg:w-[42rem]">
-          <div className="searchbox">
-            <div className="inputElementsContainer">
-              <div className="btn btn-circle btn-ghost btn-sm lg:hidden">
-                <Link href={"/assistant"} aria-label="Home">
-                  <Icon name="HomeIcon" />
-                </Link>
-              </div>
-              <input
-                type="text"
-                placeholder="Suchen..."
-                onChange={(e) => setFilterName(e.target.value)}
-              />
-            </div>
+      <main className="main">
+        <div className="searchbox">
+          <div className="inputElementsContainer">
+            <input
+              type="text"
+              placeholder="Suchen..."
+              onChange={(e) => setFilterName(e.target.value)}
+            />
           </div>
-          <div className="verticalList !pt-20 !gap-2">
-            {laps
-              .sort((a, b) => {
-                return (
-                  // @ts-ignore
-                  b.timestamp - a.timestamp
-                );
-              })
-              .filter((lap) => {
-                return filter(lap);
-              })
-              .map((lap) => {
-                return (
-                  <div
-                    key={lap.id}
-                    className="alert !pl-0 shadow rounded-box bg-base-100 flex flex-row justify-between text-lg"
-                  >
-                    <div className="whitespace-nowrap overflow-hidden">
-                      <span className="overflow-hidden text-ellipsis font-semibold">
-                        <span className="px-2">
-                          <span className="leading-zeros">
-                            {"0".repeat(
-                              3 -
-                                runners[lap.runnerId]?.number.toString().length
-                            )}
-                          </span>
-                          {runners[lap.runnerId]?.number}
+        </div>
+        <div className="verticalList !pt-20 !gap-2">
+          {laps
+            .sort((a, b) => {
+              return (
+                // @ts-ignore
+                b.timestamp - a.timestamp
+              );
+            })
+            .filter((lap) => {
+              return filter(lap);
+            })
+            .map((lap) => {
+              return (
+                <div
+                  key={lap.id}
+                  className="alert max-w-xl shadow-md !pl-0 rounded-box bg-base-100 flex flex-row justify-between text-lg"
+                >
+                  <div className="whitespace-nowrap overflow-hidden">
+                    <span className="overflow-hidden text-ellipsis font-semibold">
+                      <span className="px-2">
+                        <span className="leading-zeros">
+                          {"0".repeat(
+                            3 - runners[lap.runnerId]?.number.toString().length
+                          )}
                         </span>
-
-                        {getRunnerName(lap.runnerId, runners, students, staff)}
-                        <span className="pl-2 font-thin">
-                          {lap.timestamp.toDate().getDay() ==
-                            new Date().getDay() &&
-                          lap.timestamp.toDate().getMonth() ==
-                            new Date().getMonth() &&
-                          lap.timestamp.toDate().getFullYear() ==
-                            new Date().getFullYear()
-                            ? "heute"
-                            : "am " +
-                              lap.timestamp
-                                .toDate()
-                                .toLocaleDateString("de-DE")}{" "}
-                          {lap.timestamp.toDate().getHours().toString() +
-                            ":" +
-                            lap.timestamp.toDate().getMinutes().toString()}{" "}
-                        </span>
+                        {runners[lap.runnerId]?.number}
                       </span>
-                    </div>
-                    <button
-                      className="btn btn-outline btn-error btn-square btn-sm text-error"
-                      aria-label="Runde löschen"
-                      onClick={() => deleteLapHandler(lap.id)}
-                    >
-                      <Icon name="TrashIcon" />
-                    </button>
+
+                      {getRunnerName(lap.runnerId, runners, students, staff)}
+                      <span className="pl-2 font-thin">
+                        {lap.timestamp.toDate().getDay() ==
+                          new Date().getDay() &&
+                        lap.timestamp.toDate().getMonth() ==
+                          new Date().getMonth() &&
+                        lap.timestamp.toDate().getFullYear() ==
+                          new Date().getFullYear()
+                          ? "heute"
+                          : "am " +
+                            lap.timestamp
+                              .toDate()
+                              .toLocaleDateString("de-DE")}{" "}
+                        {lap.timestamp.toDate().getHours().toString() +
+                          ":" +
+                          lap.timestamp.toDate().getMinutes().toString()}{" "}
+                      </span>
+                    </span>
                   </div>
-                );
-              })}
-          </div>
+                  <button
+                    className="btn btn-outline btn-error btn-square btn-sm text-error"
+                    aria-label="Runde löschen"
+                    onClick={() => deleteLapHandler(lap.id)}
+                  >
+                    <Icon name="TrashIcon" />
+                  </button>
+                </div>
+              );
+            })}
         </div>
       </main>
     </>
