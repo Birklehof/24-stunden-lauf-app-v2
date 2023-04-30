@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 import Head from "@/components/Head";
 import Loading from "@/components/Loading";
 import useAuth from "@/lib/hooks/useAuth";
-import AssistantMenu from "@/components/AssistantMenu";
-import useToast from "@/lib/hooks/useToast";
 import { createRunner } from "@/lib/firebaseUtils";
 import useCollectionAsDict from "@/lib/hooks/useCollectionAsDict";
 import { Runner } from "@/lib/interfaces";
+import { themedPromiseToast } from "@/lib/utils";
 
 export default function AssistantCreateRunner() {
   const [runners, runnersLoading, runnersError] = useCollectionAsDict<Runner>(
@@ -14,7 +13,6 @@ export default function AssistantCreateRunner() {
   );
 
   const { isLoggedIn, user } = useAuth();
-  const { promiseToast } = useToast();
 
   const [submitting, setSubmitting] = useState(false);
   const [number, setNumber] = useState(0);
@@ -41,7 +39,7 @@ export default function AssistantCreateRunner() {
     const formData = new FormData(e.target as HTMLFormElement);
     const name = formData.get("name") as string;
 
-    promiseToast(createRunner(name, runners), {
+    themedPromiseToast(createRunner(name, runners), {
       pending: "Läufer wird erstellt...",
       success: "Läufer wurde erstellt!",
       error: {

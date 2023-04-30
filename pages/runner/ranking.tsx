@@ -146,75 +146,71 @@ export default function RunnerRanking() {
             })
             .map((lapCountWithRunnerId) => {
               return (
-                <div
-                  className="alert max-w-xl shadow-md bg-base-100 rounded-box flex flex-row justify-around items-center w-full gap-0"
-                  key={lapCountWithRunnerId.runnerId}
-                >
-                  <div className="w-min pr-2 overflow-hidden py-0 px-0">
-                    <div className="text-center text-xl md:text-2xl font-semibold">
-                      <span className="inline leading-zeros">
-                        {"0".repeat(
-                          3 -
-                            (
-                              getPosition(lapCountWithRunnerId.runnerId) + 1
-                            ).toString().length
-                        )}
-                      </span>
-                      {(
-                        getPosition(lapCountWithRunnerId.runnerId) + 1
-                      ).toString()}
-                    </div>
-                  </div>
-                  <div className="w-8/12 grow p-0">
-                    <div className="w-full overflow-hidden text-ellipsis text-xl md:text-2xl font-semibold">
-                      {getPosition(lapCountWithRunnerId.runnerId) < 3 && (
-                        <span
-                          aria-label="Erster Platz"
-                          className="inline-block text-sm md:text-md -translate-y-1"
-                        >
-                          {
-                            ["🥇", "🥈", "🥉"][
-                              getPosition(lapCountWithRunnerId.runnerId)
-                            ]
-                          }
-                        </span>
-                      )}
+                <div className="list-item" key={lapCountWithRunnerId.runnerId}>
+                  <span className="leading-zeros font-semibold">
+                    {"0".repeat(
+                      3 -
+                        (
+                          getPosition(lapCountWithRunnerId.runnerId) + 1
+                        ).toString().length
+                    )}
+                  </span>
+                  <span className="pr-3 font-semibold">
+                    {getPosition(lapCountWithRunnerId.runnerId) + 1}
+                  </span>
+                  {getPosition(lapCountWithRunnerId.runnerId) < 3 && (
+                    <span
+                      aria-label="Erster Platz"
+                      className="inline-block text-sm md:text-md"
+                    >
+                      {
+                        ["🥇", "🥈", "🥉"][
+                          getPosition(lapCountWithRunnerId.runnerId)
+                        ]
+                      }
+                    </span>
+                  )}
+                  <span className="whitespace-nowrap overflow-hidden pr-1">
+                    <span className="overflow-hidden text-ellipsis font-semibold">
                       {getRunnerName(
                         lapCountWithRunnerId.runnerId,
                         runners,
                         students,
                         staff
-                      )}{" "}
-                      <span className="inline-block text-sm md:text-lg -translate-y-[0.15rem]">
-                        ({runners[lapCountWithRunnerId.runnerId].number})
-                      </span>
-                    </div>
-                  </div>
-                  <div className="stat w-3/12 overflow-hidden p-0">
-                    <div className="flex flex-row justify-around">
-                      <div>
-                        <div className="stat-value text-center text-lg md:text-xl font-semibold">
-                          {lapCountWithRunnerId.lapCount
-                            .toString()
-                            .padStart(3, "0")}
-                        </div>
-                        <div className="stat-title text-center text-xs -mt-2">
-                          Runden
-                        </div>
+                      )}
+                    </span>
+                  </span>
+
+                  <div className="spacer" />
+                  <span className="flex flex-row items-center pr-3">
+                    <div className="pr-1">
+                      <div className="stat-value text-center text-lg md:text-xl font-semibold">
+                        {runners[lapCountWithRunnerId.runnerId].number}
                       </div>
-                      <div className="hidden sm:block">
-                        <div className="stat-value text-center text-lg md:text-xl font-semibold">
-                          {(
-                            (lapCountWithRunnerId.lapCount * distancePerLap) /
-                            1000
-                          ).toFixed(2)}
-                        </div>
-                        <div className="stat-title text-center text-xs -mt-2">
-                          km
-                        </div>
+                      <div className="stat-title text-center text-xs -mt-2">
+                        Nr.
                       </div>
                     </div>
-                  </div>
+                    <div className="pr-1">
+                      <div className="stat-value text-center text-lg md:text-xl font-semibold">
+                        {lapCountWithRunnerId.lapCount.toString()}
+                      </div>
+                      <div className="stat-title text-center text-xs -mt-2">
+                        Runden
+                      </div>
+                    </div>
+                    <div className="pr-1">
+                      <div className="stat-value text-center text-lg md:text-xl font-semibold">
+                        {(
+                          (lapCountWithRunnerId.lapCount * distancePerLap) /
+                          1000
+                        ).toFixed(2)}
+                      </div>
+                      <div className="stat-title text-center text-xs -mt-2">
+                        km
+                      </div>
+                    </div>
+                  </span>
                 </div>
               );
             })}
