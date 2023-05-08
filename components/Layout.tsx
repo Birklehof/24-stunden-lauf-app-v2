@@ -5,7 +5,7 @@ import RunnerMenu from "./RunnerMenu";
 import { useRouter } from "next/router";
 import AssistantMenu from "./AssistantMenu";
 
-const Layout = ({ children }: PropsWithChildren) => {
+export default function Layout({ children }: PropsWithChildren) {
   const { isDarkMode, toggle } = useDarkMode();
   const router = useRouter();
 
@@ -31,5 +31,4 @@ const Layout = ({ children }: PropsWithChildren) => {
       {children}
     </>
   );
-};
-export default Layout;
+}

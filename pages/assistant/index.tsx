@@ -136,27 +136,19 @@ export default function AssistantIndex() {
                 .slice(0, 30)
                 .map((lap) => (
                   <div key={lap.id} className="list-item">
-                    <div className="whitespace-nowrap overflow-hidden">
-                      <span className="overflow-hidden text-ellipsis font-semibold">
-                        <span className="leading-zeros font-semibold">
-                          {"0".repeat(
-                            3 - runners[lap.runnerId]?.number.toString().length
-                          )}
-                        </span>
-                        <span className="pr-3 font-semibold">
-                          {runners[lap.runnerId]?.number}
-                        </span>
-
-                        <span className="hidden md:inline">
-                          {getRunnerName(
-                            lap.runnerId,
-                            runners,
-                            students,
-                            staff
-                          )}
-                        </span>
+                    <span className="leading-zeros font-semibold">
+                      {"0".repeat(
+                        3 - runners[lap.runnerId]?.number.toString().length
+                      )}
+                    </span>
+                    <span className="pr-3 font-semibold">
+                      {runners[lap.runnerId]?.number}
+                    </span>
+                    <span className="whitespace-nowrap overflow-hidden">
+                      <span className="overflow-hidden text-ellipsis font-semibold hidden md:inline">
+                        {getRunnerName(lap.runnerId, runners, students, staff)}
                       </span>
-                    </div>
+                    </span>
                     <div className="spacer" />
                     <button
                       className="btn btn-outline btn-error btn-square btn-sm text-error hidden md:flex"
