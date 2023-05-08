@@ -2,22 +2,17 @@ import useAuth from "@/lib/hooks/useAuth";
 import { useEffect, useState } from "react";
 import Loading from "@/components/Loading";
 import Head from "@/components/Head";
-import RunnerMenu from "@/components/RunnerMenu";
 import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
 import useRanking from "@/lib/hooks/useRanking";
 import Icon from "@/components/Icon";
 import Link from "next/link";
 import useCollectionAsDict from "@/lib/hooks/useCollectionAsDict";
-import { getRunnerName } from "@/lib/utils";
-import { Student, Runner, Staff } from "@/lib/interfaces";
+import { Runner } from "@/lib/interfaces";
 
 export default function RunnerRanking() {
   const [runners, runnersLoading, runnersError] = useCollectionAsDict<Runner>(
     "apps/24-stunden-lauf/runners"
   );
-  const [students, studentsLoading, studentsError] =
-    useCollectionAsDict<Student>("students");
-  const [staff, staffLoading, staffError] = useCollectionAsDict<Staff>("staff");
 
   const { isLoggedIn, user } = useAuth();
   const { lapCountByRunnerId } = useRanking();
@@ -31,15 +26,11 @@ export default function RunnerRanking() {
     // Filter runners by class, house and name (true = show runner)
 
     if (filterClasses || filterHouse) {
-      if (runner.studentId) {
-        const student = students[runner.studentId];
-        if (!student) {
+      if (runner.type == "student") {
+        if (filterClasses && runner.class !== filterClasses) {
           return false;
         }
-        if (filterClasses && student.class !== filterClasses) {
-          return false;
-        }
-        if (filterHouse && student.house !== filterHouse) {
+        if (filterHouse && runner.house !== filterHouse) {
           return false;
         }
       } else {
@@ -49,9 +40,7 @@ export default function RunnerRanking() {
 
     if (
       filterName &&
-      !getRunnerName(runner.id, runners, students, staff)
-        .toLowerCase()
-        .includes(filterName.toLowerCase())
+      !runners[runner.id]?.name.toLowerCase().includes(filterName.toLowerCase())
     ) {
       return false;
     }
@@ -73,13 +62,7 @@ export default function RunnerRanking() {
     }
   }, [isLoggedIn]);
 
-  if (
-    !user ||
-    runnersLoading ||
-    studentsLoading ||
-    staffLoading ||
-    !lapCountByRunnerId
-  ) {
+  if (!user || runnersLoading || !lapCountByRunnerId) {
     return <Loading />;
   }
 
@@ -172,12 +155,7 @@ export default function RunnerRanking() {
                   )}
                   <span className="whitespace-nowrap overflow-hidden pr-1">
                     <span className="overflow-hidden text-ellipsis font-semibold">
-                      {getRunnerName(
-                        lapCountWithRunnerId.runnerId,
-                        runners,
-                        students,
-                        staff
-                      )}
+                      {runners[lapCountWithRunnerId.runnerId].name}
                     </span>
                   </span>
 

@@ -30,59 +30,18 @@ export default function useRunner() {
     if (!user) {
       return;
     } else {
-      if (user.email.endsWith("@s.birklehof.de")) {
-        const q = query(
-          collection(db, "students"),
-          where("email", "==", user.email)
-        );
-        const querySnapshot = await getDocs(q);
-        if (querySnapshot.docs.length == 0) {
-          throw new Error("Student not found");
-        }
-        const student = {
-          id: querySnapshot.docs[0].id,
-          ...querySnapshot.docs[0].data(),
-        } as Student;
-        const q2 = query(
-          collection(db, "/apps/24-stunden-lauf/runners"),
-          where("studentId", "==", student.id)
-        );
-        const querySnapshot2 = await getDocs(q2);
-        if (querySnapshot2.docs.length == 0) {
-          return;
-        }
-        const id = querySnapshot2.docs[0].id;
-        const data = querySnapshot2.docs[0].data();
-        const runner = { id, ...data } as Runner;
-        runner.name = student.firstName + " " + student.lastName;
-        return runner;
-      } else {
-        const q = query(
-          collection(db, "staff"),
-          where("email", "==", user.email)
-        );
-        const querySnapshot = await getDocs(q);
-        if (querySnapshot.docs.length == 0) {
-          throw new Error("Staff member not found");
-        }
-        const staff = {
-          id: querySnapshot.docs[0].id,
-          ...querySnapshot.docs[0].data(),
-        } as Staff;
-        const q2 = query(
-          collection(db, "/apps/24-stunden-lauf/runners"),
-          where("staffId", "==", staff.id)
-        );
-        const querySnapshot2 = await getDocs(q2);
-        if (querySnapshot2.docs.length == 0) {
-          return;
-        }
-        const id = querySnapshot2.docs[0].id;
-        const data = querySnapshot2.docs[0].data();
-        const runner = { id, ...data } as Runner;
-        runner.name = staff.firstName + " " + staff.lastName;
-        return runner;
+      const q = query(
+        collection(db, "/apps/24-stunden-lauf/runners"),
+        where("email", "==", user.email)
+      );
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.docs.length == 0) {
+        throw new Error("Runner not found");
       }
+      return {
+        id: querySnapshot.docs[0].id,
+        ...querySnapshot.docs[0].data(),
+      } as Runner;
     }
   }
 

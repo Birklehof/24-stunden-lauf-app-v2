@@ -3,11 +3,9 @@ import Head from "@/components/Head";
 import Loading from "@/components/Loading";
 import useAuth from "@/lib/hooks/useAuth";
 import Icon from "@/components/Icon";
-import Link from "next/link";
 import useCollectionAsList from "@/lib/hooks/useCollectionAsList";
 import useCollectionAsDict from "@/lib/hooks/useCollectionAsDict";
-import { Runner, Student, Lap, Staff } from "@/lib/interfaces";
-import { getRunnerName } from "@/lib/utils";
+import { Runner, Lap } from "@/lib/interfaces";
 import { deleteLap } from "@/lib/firebaseUtils";
 
 export default function AssistantViewLaps() {
@@ -17,9 +15,6 @@ export default function AssistantViewLaps() {
   const [runners, runnersLoading, runnersError] = useCollectionAsDict<Runner>(
     "apps/24-stunden-lauf/runners"
   );
-  const [students, studentsLoading, studentsError] =
-    useCollectionAsDict<Student>("students");
-  const [staff, staffLoading, staffError] = useCollectionAsDict<Staff>("staff");
 
   const { isLoggedIn, user } = useAuth();
 
@@ -31,13 +26,7 @@ export default function AssistantViewLaps() {
     }
   }, [isLoggedIn]);
 
-  if (
-    !user ||
-    lapsLoading ||
-    runnersLoading ||
-    studentsLoading ||
-    staffLoading
-  ) {
+  if (!user || lapsLoading || runnersLoading) {
     return <Loading />;
   }
 
@@ -52,7 +41,7 @@ export default function AssistantViewLaps() {
 
     return (
       !filterName ||
-      getRunnerName(lap.runnerId, runners, students, staff)
+      !runners[lap.runnerId].name
         .toLowerCase()
         .includes(filterName.toLowerCase())
     );
@@ -107,7 +96,7 @@ export default function AssistantViewLaps() {
                   </span>
                   <span className="whitespace-nowrap overflow-hidden pr-1">
                     <span className="overflow-hidden text-ellipsis font-semibold">
-                      {getRunnerName(lap.runnerId, runners, students, staff)}
+                      {runners[lap.runnerId]?.name || "Unbekannt"}
                     </span>
                   </span>
                   <span className="whitespace-nowrap overflow-hidden">

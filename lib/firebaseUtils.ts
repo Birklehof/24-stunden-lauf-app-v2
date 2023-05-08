@@ -10,8 +10,10 @@ async function createRunner(
     throw new Error("Invalid name");
   }
   const number = Object.keys(runners).length + 1;
-  const runner = { name, number };
+
+  const runner = { name, number, type: "guest" } as Runner;
   await addDoc(collection(db, "apps/24-stunden-lauf/runners"), runner);
+
   return number;
 }
 

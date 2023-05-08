@@ -5,8 +5,8 @@ import useAuth from "@/lib/hooks/useAuth";
 import Icon from "@/components/Icon";
 import useCollectionAsList from "@/lib/hooks/useCollectionAsList";
 import useCollectionAsDict from "@/lib/hooks/useCollectionAsDict";
-import { Runner, Student, Lap, Staff } from "@/lib/interfaces";
-import { getRunnerName, themedPromiseToast } from "@/lib/utils";
+import { Runner, Lap } from "@/lib/interfaces";
+import { themedPromiseToast } from "@/lib/utils";
 import { createLap, deleteLap } from "@/lib/firebaseUtils";
 
 export default function AssistantIndex() {
@@ -16,9 +16,6 @@ export default function AssistantIndex() {
   const [runners, runnersLoading, runnersError] = useCollectionAsDict<Runner>(
     "apps/24-stunden-lauf/runners"
   );
-  const [students, studentsLoading, studentsError] =
-    useCollectionAsDict<Student>("students");
-  const [staff, staffLoading, staffError] = useCollectionAsDict<Staff>("staff");
 
   const { isLoggedIn, user } = useAuth();
 
@@ -146,7 +143,7 @@ export default function AssistantIndex() {
                     </span>
                     <span className="whitespace-nowrap overflow-hidden">
                       <span className="overflow-hidden text-ellipsis font-semibold hidden md:inline">
-                        {getRunnerName(lap.runnerId, runners, students, staff)}
+                        {runners[lap.runnerId]?.name || "Unbekannt"}
                       </span>
                     </span>
                     <div className="spacer" />

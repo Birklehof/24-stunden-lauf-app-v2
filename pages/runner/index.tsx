@@ -2,7 +2,6 @@ import useAuth from "@/lib/hooks/useAuth";
 import { useEffect } from "react";
 import Loading from "@/components/Loading";
 import Head from "@/components/Head";
-import RunnerMenu from "@/components/RunnerMenu";
 import NewLapOverlay from "@/components/NewLapOverlay";
 import useRunner from "@/lib/hooks/useRunner";
 import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
@@ -20,7 +19,9 @@ export default function RunnerIndex() {
     }
   }, [isLoggedIn]);
 
-  if (!user || !runner || !laps) {
+  console.log(laps);
+
+  if (!user || !runner || laps == undefined) {
     return <Loading />;
   }
 
