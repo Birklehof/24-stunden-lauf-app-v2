@@ -1,11 +1,11 @@
-import useAuth from "@/lib/hooks/useAuth";
-import { useEffect } from "react";
-import Loading from "@/components/Loading";
-import Head from "@/components/Head";
-import NewLapOverlay from "@/components/NewLapOverlay";
-import useRunner from "@/lib/hooks/useRunner";
-import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
-import useRanking from "@/lib/hooks/useRanking";
+import useAuth from '@/lib/hooks/useAuth';
+import { useEffect } from 'react';
+import Loading from '@/components/Loading';
+import Head from '@/components/Head';
+import NewLapOverlay from '@/components/NewLapOverlay';
+import useRunner from '@/lib/hooks/useRunner';
+import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
+import useRanking from '@/lib/hooks/useRanking';
 
 export default function RunnerIndex() {
   const { isLoggedIn, user } = useAuth();
@@ -31,45 +31,45 @@ export default function RunnerIndex() {
       <main className="hero min-h-screen bg-base-200">
         <NewLapOverlay />
         <div className="flex w-full justify-center pb-20 lg:pb-0">
-          <div className="flex flex-col lg:flex-row lg:justify-evenly lg:w-1/2">
+          <div className="flex flex-col lg:w-1/2 lg:flex-row lg:justify-evenly">
             <div>
-              <h1 className="text-3xl sm:text-5xl text-center font-bold">
+              <h1 className="text-center text-3xl font-bold sm:text-5xl">
                 <div className="inline text-base-300">
-                  {"0".repeat(3 - runner.number.toString().length)}
+                  {'0'.repeat(3 - runner.number.toString().length)}
                 </div>
                 {runner.number.toString()}
               </h1>
-              <h2 className="text-sm sm:text-xl text-center font-bold text-base-400 opacity-80">
+              <h2 className="text-base-400 text-center text-sm font-bold opacity-80 sm:text-xl">
                 Nr.
               </h2>
             </div>
             <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
-              <h1 className="text-3xl sm:text-5xl text-center font-bold">
+              <h1 className="text-center text-3xl font-bold sm:text-5xl">
                 <div className="inline text-base-300">
-                  {"0".repeat(3 - laps.toString().length)}
+                  {'0'.repeat(3 - laps.toString().length)}
                 </div>
                 {laps}
               </h1>
-              <h2 className="text-sm sm:text-xl text-center font-bold text-base-400 opacity-80">
-                {laps === 1 ? "Runde" : "Runden"}
+              <h2 className="text-base-400 text-center text-sm font-bold opacity-80 sm:text-xl">
+                {laps === 1 ? 'Runde' : 'Runden'}
               </h2>
             </div>
             <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
-              <h1 className="text-3xl sm:text-5xl text-center font-bold">
+              <h1 className="text-center text-3xl font-bold sm:text-5xl">
                 <div className="inline text-base-300">
-                  {"0".repeat(3 - getPosition(runner).toString().length)}
+                  {'0'.repeat(3 - getPosition(runner).toString().length)}
                 </div>
                 {getPosition(runner)}
               </h1>
-              <h2 className="text-sm sm:text-xl text-center font-bold text-base-400 opacity-80">
+              <h2 className="text-base-400 text-center text-sm font-bold opacity-80 sm:text-xl">
                 Platz
               </h2>
             </div>
             <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
-              <h1 className="text-3xl sm:text-5xl text-center font-bold">
+              <h1 className="text-center text-3xl font-bold sm:text-5xl">
                 {((laps * distancePerLap) / 1000).toFixed(
                   (laps * distancePerLap) / 1000 < 10
                     ? 2
@@ -78,7 +78,7 @@ export default function RunnerIndex() {
                     : 0
                 )}
               </h1>
-              <h2 className="text-sm sm:text-xl text-center font-bold text-base-400 opacity-80">
+              <h2 className="text-base-400 text-center text-sm font-bold opacity-80 sm:text-xl">
                 km
               </h2>
             </div>

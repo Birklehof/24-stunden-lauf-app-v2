@@ -1,4 +1,4 @@
-import { ToastOptions, ToastPromiseParams, toast } from "react-toastify";
+import { ToastOptions, ToastPromiseParams, toast } from 'react-toastify';
 
 export function themedPromiseToast(
   promise: Promise<any> | (() => Promise<any>),
@@ -15,9 +15,9 @@ export function themedPromiseToast(
     {
       ...options,
       theme:
-        localStorage.getItem("usehooks-ts-dark-mode") === "true"
-          ? "dark"
-          : "light",
+        localStorage.getItem('usehooks-ts-dark-mode') === 'true'
+          ? 'dark'
+          : 'light',
     }
   );
 }

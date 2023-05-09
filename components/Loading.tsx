@@ -1,12 +1,12 @@
-import router from "next/router";
-import { useEffect } from "react";
-import Head from "./Head";
+import router from 'next/router';
+import { useEffect } from 'react';
+import Head from './Head';
 
 export default function Loading() {
   useEffect(() => {
     // Redirect to home after 5 seconds
     const timeout = setTimeout(() => {
-      router.push("/");
+      router.push('/');
     }, 10000);
     return () => clearTimeout(timeout);
   }, []);
@@ -19,7 +19,7 @@ export default function Loading() {
           <div role="status">
             <svg
               aria-hidden="true"
-              className="w-24 h-24 mr-2 text-base-300 animate-spin fill-primary"
+              className="mr-2 h-24 w-24 animate-spin fill-primary text-base-300"
               viewBox="0 0 100 101"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"

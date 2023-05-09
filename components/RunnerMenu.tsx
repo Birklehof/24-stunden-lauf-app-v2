@@ -1,20 +1,20 @@
-import Menu from "./Menu";
+import Menu from './Menu';
 
 export default function RunnerMenu() {
   return (
     <>
       <Menu
         navItems={[
-          { name: "Start", href: "/runner", icon: "HomeIcon" },
+          { name: 'Start', href: '/runner', icon: 'HomeIcon' },
           {
-            name: "Ranking",
-            href: "/runner/ranking",
-            icon: "TrendingUpIcon",
+            name: 'Ranking',
+            href: '/runner/ranking',
+            icon: 'TrendingUpIcon',
           },
           {
-            name: "Charts",
-            href: "/runner/charts",
-            icon: "ChartBarIcon",
+            name: 'Charts',
+            href: '/runner/charts',
+            icon: 'ChartBarIcon',
           },
         ]}
       />

@@ -1,9 +1,9 @@
-import useAuth from "@/lib/hooks/useAuth";
-import { useEffect } from "react";
-import Loading from "@/components/Loading";
-import Head from "@/components/Head";
-import useRunner from "@/lib/hooks/useRunner";
-import { Line } from "react-chartjs-2";
+import useAuth from '@/lib/hooks/useAuth';
+import { useEffect } from 'react';
+import Loading from '@/components/Loading';
+import Head from '@/components/Head';
+import useRunner from '@/lib/hooks/useRunner';
+import { Line } from 'react-chartjs-2';
 import {
   Chart,
   CategoryScale,
@@ -14,20 +14,20 @@ import {
   Tooltip,
   Legend,
   Filler,
-} from "chart.js";
-import { Lap } from "@/lib/interfaces";
-import useCollectionAsList from "@/lib/hooks/useCollectionAsList";
-import useRemoteConfig from "@/lib/hooks/useRemoteConfig";
-import useCollectionCount from "@/lib/hooks/useCollectionCount";
+} from 'chart.js';
+import { Lap } from '@/lib/interfaces';
+import useCollectionAsList from '@/lib/hooks/useCollectionAsList';
+import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
+import useCollectionCount from '@/lib/hooks/useCollectionCount';
 
 export default function RunnerGraphs() {
   const [laps, lapsLoading, lapsError] = useCollectionAsList<Lap>(
-    "apps/24-stunden-lauf/laps"
+    'apps/24-stunden-lauf/laps'
   );
   const [runnerCount, runnerCountLoading, runnerCountError] =
-    useCollectionCount("apps/24-stunden-lauf/runners");
+    useCollectionCount('apps/24-stunden-lauf/runners');
   const [lapsCount, lapsCountLoading, lapsCountError] = useCollectionCount(
-    "apps/24-stunden-lauf/laps"
+    'apps/24-stunden-lauf/laps'
   );
 
   const { isLoggedIn, user } = useAuth();
@@ -98,11 +98,11 @@ export default function RunnerGraphs() {
     labels: allHours.map((hour) => hour.toString()),
     datasets: [
       {
-        label: "Laps",
+        label: 'Laps',
         data: allHours.map((hour) => sortedGroupedLapsAll[hour] || 0),
-        fill: "start",
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        fill: 'start',
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 1,
       },
     ],
@@ -116,11 +116,11 @@ export default function RunnerGraphs() {
     labels: allHours.map((hour) => hour.toString()),
     datasets: [
       {
-        label: "Laps",
+        label: 'Laps',
         data: allHours.map((hour) => sortedGroupedLapsPersonal[hour] || 0),
-        fill: "start",
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        fill: 'start',
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 1,
       },
     ],
@@ -136,7 +136,7 @@ export default function RunnerGraphs() {
       line: {
         tension: 0,
         borderWidth: 2,
-        fill: "start",
+        fill: 'start',
       },
       point: {
         radius: 0,
@@ -180,31 +180,31 @@ export default function RunnerGraphs() {
           <div className="large-card">
             <div className="card-body">
               <div className="flex flex-wrap items-center justify-evenly">
-                <div className="stat text-center w-full md:w-1/3">
+                <div className="stat w-full text-center md:w-1/3">
                   <div className="stat-value">{runnerCount}</div>
                   <div className="stat-desc">Teilnehmer</div>
                 </div>
-                <div className="stat text-center w-full md:w-1/3">
+                <div className="stat w-full text-center md:w-1/3">
                   <div className="stat-value">{lapsCount}</div>
                   <div className="stat-desc">Runden gesamt</div>
                 </div>
-                <div className="stat text-center w-full md:w-1/3">
+                <div className="stat w-full text-center md:w-1/3">
                   <div className="stat-value">
                     {Math.floor(lapsCount / runnerCount)}
                   </div>
                   <div className="stat-desc">Runden pro Teilnehmer</div>
                 </div>
-                <div className="stat text-center w-full md:w-1/2">
+                <div className="stat w-full text-center md:w-1/2">
                   <div className="stat-value">
                     {(
                       ((lapsCount / runnerCount) * distancePerLap) /
                       1000
-                    ).toFixed(2)}{" "}
+                    ).toFixed(2)}{' '}
                     km
                   </div>
                   <div className="stat-desc">Strecke pro Teilnehmer</div>
                 </div>
-                <div className="stat text-center w-full md:w-1/2">
+                <div className="stat w-full text-center md:w-1/2">
                   <div className="stat-value">
                     {((lapsCount * distancePerLap) / 1000).toFixed(2)} km
                   </div>
@@ -217,7 +217,7 @@ export default function RunnerGraphs() {
             <div className="card-body">
               <h2 className="card-title">Persönlicher Fortschritt</h2>
               <progress
-                className="progress progress-primary w-full bg-base-200 h-5 shadow-inner rounded-full"
+                className="progress progress-primary h-5 w-full rounded-full bg-base-200 shadow-inner"
                 value="40"
                 max="100"
               ></progress>

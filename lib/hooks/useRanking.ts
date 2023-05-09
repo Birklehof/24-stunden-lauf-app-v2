@@ -1,9 +1,9 @@
-import { Runner } from "@/lib/interfaces";
-import { useEffect, useState } from "react";
-import { collection, getDocs } from "@firebase/firestore";
-import { db } from "@/lib/firebase";
-import { getDoc, onSnapshot } from "firebase/firestore";
-import useAuth from "./useAuth";
+import { Runner } from '@/lib/interfaces';
+import { useEffect, useState } from 'react';
+import { collection, getDocs } from '@firebase/firestore';
+import { db } from '@/lib/firebase';
+import { getDoc, onSnapshot } from 'firebase/firestore';
+import useAuth from './useAuth';
 
 interface LapCountByRunnerId {
   runnerId: string;
@@ -22,7 +22,7 @@ export default function useRanking() {
   }, [isLoggedIn, user]);
 
   async function syncLapsByRunnerId() {
-    const q = collection(db, "/apps/24-stunden-lauf/laps");
+    const q = collection(db, '/apps/24-stunden-lauf/laps');
     const querySnapshot = await getDocs(q);
     let loadedLapCountByRunnerId: LapCountByRunnerId[] = [];
     querySnapshot.docs.forEach((doc) => {

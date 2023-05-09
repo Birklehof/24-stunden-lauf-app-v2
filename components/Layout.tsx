@@ -1,9 +1,9 @@
-import React, { PropsWithChildren, useEffect } from "react";
-import Icon from "./Icon";
-import { useDarkMode } from "usehooks-ts";
-import RunnerMenu from "./RunnerMenu";
-import { useRouter } from "next/router";
-import AssistantMenu from "./AssistantMenu";
+import React, { PropsWithChildren, useEffect } from 'react';
+import Icon from './Icon';
+import { useDarkMode } from 'usehooks-ts';
+import RunnerMenu from './RunnerMenu';
+import { useRouter } from 'next/router';
+import AssistantMenu from './AssistantMenu';
 
 export default function Layout({ children }: PropsWithChildren) {
   const { isDarkMode, toggle } = useDarkMode();
@@ -11,22 +11,22 @@ export default function Layout({ children }: PropsWithChildren) {
 
   useEffect(() => {
     const body = document.body;
-    body.setAttribute("data-theme", isDarkMode ? "dark" : "light");
+    body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
   return (
     <>
       <button
-        className="hidden md:flex btn btn-square btn-ghost absolute top-3 left-3"
+        className="btn-ghost btn-square btn absolute top-3 left-3 hidden md:flex"
         onClick={toggle}
       >
         {isDarkMode ? <Icon name="MoonIcon" /> : <Icon name="SunIcon" />}
       </button>
 
-      {router.asPath.split("/")[1] === "runner" ? (
+      {router.asPath.split('/')[1] === 'runner' ? (
         <RunnerMenu />
       ) : (
-        router.asPath.split("/")[1] === "assistant" && <AssistantMenu />
+        router.asPath.split('/')[1] === 'assistant' && <AssistantMenu />
       )}
       {children}
     </>

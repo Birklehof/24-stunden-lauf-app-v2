@@ -1,17 +1,17 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { auth, db } from "@/lib/firebase/firebase-admin";
-import { Lap } from "@/lib/interfaces";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { auth, db } from '@/lib/firebase/firebase-admin';
+import { Lap } from '@/lib/interfaces';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   if (!req.headers.authorization) {
-    return res.status(401).json({ error: "Access token required" });
+    return res.status(401).json({ error: 'Access token required' });
   }
 
   try {
@@ -23,14 +23,14 @@ export default async function handler(
   const { runnerId } = req.body;
 
   if (!runnerId) {
-    return res.status(400).json({ error: "Missing runnerId" });
+    return res.status(400).json({ error: 'Missing runnerId' });
   }
 
   // Get last lap of runner
   const querySnapshot = await db
-    .collection("apps/24-stunden-lauf/laps")
-    .where("runnerId", "==", runnerId)
-    .orderBy("timestamp", "desc")
+    .collection('apps/24-stunden-lauf/laps')
+    .where('runnerId', '==', runnerId)
+    .orderBy('timestamp', 'desc')
     .limit(1)
     .get();
 
@@ -42,13 +42,13 @@ export default async function handler(
 
     // Check if last lap was less than 2 minutes ago
     if (now.getTime() - lastLapDate.getTime() < 2 * 60 * 1000) {
-      return res.status(400).json({ error: "Too many laps" });
+      return res.status(400).json({ error: 'Too many laps' });
     }
   }
 
   const lap = { runnerId, timestamp: new Date() };
   await db
-    .collection("apps/24-stunden-lauf/laps")
+    .collection('apps/24-stunden-lauf/laps')
     .add(lap)
     .catch((err) => {
       console.error(err);

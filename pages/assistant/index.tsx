@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
-import Head from "@/components/Head";
-import Loading from "@/components/Loading";
-import useAuth from "@/lib/hooks/useAuth";
-import Icon from "@/components/Icon";
-import useCollectionAsList from "@/lib/hooks/useCollectionAsList";
-import useCollectionAsDict from "@/lib/hooks/useCollectionAsDict";
-import { Runner, Lap } from "@/lib/interfaces";
-import { themedPromiseToast } from "@/lib/utils";
-import { createLap, deleteLap } from "@/lib/firebaseUtils";
+import { useEffect, useState } from 'react';
+import Head from '@/components/Head';
+import Loading from '@/components/Loading';
+import useAuth from '@/lib/hooks/useAuth';
+import Icon from '@/components/Icon';
+import useCollectionAsList from '@/lib/hooks/useCollectionAsList';
+import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
+import { Runner, Lap } from '@/lib/interfaces';
+import { themedPromiseToast } from '@/lib/utils';
+import { createLap, deleteLap } from '@/lib/firebaseUtils';
 
 export default function AssistantIndex() {
   const [laps, lapsLoading, lapsError] = useCollectionAsList<Lap>(
-    "apps/24-stunden-lauf/laps"
+    'apps/24-stunden-lauf/laps'
   );
   const [runners, runnersLoading, runnersError] = useCollectionAsDict<Runner>(
-    "apps/24-stunden-lauf/runners"
+    'apps/24-stunden-lauf/runners'
   );
 
   const { isLoggedIn, user } = useAuth();
@@ -47,7 +47,7 @@ export default function AssistantIndex() {
         setSubmitting(false);
 
         // Focus input
-        (document.getElementById("number") as HTMLInputElement).focus();
+        (document.getElementById('number') as HTMLInputElement).focus();
       });
   }
 
@@ -67,19 +67,19 @@ export default function AssistantIndex() {
     <>
       <Head title="Assistent" />
       <main className="main">
-        <div className="flex flex-row h-1/5 items-center gap-2 lg:w-1/2 justify-around">
+        <div className="flex h-1/5 flex-row items-center justify-around gap-2 lg:w-1/2">
           <div className="flex flex-col items-center justify-center gap-2">
-            <div className="card max-w-md shadow-xl bg-base-100 ml-2 lg:p-0">
+            <div className="card ml-2 max-w-md bg-base-100 shadow-xl lg:p-0">
               <div className="card-body p-2">
                 <input
                   id="number"
                   name="number"
-                  className={`font-medium font-serif box-border input input-bordered rounded-box w-full max-w-[18rem] text-center text-4xl md:text-7xl tracking-widest h-full ${
+                  className={`font-serif input-bordered input rounded-box box-border h-full w-full max-w-[18rem] text-center text-4xl font-medium tracking-widest md:text-7xl ${
                     Object.values(runners).find(
                       (runner) => runner.number == number
                     ) != undefined
-                      ? "input-success"
-                      : "input-error"
+                      ? 'input-success'
+                      : 'input-error'
                   }`}
                   autoFocus
                   onChange={(e) => {
@@ -95,10 +95,10 @@ export default function AssistantIndex() {
                     if (submitting) {
                       return;
                     }
-                    if (e.key === "Enter") {
+                    if (e.key === 'Enter') {
                       themedPromiseToast(createNewLapHandler, {
-                        pending: "Runde wird hinzugefügt",
-                        success: "Erfolgreich hinzugefügt",
+                        pending: 'Runde wird hinzugefügt',
+                        success: 'Erfolgreich hinzugefügt',
                         error: {
                           render({ data }) {
                             if (data instanceof Error) {
@@ -116,12 +116,12 @@ export default function AssistantIndex() {
                 />
               </div>
             </div>
-            <div className="w-full text-sm text-center">
+            <div className="w-full text-center text-sm">
               Drücke <kbd className="kbd kbd-sm">Enter</kbd>, um eine Runde zu
               zählen
             </div>
           </div>
-          <div className="flex flex-start h-screen pr-2 lg:px-0 w-1/2 justify-center">
+          <div className="flex-start flex h-screen w-1/2 justify-center pr-2 lg:px-0">
             <div className="vertical-list !gap-2">
               {laps
                 .sort((a, b) => {
@@ -134,21 +134,21 @@ export default function AssistantIndex() {
                 .map((lap) => (
                   <div key={lap.id} className="list-item">
                     <span className="leading-zeros font-semibold">
-                      {"0".repeat(
+                      {'0'.repeat(
                         3 - runners[lap.runnerId]?.number.toString().length
                       )}
                     </span>
                     <span className="pr-3 font-semibold">
                       {runners[lap.runnerId]?.number}
                     </span>
-                    <span className="whitespace-nowrap overflow-hidden">
-                      <span className="overflow-hidden text-ellipsis font-semibold hidden md:inline">
-                        {runners[lap.runnerId]?.name || "Unbekannt"}
+                    <span className="overflow-hidden whitespace-nowrap">
+                      <span className="hidden overflow-hidden text-ellipsis font-semibold md:inline">
+                        {runners[lap.runnerId]?.name || 'Unbekannt'}
                       </span>
                     </span>
                     <div className="spacer" />
                     <button
-                      className="btn btn-outline btn-error btn-square btn-sm text-error hidden md:flex"
+                      className="btn-outline btn-error btn-square btn-sm btn hidden text-error md:flex"
                       aria-label="Runde löschen"
                       onClick={() => deleteLapHandler(lap.id)}
                     >
@@ -156,7 +156,7 @@ export default function AssistantIndex() {
                     </button>
                   </div>
                 ))}
-              <div className="w-full text-sm text-center">
+              <div className="w-full text-center text-sm">
                 Neuesten 30 Runden
               </div>
             </div>

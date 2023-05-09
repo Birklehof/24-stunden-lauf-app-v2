@@ -1,12 +1,12 @@
-import router from "next/router";
-import { useEffect, useState } from "react";
-import { auth, db } from "@/lib/firebase";
-import { User } from "@/lib/interfaces";
-import { doc, getDoc } from "firebase/firestore";
+import router from 'next/router';
+import { useEffect, useState } from 'react';
+import { auth, db } from '@/lib/firebase';
+import { User } from '@/lib/interfaces';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function useAuth() {
   const [user, setUser] = useState<User>();
-  const [role, setRole] = useState<string>("");
+  const [role, setRole] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -29,12 +29,12 @@ export default function useAuth() {
 
   async function getUserRole(user: User): Promise<string> {
     if (!user || !user.email) {
-      return "";
+      return '';
     }
     const userRole = await getDoc(
-      doc(db, "/apps/24-stunden-lauf/roles", user.email)
+      doc(db, '/apps/24-stunden-lauf/roles', user.email)
     );
-    const role = userRole.data()?.role || "runner";
+    const role = userRole.data()?.role || 'runner';
     return role;
   }
 
@@ -42,7 +42,7 @@ export default function useAuth() {
     return auth
       .signOut()
       .then(() => {
-        router.push("/");
+        router.push('/');
       })
       .catch((e) => {
         console.error(e);

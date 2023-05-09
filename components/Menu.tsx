@@ -1,7 +1,7 @@
-import { PossibleIcons } from "heroicons-lookup";
-import Link from "next/link";
-import useAuth from "@/lib/hooks/useAuth";
-import Icon from "@/components/Icon";
+import { PossibleIcons } from 'heroicons-lookup';
+import Link from 'next/link';
+import useAuth from '@/lib/hooks/useAuth';
+import Icon from '@/components/Icon';
 
 interface MenuProps {
   navItems: NavItem[];
@@ -18,13 +18,13 @@ export default function Menu({ navItems }: MenuProps) {
 
   return (
     <>
-      <div className="menu menu-horizontal lg:menu-vertical bg-base-100 p-2 rounded-box z-40 absolute bottom-3 left-1/2 -translate-x-1/2 lg:translate-x-0 lg:bottom-1/2 lg:translate-y-1/2 lg:left-3 lg:gap-2 shadow-xl">
-        <ul className="flex flex-row lg:flex-col gap-2">
+      <div className="menu rounded-box menu-horizontal absolute bottom-3 left-1/2 z-40 -translate-x-1/2 bg-base-100 p-2 shadow-xl lg:bottom-1/2 lg:left-3 lg:translate-x-0 lg:translate-y-1/2 lg:gap-2 lg:menu-vertical">
+        <ul className="flex flex-row gap-2 lg:flex-col">
           {navItems.map((item) => (
             <li key={item.name}>
               <Link
                 href={item.href}
-                className="btn !btn-ghost !btn-square"
+                className="!btn-ghost !btn-square btn"
                 aria-label={item.name}
               >
                 <Icon name={item.icon} />
@@ -32,11 +32,11 @@ export default function Menu({ navItems }: MenuProps) {
             </li>
           ))}
         </ul>
-        <div className="divider divider-horizontal lg:divider-vertical !m-0" />
+        <div className="divider divider-horizontal !m-0 lg:divider-vertical" />
         <button
           disabled={!isLoggedIn}
           onClick={logout}
-          className="text-error btn btn-ghost btn-square"
+          className="btn-ghost btn-square btn text-error"
           aria-label="Logout"
         >
           <Icon name="LogoutIcon" />
