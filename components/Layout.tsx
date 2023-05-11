@@ -1,9 +1,8 @@
 import React, { PropsWithChildren, useEffect } from 'react';
 import Icon from './Icon';
 import { useDarkMode } from 'usehooks-ts';
-import RunnerMenu from './RunnerMenu';
 import { useRouter } from 'next/router';
-import AssistantMenu from './AssistantMenu';
+import Menu from './Menu';
 
 export default function Layout({ children }: PropsWithChildren) {
   const { isDarkMode, toggle } = useDarkMode();
@@ -20,13 +19,56 @@ export default function Layout({ children }: PropsWithChildren) {
         className="btn-ghost btn-square btn absolute top-3 left-3 hidden md:flex"
         onClick={toggle}
       >
-        {isDarkMode ? <Icon name="MoonIcon" /> : <Icon name="SunIcon" />}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+          fill="currentColor"
+          className="h-4 w-4"
+        >
+          <path d="M448 256c0-106-86-192-192-192V448c106 0 192-86 192-192zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z" />
+        </svg>
       </button>
 
       {router.asPath.split('/')[1] === 'runner' ? (
-        <RunnerMenu />
+        <Menu
+          // Runner Menu
+          navItems={[
+            { name: 'Start', href: '/runner', icon: 'HomeIcon' },
+            {
+              name: 'Ranking',
+              href: '/runner/ranking',
+              icon: 'TrendingUpIcon',
+            },
+            {
+              name: 'Charts',
+              href: '/runner/charts',
+              icon: 'ChartBarIcon',
+            },
+          ]}
+        />
       ) : (
-        router.asPath.split('/')[1] === 'assistant' && <AssistantMenu />
+        router.asPath.split('/')[1] === 'assistant' && (
+          <Menu
+            // Assistant Menu
+            navItems={[
+              {
+                name: 'Runde zählen',
+                href: '/assistant',
+                icon: 'PlusCircleIcon',
+              },
+              {
+                name: 'Runde löschen',
+                href: '/assistant/view-laps',
+                icon: 'ViewListIcon',
+              },
+              {
+                name: 'Läufer hinzufügen',
+                href: '/assistant/create-runner',
+                icon: 'UserAddIcon',
+              },
+            ]}
+          />
+        )
       )}
       {children}
     </>

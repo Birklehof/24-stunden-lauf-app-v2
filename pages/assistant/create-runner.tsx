@@ -63,59 +63,61 @@ export default function AssistantCreateRunner() {
     <>
       <Head title="Assistent" />
       <main className="main">
-        <div className="small-card">
-          <div className="card-body gap-3">
-            {number != 0 ? (
-              <>
-                <h1 className="text-center text-xl font-bold">
-                  Läufer erstellt
-                </h1>
-                <input
-                  name={'text'}
-                  className="input-bordered input input-disabled w-full max-w-xs"
-                  readOnly={true}
-                  type={'text'}
-                  value={'Startnummer: ' + number}
-                  required
-                />
-                <button
-                  className="btn-primary btn"
-                  onClick={() => {
-                    setNumber(0);
-                  }}
+        <div className="vertical-list">
+          <div className="large-card">
+            <div className="card-body gap-3">
+              {number != 0 ? (
+                <>
+                  <h1 className="text-center text-xl font-bold">
+                    Läufer erstellt
+                  </h1>
+                  <input
+                    name={'text'}
+                    className="input-bordered input input-disabled"
+                    readOnly={true}
+                    type={'text'}
+                    value={'Startnummer: ' + number}
+                    required
+                  />
+                  <button
+                    className="btn-primary btn"
+                    onClick={() => {
+                      setNumber(0);
+                    }}
+                  >
+                    Okay!
+                  </button>
+                </>
+              ) : (
+                <form
+                  onSubmit={createRunnerHandler}
+                  className="flex flex-col gap-3"
                 >
-                  Okay!
-                </button>
-              </>
-            ) : (
-              <form
-                onSubmit={createRunnerHandler}
-                className="flex flex-col gap-3"
-              >
-                <h1 className="text-center text-xl font-bold">
-                  Läufer hinzufügen
-                </h1>
-                <input
-                  id="name"
-                  name="name"
-                  className="input-bordered input w-full max-w-xs"
-                  placeholder="Name"
-                  autoFocus
-                  type="text"
-                  required
-                  minLength={3}
-                />
-                <button
-                  className={`btn-outline btn-primary btn w-full ${
-                    submitting ? 'btn-disabled loading' : ''
-                  }`}
-                  type="submit"
-                  disabled={submitting}
-                >
-                  Hinzufügen
-                </button>
-              </form>
-            )}
+                  <h1 className="text-center text-xl font-bold">
+                    Läufer hinzufügen
+                  </h1>
+                  <input
+                    id="name"
+                    name="name"
+                    className="input-bordered input"
+                    placeholder="Name"
+                    autoFocus
+                    type="text"
+                    required
+                    minLength={3}
+                  />
+                  <button
+                    className={`btn-outline btn-primary btn ${
+                      submitting ? 'btn-disabled loading' : ''
+                    }`}
+                    type="submit"
+                    disabled={submitting}
+                  >
+                    Hinzufügen
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       </main>

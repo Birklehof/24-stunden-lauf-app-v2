@@ -7,6 +7,8 @@ import useCollectionAsList from '@/lib/hooks/useCollectionAsList';
 import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
 import { Runner, Lap } from '@/lib/interfaces';
 import { deleteLap } from '@/lib/firebaseUtils';
+import SearchBar from '@/components/SearchBar';
+import ListItem from '@/components/ListItem';
 
 export default function AssistantViewLaps() {
   const [laps, lapsLoading, lapsError] = useCollectionAsList<Lap>(
@@ -63,7 +65,8 @@ export default function AssistantViewLaps() {
     <>
       <Head title="Assistent" />
       <main className="main">
-        <div className="searchbox">
+        <SearchBar searchValue={filterName} setSearchValue={setFilterName} />
+        {/* <div className="searchbox">
           <div className="input-elements-container">
             <input
               type="text"
@@ -71,7 +74,7 @@ export default function AssistantViewLaps() {
               onChange={(e) => setFilterName(e.target.value)}
             />
           </div>
-        </div>
+        </div> */}
         <div className="vertical-list !gap-2 !pt-20">
           {laps
             .sort((a, b) => {
@@ -85,38 +88,25 @@ export default function AssistantViewLaps() {
             })
             .map((lap) => {
               return (
-                <div key={lap.id} className="list-item">
-                  <span className="leading-zeros font-semibold">
-                    {'0'.repeat(
-                      3 - runners[lap.runnerId]?.number.toString().length
-                    )}
-                  </span>
-                  <span className="pr-3 font-semibold">
-                    {runners[lap.runnerId]?.number}
-                  </span>
-                  <span className="overflow-hidden whitespace-nowrap pr-1">
-                    <span className="overflow-hidden text-ellipsis font-semibold">
-                      {runners[lap.runnerId]?.name || 'Unbekannt'}
-                    </span>
-                  </span>
-                  <span className="overflow-hidden whitespace-nowrap">
-                    <span className="overflow-hidden text-ellipsis">
-                      {lap.timestamp.toDate().getDay() == new Date().getDay() &&
-                      lap.timestamp.toDate().getMonth() ==
-                        new Date().getMonth() &&
-                      lap.timestamp.toDate().getFullYear() ==
-                        new Date().getFullYear()
-                        ? 'heute'
-                        : 'am ' +
-                          lap.timestamp
-                            .toDate()
-                            .toLocaleDateString('de-DE')}{' '}
-                      {lap.timestamp.toDate().getHours().toString() +
-                        ':' +
-                        lap.timestamp.toDate().getMinutes().toString()}
-                    </span>
-                  </span>
-                  <div className="spacer" />
+                <ListItem
+                  key={lap.id}
+                  number={runners[lap.runnerId]?.number}
+                  mainContent={runners[lap.runnerId]?.name || 'Unbekannt'}
+                  secondaryContent={
+                    (lap.timestamp.toDate().getDay() == new Date().getDay() &&
+                    lap.timestamp.toDate().getMonth() ==
+                      new Date().getMonth() &&
+                    lap.timestamp.toDate().getFullYear() ==
+                      new Date().getFullYear()
+                      ? 'heute'
+                      : 'am ' +
+                        lap.timestamp.toDate().toLocaleDateString('de-DE')) +
+                    ' ' +
+                    lap.timestamp.toDate().getHours().toString() +
+                    ':' +
+                    lap.timestamp.toDate().getMinutes().toString()
+                  }
+                >
                   <button
                     className="btn-outline btn-error btn-square btn-sm btn text-error"
                     aria-label="Runde löschen"
@@ -124,9 +114,10 @@ export default function AssistantViewLaps() {
                   >
                     <Icon name="TrashIcon" />
                   </button>
-                </div>
+                </ListItem>
               );
             })}
+          <div className="w-full text-center text-sm">Keine weiteren Runden</div>
         </div>
       </main>
     </>

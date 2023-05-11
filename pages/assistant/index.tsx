@@ -8,6 +8,7 @@ import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
 import { Runner, Lap } from '@/lib/interfaces';
 import { themedPromiseToast } from '@/lib/utils';
 import { createLap, deleteLap } from '@/lib/firebaseUtils';
+import ListItem from '@/components/ListItem';
 
 export default function AssistantIndex() {
   const [laps, lapsLoading, lapsError] = useCollectionAsList<Lap>(
@@ -67,9 +68,9 @@ export default function AssistantIndex() {
     <>
       <Head title="Assistent" />
       <main className="main">
-        <div className="flex h-1/5 flex-row items-center justify-around gap-2 lg:w-1/2">
-          <div className="flex flex-col items-center justify-center gap-2">
-            <div className="card ml-2 max-w-md bg-base-100 shadow-xl lg:p-0">
+        <div className="grid !h-screen grid-cols-2 gap-2">
+          <section className="flex flex-col items-center justify-center gap-2">
+            <div className="card bg-base-100 shadow-xl">
               <div className="card-body p-2">
                 <input
                   id="number"
@@ -120,47 +121,33 @@ export default function AssistantIndex() {
               Drücke <kbd className="kbd kbd-sm">Enter</kbd>, um eine Runde zu
               zählen
             </div>
-          </div>
-          <div className="flex-start flex h-screen w-1/2 justify-center pr-2 lg:px-0">
-            <div className="vertical-list !gap-2">
-              {laps
-                .sort((a, b) => {
-                  return (
-                    // @ts-ignore
-                    b.timestamp - a.timestamp
-                  );
-                })
-                .slice(0, 30)
-                .map((lap) => (
-                  <div key={lap.id} className="list-item">
-                    <span className="leading-zeros font-semibold">
-                      {'0'.repeat(
-                        3 - runners[lap.runnerId]?.number.toString().length
-                      )}
-                    </span>
-                    <span className="pr-3 font-semibold">
-                      {runners[lap.runnerId]?.number}
-                    </span>
-                    <span className="overflow-hidden whitespace-nowrap">
-                      <span className="hidden overflow-hidden text-ellipsis font-semibold md:inline">
-                        {runners[lap.runnerId]?.name || 'Unbekannt'}
-                      </span>
-                    </span>
-                    <div className="spacer" />
-                    <button
-                      className="btn-outline btn-error btn-square btn-sm btn hidden text-error md:flex"
-                      aria-label="Runde löschen"
-                      onClick={() => deleteLapHandler(lap.id)}
-                    >
-                      <Icon name="TrashIcon" />
-                    </button>
-                  </div>
-                ))}
-              <div className="w-full text-center text-sm">
-                Neuesten 30 Runden
-              </div>
-            </div>
-          </div>
+          </section>
+          <section className="vertical-list">
+            {laps
+              .sort((a, b) => {
+                return (
+                  // @ts-ignore
+                  b.timestamp - a.timestamp
+                );
+              })
+              .slice(0, 30)
+              .map((lap) => (
+                <ListItem
+                  key={lap.id}
+                  number={runners[lap.runnerId]?.number}
+                  mainContent={runners[lap.runnerId]?.name || 'Unbekannt'}
+                >
+                  <button
+                    className="btn-outline btn-error btn-square btn-sm btn hidden text-error md:flex"
+                    aria-label="Runde löschen"
+                    onClick={() => deleteLapHandler(lap.id)}
+                  >
+                    <Icon name="TrashIcon" />
+                  </button>
+                </ListItem>
+              ))}
+            <div className="w-full text-center text-sm">Neuesten 30 Runden</div>
+          </section>
         </div>
       </main>
     </>

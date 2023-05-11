@@ -27,48 +27,29 @@
   background: #555;
 }
 
+/* General layout */
 .main {
-  @apply flex flex-col justify-center items-center bg-base-200 h-screen px-2;
+  @apply flex h-screen flex-col items-center justify-start bg-base-200 px-2 md:px-0;
 }
 
-.small-card {
-  @apply card w-full max-w-sm shadow-xl bg-base-100 mx-2;
+.main > * {
+  @apply max-w-xl;
 }
 
-.large-card {
-  @apply card w-full max-w-xl shadow-xl bg-base-100;
+.search-bar {
+  @apply menu rounded-box menu-horizontal absolute z-40 mt-2 w-[calc(100%-1rem)] bg-base-100 p-2 shadow-xl;
+}
+
+.search-bar + * {
+  @apply !pt-[calc(2rem+33px)];
 }
 
 .vertical-list {
-  @apply flex items-center flex-col overflow-y-auto h-screen w-full pt-2 pb-2 gap-2;
+  @apply grid w-full grid-cols-1 flex-col items-center gap-2 overflow-y-auto pb-[5.25rem] pt-2 lg:pb-2;
 }
 
-.vertical-list .list-item {
-  @apply alert max-w-xl shadow-md bg-base-100 rounded-box flex flex-row justify-start w-full !gap-0 text-lg;
-}
-
-.vertical-list .list-item .spacer {
-  @apply flex-grow;
-}
-
-.searchbox {
-  @apply menu menu-horizontal bg-base-100 p-2 rounded-full z-40 top-4 shadow-xl absolute w-[calc(100%-1rem)] max-w-xl;
-}
-
-.input-elements-container {
-  @apply form-control flex flex-row gap-3 justify-between w-full;
-}
-
-.input-elements-container input[type="text"] {
-  @apply input input-bordered input-sm rounded-full grow w-10;
-}
-
-.alert {
-  @apply px-1 py-1 pl-3;
-}
-
-.alert > :not([hidden]) ~ :not([hidden]) {
-  @apply mt-0;
+.large-card {
+  @apply card bg-base-100 shadow-xl;
 }
 
 .leading-zeros {

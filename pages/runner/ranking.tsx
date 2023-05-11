@@ -8,6 +8,8 @@ import Icon from '@/components/Icon';
 import Link from 'next/link';
 import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
 import { Runner } from '@/lib/interfaces';
+import SearchBar from '@/components/SearchBar';
+import ListItem from '@/components/ListItem';
 
 export default function RunnerRanking() {
   const [runners, runnersLoading, runnersError] = useCollectionAsDict<Runner>(
@@ -70,7 +72,39 @@ export default function RunnerRanking() {
     <>
       <Head title="Läufer" />
       <main className="main">
-        <div className="searchbox">
+        <SearchBar
+          searchValue={filterName}
+          setSearchValue={setFilterName}
+          filters={[
+            // {
+            //   filerValue: filterType,
+            //   setFilterValue: setFilterType,
+            //   filterOptions: [
+            //     { value: '', label: 'Alle Typen' },
+            //     { value: 'student', label: 'Schüler' },
+            //     { value: 'staff', label: 'Lehrer' },
+            //     { value: 'other', label: 'Sonstige' },
+            //   ],
+            // },
+            {
+              filerValue: filterClasses,
+              setFilterValue: setFilterClasses,
+              filterOptions: [
+                { value: '', label: 'Alle Klassen' },
+                ...classes.map((_class) => ({ value: _class, label: _class })),
+              ],
+            },
+            {
+              filerValue: filterHouse,
+              setFilterValue: setFilterHouse,
+              filterOptions: [
+                { value: '', label: 'Alle Häuser' },
+                ...houses.map((house) => ({ value: house, label: house })),
+              ],
+            },
+          ]}
+        />
+        {/* <div className="searchbox">
           <div className="input-elements-container">
             <div className="btn-ghost btn-sm btn-circle btn lg:hidden">
               <Link href={'/runner'} aria-label="Home">
@@ -118,8 +152,8 @@ export default function RunnerRanking() {
               </div>
             </div>
           </div>
-        </div>
-        <div className="vertical-list !pt-20">
+        </div> */}
+        <div className="vertical-list">
           {lapCountByRunnerId
             .filter((lapCountWithRunnerId) => {
               return (
@@ -129,67 +163,72 @@ export default function RunnerRanking() {
             })
             .map((lapCountWithRunnerId) => {
               return (
-                <div className="list-item" key={lapCountWithRunnerId.runnerId}>
-                  <span className="leading-zeros font-semibold">
-                    {'0'.repeat(
-                      3 -
-                        (
-                          getPosition(lapCountWithRunnerId.runnerId) + 1
-                        ).toString().length
-                    )}
-                  </span>
-                  <span className="pr-3 font-semibold">
-                    {getPosition(lapCountWithRunnerId.runnerId) + 1}
-                  </span>
-                  {getPosition(lapCountWithRunnerId.runnerId) < 3 && (
-                    <span
-                      aria-label="Erster Platz"
-                      className="md:text-md inline-block text-sm"
-                    >
-                      {
-                        ['🥇', '🥈', '🥉'][
-                          getPosition(lapCountWithRunnerId.runnerId)
-                        ]
-                      }
-                    </span>
-                  )}
-                  <span className="overflow-hidden whitespace-nowrap pr-1">
-                    <span className="overflow-hidden text-ellipsis font-semibold">
-                      {runners[lapCountWithRunnerId.runnerId].name}
-                    </span>
-                  </span>
+                <ListItem
+                  key={lapCountWithRunnerId.runnerId}
+                  number={getPosition(lapCountWithRunnerId.runnerId) + 1}
+                  mainContent={runners[lapCountWithRunnerId.runnerId].name}
+                ></ListItem>
+                // <div className="list-item" key={lapCountWithRunnerId.runnerId}>
+                //   <span className="leading-zeros font-semibold">
+                //     {'0'.repeat(
+                //       3 -
+                //         (
+                //           getPosition(lapCountWithRunnerId.runnerId) + 1
+                //         ).toString().length
+                //     )}
+                //   </span>
+                //   <span className="pr-3 font-semibold">
+                //     {getPosition(lapCountWithRunnerId.runnerId) + 1}
+                //   </span>
+                //   {getPosition(lapCountWithRunnerId.runnerId) < 3 && (
+                //     <span
+                //       aria-label="Erster Platz"
+                //       className="md:text-md inline-block text-sm"
+                //     >
+                //       {
+                //         ['🥇', '🥈', '🥉'][
+                //           getPosition(lapCountWithRunnerId.runnerId)
+                //         ]
+                //       }
+                //     </span>
+                //   )}
+                //   <span className="overflow-hidden whitespace-nowrap pr-1">
+                //     <span className="overflow-hidden text-ellipsis font-semibold">
+                //       {runners[lapCountWithRunnerId.runnerId].name}
+                //     </span>
+                //   </span>
 
-                  <div className="spacer" />
-                  <span className="flex flex-row items-center pr-3">
-                    <div className="pr-1">
-                      <div className="stat-value text-center text-lg font-semibold md:text-xl">
-                        {runners[lapCountWithRunnerId.runnerId].number}
-                      </div>
-                      <div className="stat-title -mt-2 text-center text-xs">
-                        Nr.
-                      </div>
-                    </div>
-                    <div className="pr-1">
-                      <div className="stat-value text-center text-lg font-semibold md:text-xl">
-                        {lapCountWithRunnerId.lapCount.toString()}
-                      </div>
-                      <div className="stat-title -mt-2 text-center text-xs">
-                        Runden
-                      </div>
-                    </div>
-                    <div className="pr-1">
-                      <div className="stat-value text-center text-lg font-semibold md:text-xl">
-                        {(
-                          (lapCountWithRunnerId.lapCount * distancePerLap) /
-                          1000
-                        ).toFixed(2)}
-                      </div>
-                      <div className="stat-title -mt-2 text-center text-xs">
-                        km
-                      </div>
-                    </div>
-                  </span>
-                </div>
+                //   <div className="spacer" />
+                //   <span className="flex flex-row items-center pr-3">
+                //     <div className="pr-1">
+                //       <div className="stat-value text-center text-lg font-semibold md:text-xl">
+                //         {runners[lapCountWithRunnerId.runnerId].number}
+                //       </div>
+                //       <div className="stat-title -mt-2 text-center text-xs">
+                //         Nr.
+                //       </div>
+                //     </div>
+                //     <div className="pr-1">
+                //       <div className="stat-value text-center text-lg font-semibold md:text-xl">
+                //         {lapCountWithRunnerId.lapCount.toString()}
+                //       </div>
+                //       <div className="stat-title -mt-2 text-center text-xs">
+                //         Runden
+                //       </div>
+                //     </div>
+                //     <div className="pr-1">
+                //       <div className="stat-value text-center text-lg font-semibold md:text-xl">
+                //         {(
+                //           (lapCountWithRunnerId.lapCount * distancePerLap) /
+                //           1000
+                //         ).toFixed(2)}
+                //       </div>
+                //       <div className="stat-title -mt-2 text-center text-xs">
+                //         km
+                //       </div>
+                //     </div>
+                //   </span>
+                // </div>
               );
             })}
           <div className="w-full text-center text-sm">
