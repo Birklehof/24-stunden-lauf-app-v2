@@ -51,12 +51,15 @@ export default function SearchBar({
             >
               {filters?.map((filter) => (
                 <select
+                  key={filter.filerValue}
                   className="select-bordered select select-sm grow"
                   onChange={(e) => filter.setFilterValue(e.target.value)}
                   value={filter.filerValue}
                 >
                   {filter.filterOptions?.map((option) => (
-                    <option value={option.value}>{option.label}</option>
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
                   ))}
                 </select>
               ))}
