@@ -15,7 +15,22 @@ export default async function handler(
   }
 
   try {
-    await auth.verifyIdToken(req.headers.authorization.toString());
+    const token = await auth.verifyIdToken(
+      req.headers.authorization.toString()
+    );
+
+    if (!token.email) {
+      return res.status(401).json({ error: 'Access token invalid' });
+    }
+
+    const role = await db
+      .collection('apps/24-stunden-lauf/roles')
+      .doc(token.email)
+      .get();
+
+    if (!role.exists || role.data()?.role !== 'assistant') {
+      throw new Error('Insufficient permissions');
+    }
   } catch (error: any) {
     return res.status(401).json({ error: error.message });
   }

@@ -101,10 +101,11 @@ export default function AssistantIndex() {
                         pending: 'Runde wird hinzugefügt',
                         success: 'Erfolgreich hinzugefügt',
                         error: {
-                          render({ data }) {
-                            if (data instanceof Error) {
+                          render({ data }: any) {
+                            if (data.message) {
                               return data.message;
                             }
+                            return 'Unbekannter Fehler';
                           },
                         },
                       });
