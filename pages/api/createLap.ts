@@ -56,7 +56,7 @@ export default async function handler(
     const now = new Date();
 
     // Check if last lap was less than 2 minutes ago
-    if (now.getTime() - lastLapDate.getTime() < 0 * 60 * 1000) {
+    if (now.getTime() - lastLapDate.getTime() < 2 * 60 * 1000) {
       return res.status(400).json({ error: 'Too many laps' });
     }
   }

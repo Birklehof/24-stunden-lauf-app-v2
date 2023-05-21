@@ -101,11 +101,13 @@ export default function AssistantIndex() {
                         pending: 'Runde wird hinzugefügt',
                         success: 'Erfolgreich hinzugefügt',
                         error: {
-                          render({ data }: any) {
+                          render: ({ data }: any) => {
                             if (data.message) {
                               return data.message;
+                            } else if (typeof data === 'string') {
+                              return data;
                             }
-                            return 'Unbekannter Fehler';
+                            return 'Fehler beim Hinzufügen der Runde';
                           },
                         },
                       });

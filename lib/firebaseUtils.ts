@@ -35,7 +35,7 @@ async function createLap(
   )?.id;
 
   if (!runnerId) {
-    throw new Error('Kein Läufer mit dieser Startnummer');
+    return Promise.reject('Kein Läufer mit dieser Startnummer');
   }
 
   // Make api request to /api/createLap
@@ -55,16 +55,16 @@ async function createLap(
   const body = await res.text();
 
   if (res.status == 401 || res.status == 403) {
-    throw new Error('Zugriff verweigert');
+    return Promise.reject('Zugriff verweigert');
   }
 
   if (res.status == 400) {
     if (JSON.parse(body).error == 'Too many laps') {
-      throw new Error('Letzte Runde ist keine Zwei Minuten her');
+      return Promise.reject('Letzte Runde ist keine Zwei Minuten her');
     }
   }
 
-  throw new Error('Unbekannter Fehler');
+  return Promise.reject('Fehler beim Hinzufügen der Runde');
 }
 
 export { createRunner, deleteLap, createLap };
