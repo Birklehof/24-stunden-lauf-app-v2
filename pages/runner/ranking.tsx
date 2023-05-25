@@ -4,8 +4,6 @@ import Loading from '@/components/Loading';
 import Head from '@/components/Head';
 import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
 import useRanking from '@/lib/hooks/useRanking';
-import Icon from '@/components/Icon';
-import Link from 'next/link';
 import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
 import { Runner } from '@/lib/interfaces';
 import SearchBar from '@/components/SearchBar';
@@ -104,55 +102,6 @@ export default function RunnerRanking() {
             },
           ]}
         />
-        {/* <div className="searchbox">
-          <div className="input-elements-container">
-            <div className="btn-ghost btn-sm btn-circle btn lg:hidden">
-              <Link href={'/runner'} aria-label="Home">
-                <Icon name="HomeIcon" />
-              </Link>
-            </div>
-            <input
-              type="text"
-              placeholder="Suchen..."
-              onChange={(e) => setFilterName(e.target.value)}
-            />
-            <div className="dropdown-bottom dropdown-end dropdown">
-              <label
-                tabIndex={0}
-                className="btn-ghost btn-sm btn-circle btn"
-                aria-label="Filtern"
-              >
-                <Icon name="AdjustmentsIcon" />
-              </label>
-              <div
-                tabIndex={0}
-                className="dropdown-content menu rounded-box flex flex-col gap-3 bg-base-100 p-3 shadow"
-              >
-                <select
-                  className="select-bordered select select-sm grow"
-                  onChange={(e) => setFilterClasses(e.target.value)}
-                  value={filterClasses}
-                >
-                  <option value={''}>Alle Klassen</option>
-                  {classes.map((_class) => (
-                    <option key={_class}>{_class}</option>
-                  ))}
-                </select>
-
-                <select
-                  className="select-bordered select select-sm grow"
-                  onChange={(e) => setFilterHouse(e.target.value)}
-                  value={filterHouse}
-                >
-                  <option value={''}>Alle Häuser</option>
-                  {houses.map((house) => (
-                    <option key={house}>{house}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-        </div> */}
         <div className="vertical-list">
           {lapCountByRunnerId
             .filter((lapCountWithRunnerId) => {
@@ -166,8 +115,43 @@ export default function RunnerRanking() {
                 <ListItem
                   key={lapCountWithRunnerId.runnerId}
                   number={getPosition(lapCountWithRunnerId.runnerId) + 1}
-                  mainContent={runners[lapCountWithRunnerId.runnerId].name}
-                ></ListItem>
+                  mainContent={
+                    ['🥇', '🥈', '🥉'][
+                      getPosition(lapCountWithRunnerId.runnerId)
+                    ] +
+                    runners[lapCountWithRunnerId.runnerId].name
+                  }
+                >
+                    <div className="flex flex-row items-center justify-between pr-3 w-1/4">
+                    <div className="pr-1">
+                      <div className="stat-value text-center text-lg font-semibold md:text-xl">
+                        {runners[lapCountWithRunnerId.runnerId].number}
+                      </div>
+                      <div className="stat-title -mt-2 text-center text-xs">
+                        Nr.
+                      </div>
+                    </div>
+                    <div className="pr-1">
+                      <div className="stat-value text-center text-lg font-semibold md:text-xl">
+                        {lapCountWithRunnerId.lapCount.toString()}
+                      </div>
+                      <div className="stat-title -mt-2 text-center text-xs">
+                        Runden
+                      </div>
+                    </div>
+                    <div className="pr-1">
+                      <div className="stat-value text-center text-lg font-semibold md:text-xl">
+                        {(
+                          (lapCountWithRunnerId.lapCount * distancePerLap) /
+                          1000
+                        ).toFixed(2)}
+                      </div>
+                      <div className="stat-title -mt-2 text-center text-xs">
+                        km
+                      </div>
+                    </div>
+                  </div>
+                </ListItem>
                 // <div className="list-item" key={lapCountWithRunnerId.runnerId}>
                 //   <span className="leading-zeros font-semibold">
                 //     {'0'.repeat(
@@ -199,35 +183,7 @@ export default function RunnerRanking() {
                 //   </span>
 
                 //   <div className="spacer" />
-                //   <span className="flex flex-row items-center pr-3">
-                //     <div className="pr-1">
-                //       <div className="stat-value text-center text-lg font-semibold md:text-xl">
-                //         {runners[lapCountWithRunnerId.runnerId].number}
-                //       </div>
-                //       <div className="stat-title -mt-2 text-center text-xs">
-                //         Nr.
-                //       </div>
-                //     </div>
-                //     <div className="pr-1">
-                //       <div className="stat-value text-center text-lg font-semibold md:text-xl">
-                //         {lapCountWithRunnerId.lapCount.toString()}
-                //       </div>
-                //       <div className="stat-title -mt-2 text-center text-xs">
-                //         Runden
-                //       </div>
-                //     </div>
-                //     <div className="pr-1">
-                //       <div className="stat-value text-center text-lg font-semibold md:text-xl">
-                //         {(
-                //           (lapCountWithRunnerId.lapCount * distancePerLap) /
-                //           1000
-                //         ).toFixed(2)}
-                //       </div>
-                //       <div className="stat-title -mt-2 text-center text-xs">
-                //         km
-                //       </div>
-                //     </div>
-                //   </span>
+                
                 // </div>
               );
             })}

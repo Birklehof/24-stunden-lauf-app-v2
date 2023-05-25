@@ -2,7 +2,7 @@ import { Runner } from '@/lib/interfaces';
 import { useEffect, useState } from 'react';
 import { collection, getDocs } from '@firebase/firestore';
 import { db } from '@/lib/firebase';
-import { getDoc, onSnapshot } from 'firebase/firestore';
+import { onSnapshot } from 'firebase/firestore';
 import useAuth from './useAuth';
 
 interface LapCountByRunnerId {
