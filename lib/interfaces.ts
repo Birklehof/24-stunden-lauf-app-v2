@@ -19,6 +19,10 @@ export interface Runner {
   class?: string;
 }
 
+export interface RunnerWithLapCount extends Runner {
+  lapCount: number;
+}
+
 export interface Staff {
   id: string;
   firstName: string;

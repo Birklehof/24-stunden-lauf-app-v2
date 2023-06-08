@@ -6,7 +6,7 @@ import Icon from '@/components/Icon';
 import useCollectionAsList from '@/lib/hooks/useCollectionAsList';
 import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
 import { Runner, Lap } from '@/lib/interfaces';
-import { deleteLap } from '@/lib/firebaseUtils';
+import { deleteLap } from '@/lib/firebase/frontendUtils';
 import SearchBar from '@/components/SearchBar';
 import ListItem from '@/components/ListItem';
 

@@ -6,6 +6,7 @@ interface ListItemProps {
   secondaryContent?: string;
   badges?: string[];
   children?: ReactNode | undefined;
+  glass?: boolean;
 }
 
 export default function ListItem({
@@ -14,39 +15,44 @@ export default function ListItem({
   secondaryContent,
   badges,
   children,
+  glass,
 }: ListItemProps) {
   return (
-    <div className="card rounded-box flex flex-row gap-0 bg-base-100 p-1 pl-3 shadow-md">
-      <div className="flex grow flex-col justify-center">
-        <div className="flex w-full flex-row items-center">
-          {number != undefined && (
-            <>
-              <span className="opacity-60">
-                {'0'.repeat(3 - number.toString().length)}
-              </span>
-              <span className="pr-1">{number}</span>
-            </>
-          )}
-          <span className="overflow-hidden text-ellipsis whitespace-nowrap pr-1 font-semibold">
+    <div className={`centered-card ${glass && '!bg-opacity-60'}`}>
+      <div className="card-body w-full flex-row p-1">
+        <div className="flex grow flex-col justify-center overflow-hidden text-ellipsis pl-1">
+          <div className="font-semibold">
+            {number != undefined && (
+              <>
+                <span className="opacity-20">
+                  {'0'.repeat(3 - number.toString().length)}
+                </span>
+                <span className="pr-1">{number}</span>
+              </>
+            )}
             {mainContent}
-          </span>
+          </div>
+
           {secondaryContent && (
-            <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+            <span className="flex overflow-hidden text-ellipsis whitespace-nowrap">
               {secondaryContent}
             </span>
           )}
+          {(badges?.length || 0) > 0 && (
+            <div className="flex flex-row flex-wrap gap-1 py-1">
+              {badges?.map((badge) => (
+                <span
+                  key={badge}
+                  className="badge badge-info badge-outline justify-start overflow-hidden whitespace-nowrap"
+                >
+                  {badge}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
-        {(badges?.length || 0) > 0 && (
-          <div className="flex flex-row gap-1 pb-1">
-            {badges?.map((badge) => (
-              <span key={badge} className="badge-success badge-outline badge">
-                {badge}
-              </span>
-            ))}
-          </div>
-        )}
+        <div className="flex w-min flex-row gap-1">{children}</div>
       </div>
-      {children}
     </div>
   );
 }

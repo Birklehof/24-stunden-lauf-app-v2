@@ -7,7 +7,7 @@ import useCollectionAsList from '@/lib/hooks/useCollectionAsList';
 import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
 import { Runner, Lap } from '@/lib/interfaces';
 import { themedPromiseToast } from '@/lib/utils';
-import { createLap, deleteLap } from '@/lib/firebaseUtils';
+import { createLap, deleteLap } from '@/lib/firebase/frontendUtils';
 import ListItem from '@/components/ListItem';
 
 export default function AssistantIndex() {

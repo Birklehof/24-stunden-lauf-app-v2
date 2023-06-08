@@ -1,17 +1,17 @@
 import useAuth from '@/lib/hooks/useAuth';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Loading from '@/components/Loading';
 import Head from '@/components/Head';
 import NewLapOverlay from '@/components/NewLapOverlay';
 import useRunner from '@/lib/hooks/useRunner';
 import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
-import useRanking from '@/lib/hooks/useRanking';
+import { getRunnerPosition } from '@/lib/firebase/frontendUtils';
 
 export default function RunnerIndex() {
   const { isLoggedIn, user } = useAuth();
-  const { runner, laps } = useRunner();
-  const { getPosition } = useRanking();
+  const { runner, lapCount } = useRunner();
   const { distancePerLap } = useRemoteConfig();
+  const [position, setPosition] = useState<number | null>(null);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -19,9 +19,21 @@ export default function RunnerIndex() {
     }
   }, [isLoggedIn]);
 
-  console.log(laps);
+  useEffect(() => {
+    if (!runner || lapCount == 0) {
+      return;
+    }
 
-  if (!user || !runner || laps == undefined) {
+    getRunnerPosition({
+      ...runner,
+      lapCount,
+    }).then((position) => {
+      setPosition(position);
+    });
+  }, [runner, lapCount]);
+
+
+  if (!user || !runner) {
     return <Loading />;
   }
 
@@ -47,21 +59,27 @@ export default function RunnerIndex() {
             <div>
               <h1 className="text-center text-3xl font-bold sm:text-5xl">
                 <div className="inline text-base-300">
-                  {'0'.repeat(3 - laps.toString().length)}
+                  {'0'.repeat(3 - lapCount.toString().length)}
                 </div>
-                {laps}
+                {lapCount}
               </h1>
               <h2 className="text-base-400 text-center text-sm font-bold opacity-80 sm:text-xl">
-                {laps === 1 ? 'Runde' : 'Runden'}
+                {lapCount === 1 ? 'Runde' : 'Runden'}
               </h2>
             </div>
             <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
               <h1 className="text-center text-3xl font-bold sm:text-5xl">
-                <div className="inline text-base-300">
-                  {'0'.repeat(3 - getPosition(runner).toString().length)}
-                </div>
-                {getPosition(runner)}
+                {position ? (
+                  <>
+                    <div className="inline text-base-300">
+                      {'0'.repeat(3 - position.toString().length)}
+                    </div>
+                    {position}
+                  </>
+                ) : (
+                  <div className="inline text-base-300">000</div>
+                )}
               </h1>
               <h2 className="text-base-400 text-center text-sm font-bold opacity-80 sm:text-xl">
                 Platz
@@ -70,10 +88,10 @@ export default function RunnerIndex() {
             <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
               <h1 className="text-center text-3xl font-bold sm:text-5xl">
-                {((laps * distancePerLap) / 1000).toFixed(
-                  (laps * distancePerLap) / 1000 < 10
+                {((lapCount * distancePerLap) / 1000).toFixed(
+                  (lapCount * distancePerLap) / 1000 < 10
                     ? 2
-                    : (laps * distancePerLap) / 1000 < 100
+                    : (lapCount * distancePerLap) / 1000 < 100
                     ? 1
                     : 0
                 )}

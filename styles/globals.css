@@ -29,27 +29,27 @@
 
 /* General layout */
 .main {
-  @apply flex h-screen flex-col items-center justify-start bg-base-200 px-2 md:px-0;
-}
-
-.main > * {
-  @apply max-w-xl;
+  @apply flex w-full h-screen flex-col items-center justify-start bg-base-200 p-2;
 }
 
 .search-bar {
-  @apply menu rounded-box menu-horizontal absolute z-40 mt-2 w-[calc(100%-1rem)] bg-base-100 p-2 shadow-xl;
+  @apply menu rounded-box menu-horizontal absolute z-10 w-[calc(100%-1rem)] lg:w-[calc(100%-1rem)] max-w-xl bg-base-100 p-2 shadow-md;
 }
 
 .search-bar + * {
-  @apply !pt-[calc(2rem+33px)];
+  @apply !pt-[calc(0.5rem+48px)];
 }
 
 .vertical-list {
-  @apply grid w-full grid-cols-1 flex-col items-center gap-2 overflow-y-auto pb-[5.25rem] pt-2 lg:pb-2;
+  @apply grid w-full grid-cols-1 flex-col items-center gap-2 overflow-y-auto;
 }
 
-.large-card {
-  @apply card bg-base-100 shadow-xl;
+.filling-card {
+  @apply card bg-base-100 shadow-md grow;
+}
+
+.centered-card {
+  @apply card bg-base-100 shadow-md max-w-xl mx-auto w-full;
 }
 
 .leading-zeros {

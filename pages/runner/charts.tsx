@@ -18,17 +18,15 @@ import {
 import { Lap } from '@/lib/interfaces';
 import useCollectionAsList from '@/lib/hooks/useCollectionAsList';
 import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
-import useCollectionCount from '@/lib/hooks/useCollectionCount';
 
 export default function RunnerGraphs() {
   const [laps, lapsLoading, lapsError] = useCollectionAsList<Lap>(
     'apps/24-stunden-lauf/laps'
   );
-  const [runnerCount, runnerCountLoading, runnerCountError] =
-    useCollectionCount('apps/24-stunden-lauf/runners');
-  const [lapsCount, lapsCountLoading, lapsCountError] = useCollectionCount(
-    'apps/24-stunden-lauf/laps'
-  );
+
+  // TODO: Implement runnerCount and lapsCount
+  const runnerCount = 0
+  const lapsCount = 0
 
   const { isLoggedIn, user } = useAuth();
   const { runner } = useRunner();
@@ -43,9 +41,7 @@ export default function RunnerGraphs() {
   if (
     !user ||
     !runner ||
-    lapsLoading ||
-    runnerCountLoading ||
-    lapsCountLoading
+    lapsLoading
   ) {
     return <Loading />;
   }

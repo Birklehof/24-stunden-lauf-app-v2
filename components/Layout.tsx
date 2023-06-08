@@ -58,7 +58,7 @@ export default function Layout({ children }: PropsWithChildren) {
               },
               {
                 name: 'Runde löschen',
-                href: '/assistant/view-laps',
+                href: '/assistant/laps',
                 icon: 'ViewListIcon',
               },
               {

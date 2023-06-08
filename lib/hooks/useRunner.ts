@@ -14,7 +14,7 @@ import useAuth from './useAuth';
 export default function useRunner() {
   const { isLoggedIn, user, role } = useAuth();
   const [runner, setRunner] = useState<Runner>();
-  const [laps, setLaps] = useState<number>(0);
+  const [lapCount, setLapCount] = useState<number>(0);
 
   useEffect(() => {
     if (!isLoggedIn || !user) return;
@@ -51,12 +51,12 @@ export default function useRunner() {
       where('runnerId', '==', runner.id)
     );
     const lapCount = await getCountFromServer(q);
-    setLaps(lapCount.data().count);
+    setLapCount(lapCount.data().count);
 
     onSnapshot(q, (query) => {
-      setLaps(query.docs.length);
+      setLapCount(query.docs.length);
     });
   }
 
-  return { runner, laps };
+  return { runner, lapCount };
 }

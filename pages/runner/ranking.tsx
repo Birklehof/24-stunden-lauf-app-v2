@@ -3,26 +3,33 @@ import { useEffect, useState } from 'react';
 import Loading from '@/components/Loading';
 import Head from '@/components/Head';
 import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
-import useRanking from '@/lib/hooks/useRanking';
-import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
-import { Runner } from '@/lib/interfaces';
+import { RunnerWithLapCount } from '@/lib/interfaces';
 import SearchBar from '@/components/SearchBar';
 import ListItem from '@/components/ListItem';
+import { getRunnersWithLapCount } from '@/lib/firebase/backendUtils';
 
-export default function RunnerRanking() {
-  const [runners, runnersLoading, runnersError] = useCollectionAsDict<Runner>(
-    'apps/24-stunden-lauf/runners'
-  );
+export async function getStaticProps() {
+  return {
+    props: {
+      runnersWithLapCount: await getRunnersWithLapCount(),
+    },
+    revalidate: 60 * 3, // 3 minutes
+  };
+}
 
+export default function RunnerRanking({
+  runnersWithLapCount,
+}: {
+  runnersWithLapCount: RunnerWithLapCount[];
+}) {
   const { isLoggedIn, user } = useAuth();
-  const { lapCountByRunnerId } = useRanking();
   const { classes, houses, distancePerLap } = useRemoteConfig();
 
   const [filterClasses, setFilterClasses] = useState('');
   const [filterHouse, setFilterHouse] = useState('');
   const [filterName, setFilterName] = useState('');
 
-  function filter(runner: Runner): boolean {
+  function filter(runner: RunnerWithLapCount): boolean {
     // Filter runners by class, house and name (true = show runner)
 
     if (filterClasses || filterHouse) {
@@ -40,7 +47,7 @@ export default function RunnerRanking() {
 
     if (
       filterName &&
-      !runners[runner.id]?.name.toLowerCase().includes(filterName.toLowerCase())
+      !runner.name.toLowerCase().includes(filterName.toLowerCase())
     ) {
       return false;
     }
@@ -48,12 +55,11 @@ export default function RunnerRanking() {
     return true;
   }
 
-  function getPosition(runnerId: string): number {
-    // Get position of runner in ranking
-    const position = lapCountByRunnerId.findIndex(
-      (lapCountWithRunnerId) => lapCountWithRunnerId.runnerId === runnerId
-    );
-    return position;
+  function getPosition(runner: RunnerWithLapCount): number {
+    // Get position of runner in runnersWithLapCount array
+    return runnersWithLapCount
+      .sort((a, b) => b.lapCount - a.lapCount)
+      .findIndex((runnerWithLapCount) => runnerWithLapCount.lapCount == runner.lapCount); 
   }
 
   useEffect(() => {
@@ -62,7 +68,7 @@ export default function RunnerRanking() {
     }
   }, [isLoggedIn]);
 
-  if (!user || runnersLoading || !lapCountByRunnerId) {
+  if (!user) {
     return <Loading />;
   }
 
@@ -103,29 +109,25 @@ export default function RunnerRanking() {
           ]}
         />
         <div className="vertical-list">
-          {lapCountByRunnerId
-            .filter((lapCountWithRunnerId) => {
-              return (
-                runners[lapCountWithRunnerId.runnerId] &&
-                filter(runners[lapCountWithRunnerId.runnerId])
-              );
+          {runnersWithLapCount
+            .filter((runnerWithLapCount) => {
+              return runnerWithLapCount.lapCount > 0 && filter(runnerWithLapCount);
             })
-            .map((lapCountWithRunnerId) => {
+            .sort((a, b) => b.lapCount - a.lapCount)
+            .map((runnerWithLapCount) => {
               return (
                 <ListItem
-                  key={lapCountWithRunnerId.runnerId}
-                  number={getPosition(lapCountWithRunnerId.runnerId) + 1}
+                  key={runnerWithLapCount.number}
+                  number={getPosition(runnerWithLapCount) + 1}
                   mainContent={
-                    ['🥇', '🥈', '🥉'][
-                      getPosition(lapCountWithRunnerId.runnerId)
-                    ] +
-                    runners[lapCountWithRunnerId.runnerId].name
+                    (['🥇', '🥈', '🥉'][getPosition(runnerWithLapCount)] ||
+                      '') + runnerWithLapCount.name
                   }
                 >
-                    <div className="flex flex-row items-center justify-between pr-3 w-1/4">
+                  <div className="flex w-1/4 flex-row items-center justify-between pr-3">
                     <div className="pr-1">
                       <div className="stat-value text-center text-lg font-semibold md:text-xl">
-                        {runners[lapCountWithRunnerId.runnerId].number}
+                        {runnerWithLapCount.number}
                       </div>
                       <div className="stat-title -mt-2 text-center text-xs">
                         Nr.
@@ -133,7 +135,7 @@ export default function RunnerRanking() {
                     </div>
                     <div className="pr-1">
                       <div className="stat-value text-center text-lg font-semibold md:text-xl">
-                        {lapCountWithRunnerId.lapCount.toString()}
+                        {runnerWithLapCount.lapCount.toString()}
                       </div>
                       <div className="stat-title -mt-2 text-center text-xs">
                         Runden
@@ -142,7 +144,7 @@ export default function RunnerRanking() {
                     <div className="pr-1">
                       <div className="stat-value text-center text-lg font-semibold md:text-xl">
                         {(
-                          (lapCountWithRunnerId.lapCount * distancePerLap) /
+                          (runnerWithLapCount.lapCount * distancePerLap) /
                           1000
                         ).toFixed(2)}
                       </div>
@@ -183,7 +185,7 @@ export default function RunnerRanking() {
                 //   </span>
 
                 //   <div className="spacer" />
-                
+
                 // </div>
               );
             })}
