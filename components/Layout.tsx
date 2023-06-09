@@ -18,7 +18,7 @@ export default function Layout({ children }: PropsWithChildren) {
   return (
     <>
       <button
-        className="btn-ghost btn-square btn absolute top-2 left-2 hidden md:flex"
+        className="btn-ghost btn-square btn absolute left-2 top-2 hidden md:flex"
         onClick={toggle}
       >
         <svg
@@ -55,19 +55,17 @@ export default function Layout({ children }: PropsWithChildren) {
               ]}
             />
           ) : (
-            router.asPath.split('/')[1] === 'assistant' && (
-              <Menu
-                // Runner Menu
-                navItems={[
-                  { name: 'Start', href: '/runner', icon: 'HomeIcon' },
-                  {
-                    name: 'Ranking',
-                    href: '/shared/ranking',
-                    icon: 'TrendingUpIcon',
-                  },
-                ]}
-              />
-            )
+            <Menu
+              // Runner Menu
+              navItems={[
+                { name: 'Start', href: '/runner', icon: 'HomeIcon' },
+                {
+                  name: 'Ranking',
+                  href: '/shared/ranking',
+                  icon: 'TrendingUpIcon',
+                },
+              ]}
+            />
           )}
         </>
       )}
