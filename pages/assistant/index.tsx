@@ -93,7 +93,7 @@ export default function AssistantIndex() {
                     if (e.key === 'Enter') {
                       themedPromiseToast(createNewLapHandler, {
                         pending: 'Runde wird hinzugefügt',
-                        success: 'Erfolgreich hinzugefügt',
+                        success: 'Runde erfolgreich hinzugefügt',
                         error: {
                           render: ({ data }: any) => {
                             if (data.message) {
