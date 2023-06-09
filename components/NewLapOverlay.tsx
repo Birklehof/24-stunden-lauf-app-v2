@@ -3,15 +3,17 @@ import { useEffect, useMemo } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 
 export default function NewLapOverlay() {
-  const { laps } = useRunner();
+  const { lapCount } = useRunner();
   const [lastLapCount, setLastLapCount] = useLocalStorage('lastLapCount', 0);
 
   useEffect(() => {
-    if (laps > lastLapCount) {
-      setLastLapCount(laps);
+    if (!lapCount) return
+
+    if (lapCount > lastLapCount) {
+      setLastLapCount(lapCount);
       animateGrow();
     }
-  }, [laps]);
+  }, [lapCount]);
 
   function animateGrow() {
     // Animation currently not working because of there is no way to call the animation when the value of laps changes
@@ -29,7 +31,7 @@ export default function NewLapOverlay() {
     <>
       <div className="absolute z-50 flex hidden h-[max(200vw,200vh)] w-[max(200vw,200vh)] grow items-center justify-center rounded-full bg-success opacity-0">
         <h1 className="animate-[showText_1s_ease-in-out] text-5xl font-bold text-white">
-          {laps}. Runde
+          {lapCount}. Runde
         </h1>
       </div>
     </>
