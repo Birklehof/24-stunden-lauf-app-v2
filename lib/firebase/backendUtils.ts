@@ -1,6 +1,7 @@
 import { RunnerWithLapCount } from '../interfaces';
 import { db } from './firebase-admin';
 
+// Used in pages/shared/ranking.tsx
 export async function getRunnersWithLapCount(): Promise<RunnerWithLapCount[]> {
   const runners = await db.collection('apps/24-stunden-lauf/runners').get();
 

@@ -1,5 +1,5 @@
 {
-  "name": "24-stunden-lauf-web",
+  "name": "24-stunden-lauf-app-v2",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -15,7 +15,7 @@
     "@types/react-dom": "18.0.10",
     "autoprefixer": "^10.4.13",
     "chart.js": "^4.2.0",
-    "daisyui": "^2.46.1",
+    "daisyui": "^3.0.20",
     "eslint": "8.31.0",
     "eslint-config-next": "13.1.1",
     "firebase": "^9.20.0",

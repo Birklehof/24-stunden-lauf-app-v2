@@ -5,49 +5,64 @@ import {
   doc,
   getCountFromServer,
   getDocs,
+  limit,
+  orderBy,
   query,
   where,
 } from 'firebase/firestore';
-import { User, Runner, RunnerWithLapCount } from '@/lib/interfaces';
+import {
+  User,
+  Runner,
+  RunnerWithLapCount,
+  Lap,
+} from '@/lib/interfaces';
 import { db } from '.';
 
-export async function createRunner(
-  name: string,
-  runners: { [id: string]: Runner }
-): Promise<number> {
+// Used in pages/assistant/create-runner.tsx
+export async function createRunner(name: string): Promise<number> {
   if (!name) {
     throw new Error('Invalid name');
   }
-  const number = Object.keys(runners).length + 1;
 
-  const runner = { name, number, type: 'guest' } as Runner;
+  const newNumberQuery = query(
+    collection(db, 'apps/24-stunden-lauf/runners'),
+    orderBy('number', 'desc'),
+    limit(1)
+  );
+  const newNumberSnapshot = await getDocs(newNumberQuery);
+  const newNumber = newNumberSnapshot.empty
+    ? 1
+    : newNumberSnapshot.docs[0].data().number + 1;
+
+  const runner = { name, number: newNumber, type: 'guest' } as Runner;
   await addDoc(collection(db, 'apps/24-stunden-lauf/runners'), runner);
 
-  return number;
+  return newNumber;
 }
 
+// Used in pages/assistant/index.tsx
 export async function deleteLap(lapId: string) {
   await deleteDoc(doc(db, 'apps/24-stunden-lauf/laps', lapId));
 }
 
+// Used in pages/assistant/index.tsx
 export async function createLap(
   runnerNumber: number,
   runners: { [id: string]: Runner },
   user: User | undefined
 ) {
+  // Convert runnerNumber to valid runnerId
   if (runnerNumber <= 0) {
     throw new Error('Ungültige Startnummer');
   }
-
   const runnerId = Object.values(runners).find(
     (runner) => runner.number == runnerNumber
   )?.id;
-
   if (!runnerId) {
     return Promise.reject('Kein Läufer mit dieser Startnummer');
   }
 
-  // Make api request to /api/createLap
+  // Make api request to /api/createLap to create a lap with the corresponding runnerId
   const res = await fetch('/api/createLap', {
     method: 'POST',
     headers: {
@@ -76,50 +91,34 @@ export async function createLap(
   return Promise.reject('Fehler beim Hinzufügen der Runde');
 }
 
-export async function getRunnerWithLapCount(runnerId: string): Promise<RunnerWithLapCount> {
-  const runnerDoc = await getDocs(collection(db, 'apps/24-stunden-lauf/runners'));
-  const runner = runnerDoc.docs.find((doc) => doc.id == runnerId)?.data() as Runner;
-
-  const lapCountSnapshot = await getCountFromServer(
-    query(collection(db, 'apps/24-stunden-lauf/laps'), where('runnerId', '==', runnerId))
+// Used in pages/assistant/index.tsx
+export async function getNewestLaps(numberOfLaps: number): Promise<Lap[]> {
+  const lapsQuery = query(
+    collection(db, 'apps/24-stunden-lauf/laps'),
+    orderBy('timestamp', 'desc'),
+    limit(numberOfLaps)
   );
-  const lapCount = lapCountSnapshot.data().count || 0;
+  const lapsSnapshot = await getDocs(lapsQuery);
 
-  return {
-    ...runner,
-    lapCount,
-  } as RunnerWithLapCount;
+  const laps = lapsSnapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      ...data,
+    } as Lap;
+  });
+
+  return laps;
 }
 
-export async function getRunnersWithLapCount(): Promise<RunnerWithLapCount[]> {
-  // Get all runners
-
-  const runners = await getDocs(collection(db, 'apps/24-stunden-lauf/runners'));
-
-  // Get the lap count for each runner
-  const runnersWithLaps = await Promise.all(
-    runners.docs.map(async (docs) => {
-      const runner = docs.data() as Runner;
-
-      const lapsQuery = query(
-        collection(db, 'apps/24-stunden-lauf/laps'),
-        where('runnerId', '==', docs.id)
-      );
-      const lapCountSnapshot = await getCountFromServer(lapsQuery);
-      const lapCount = lapCountSnapshot.data().count || 0;
-
-      return {
-        ...runner,
-        lapCount,
-      } as RunnerWithLapCount;
-    })
+// Used in lib/hooks/useRunner.ts
+export async function getRunnerPosition(
+  runner: RunnerWithLapCount
+): Promise<number> {
+  const positionQuery = query(
+    collection(db, 'apps/24-stunden-lauf/runners'),
+    where('lapCount', '>', runner.lapCount)
   );
-
-  return runnersWithLaps;
-}
-
-export async function getRunnerPosition(runner: RunnerWithLapCount): Promise<number> {
-  const positionQuery = query(collection(db, 'apps/24-stunden-lauf/runners'), where('lapCount', '>', runner.lapCount));
   const positionSnapshot = await getCountFromServer(positionQuery);
   const position = positionSnapshot.data().count || 0;
   return position + 1;

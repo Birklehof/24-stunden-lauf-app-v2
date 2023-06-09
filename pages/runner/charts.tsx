@@ -32,12 +32,7 @@ export default function RunnerGraphs() {
   const { runner } = useRunner();
   const { classes, houses, distancePerLap } = useRemoteConfig();
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      return;
-    }
-  }, [isLoggedIn]);
-
+  // While loading, show loading screen
   if (
     !user ||
     !runner ||

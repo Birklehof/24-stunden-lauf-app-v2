@@ -3,8 +3,10 @@ import Icon from './Icon';
 import { useDarkMode } from 'usehooks-ts';
 import { useRouter } from 'next/router';
 import Menu from './Menu';
+import useAuth from '@/lib/hooks/useAuth';
 
 export default function Layout({ children }: PropsWithChildren) {
+  const { isLoggedIn, role } = useAuth();
   const { isDarkMode, toggle } = useDarkMode();
   const router = useRouter();
 
@@ -16,7 +18,7 @@ export default function Layout({ children }: PropsWithChildren) {
   return (
     <>
       <button
-        className="btn-ghost btn-square btn absolute top-3 left-3 hidden md:flex"
+        className="btn-ghost btn-square btn absolute top-2 left-2 hidden md:flex"
         onClick={toggle}
       >
         <svg
@@ -29,46 +31,45 @@ export default function Layout({ children }: PropsWithChildren) {
         </svg>
       </button>
 
-      {router.asPath.split('/')[1] === 'runner' ? (
-        <Menu
-          // Runner Menu
-          navItems={[
-            { name: 'Start', href: '/runner', icon: 'HomeIcon' },
-            {
-              name: 'Ranking',
-              href: '/runner/ranking',
-              icon: 'TrendingUpIcon',
-            },
-            {
-              name: 'Charts',
-              href: '/runner/charts',
-              icon: 'ChartBarIcon',
-            },
-          ]}
-        />
-      ) : (
-        router.asPath.split('/')[1] === 'assistant' && (
-          <Menu
-            // Assistant Menu
-            navItems={[
-              {
-                name: 'Runde zählen',
-                href: '/assistant',
-                icon: 'PlusCircleIcon',
-              },
-              {
-                name: 'Runde löschen',
-                href: '/assistant/laps',
-                icon: 'ViewListIcon',
-              },
-              {
-                name: 'Läufer hinzufügen',
-                href: '/assistant/create-runner',
-                icon: 'UserAddIcon',
-              },
-            ]}
-          />
-        )
+      {isLoggedIn && (
+        <>
+          {role === 'assistant' ? (
+            <Menu
+              // Assistant Menu
+              navItems={[
+                {
+                  name: 'Runde zählen',
+                  href: '/assistant',
+                  icon: 'HomeIcon',
+                },
+                {
+                  name: 'Ranking',
+                  href: '/shared/ranking',
+                  icon: 'TrendingUpIcon',
+                },
+                {
+                  name: 'Läufer hinzufügen',
+                  href: '/assistant/create-runner',
+                  icon: 'UserAddIcon',
+                },
+              ]}
+            />
+          ) : (
+            router.asPath.split('/')[1] === 'assistant' && (
+              <Menu
+                // Runner Menu
+                navItems={[
+                  { name: 'Start', href: '/runner', icon: 'HomeIcon' },
+                  {
+                    name: 'Ranking',
+                    href: '/shared/ranking',
+                    icon: 'TrendingUpIcon',
+                  },
+                ]}
+              />
+            )
+          )}
+        </>
       )}
       {children}
     </>

@@ -3,27 +3,16 @@ import Head from '@/components/Head';
 import Loading from '@/components/Loading';
 import useAuth from '@/lib/hooks/useAuth';
 import { createRunner } from '@/lib/firebase/frontendUtils';
-import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
-import { Runner } from '@/lib/interfaces';
 import { themedPromiseToast } from '@/lib/utils';
 
 export default function AssistantCreateRunner() {
-  const [runners, runnersLoading, runnersError] = useCollectionAsDict<Runner>(
-    'apps/24-stunden-lauf/runners'
-  );
-
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn } = useAuth();
 
   const [submitting, setSubmitting] = useState(false);
   const [number, setNumber] = useState(0);
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      return;
-    }
-  }, [isLoggedIn]);
-
-  if (!user) {
+  // While loading, show loading screen
+  if (!isLoggedIn) {
     return <Loading />;
   }
 
@@ -36,10 +25,11 @@ export default function AssistantCreateRunner() {
 
     setSubmitting(true);
 
+    // Get form data
     const formData = new FormData(e.target as HTMLFormElement);
     const name = formData.get('name') as string;
 
-    themedPromiseToast(createRunner(name, runners), {
+    themedPromiseToast(createRunner(name), {
       pending: 'Läufer wird erstellt...',
       success: 'Läufer wurde erstellt!',
       error: {
@@ -62,7 +52,7 @@ export default function AssistantCreateRunner() {
   return (
     <>
       <Head title="Assistent" />
-      <main className="main">
+      <main className="main !justify-center">
         <div className="centered-card">
           <div className="card-body gap-3">
             {number != 0 ? (

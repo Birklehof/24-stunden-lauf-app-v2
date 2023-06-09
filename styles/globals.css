@@ -41,7 +41,7 @@
 }
 
 .vertical-list {
-  @apply grid w-full grid-cols-1 flex-col items-center gap-2 overflow-y-auto;
+  @apply grid w-full grid-cols-1 flex-col items-center gap-2 py-2 overflow-y-auto;
 }
 
 .filling-card {

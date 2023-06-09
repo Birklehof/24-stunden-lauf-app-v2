@@ -3,17 +3,18 @@ import Head from '@/components/Head';
 import Loading from '@/components/Loading';
 import useAuth from '@/lib/hooks/useAuth';
 import Icon from '@/components/Icon';
-import useCollectionAsList from '@/lib/hooks/useCollectionAsList';
-import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
-import { Runner, Lap } from '@/lib/interfaces';
+import { Lap, Runner } from '@/lib/interfaces';
 import { themedPromiseToast } from '@/lib/utils';
-import { createLap, deleteLap } from '@/lib/firebase/frontendUtils';
+import {
+  createLap,
+  deleteLap,
+  getNewestLaps,
+} from '@/lib/firebase/frontendUtils';
 import ListItem from '@/components/ListItem';
+import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
 
 export default function AssistantIndex() {
-  const [laps, lapsLoading, lapsError] = useCollectionAsList<Lap>(
-    'apps/24-stunden-lauf/laps'
-  );
+  const [newestLaps, setLaps] = useState<Lap[] | null>(null);
   const [runners, runnersLoading, runnersError] = useCollectionAsDict<Runner>(
     'apps/24-stunden-lauf/runners'
   );
@@ -24,12 +25,13 @@ export default function AssistantIndex() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      return;
-    }
-  }, [isLoggedIn]);
+    getNewestLaps(30).then((laps) => {
+      setLaps(laps);
+    });
+  }, []);
 
-  if (!user || lapsLoading || runnersLoading) {
+  // While loading, show loading screen
+  if (!isLoggedIn) {
     return <Loading />;
   }
 
@@ -43,6 +45,10 @@ export default function AssistantIndex() {
     await createLap(number, runners, user)
       .then(() => {
         setNumber(0);
+
+        getNewestLaps(30).then((laps) => {
+          setLaps(laps);
+        });
       })
       .finally(() => {
         setSubmitting(false);
@@ -52,22 +58,10 @@ export default function AssistantIndex() {
       });
   }
 
-  async function deleteLapHandler(lapId: string) {
-    try {
-      await deleteLap(lapId);
-    } catch (e: any) {
-      if (e instanceof Error) {
-        alert(e.message);
-        return;
-      }
-      throw e;
-    }
-  }
-
   return (
     <>
       <Head title="Assistent" />
-      <main className="main">
+      <main className="main !p-0">
         <div className="grid !h-screen grid-cols-2 gap-2">
           <section className="flex flex-col items-center justify-center gap-2">
             <div className="card bg-base-100 shadow-xl">
@@ -126,30 +120,52 @@ export default function AssistantIndex() {
             </div>
           </section>
           <section className="vertical-list">
-            {laps
-              .sort((a, b) => {
-                return (
-                  // @ts-ignore
-                  b.timestamp - a.timestamp
-                );
-              })
-              .slice(0, 30)
-              .map((lap) => (
-                <ListItem
-                  key={lap.id}
-                  number={runners[lap.runnerId]?.number}
-                  mainContent={runners[lap.runnerId]?.name || 'Unbekannt'}
-                >
-                  <button
-                    className="btn-outline btn-error btn-square btn-sm btn hidden text-error md:flex"
-                    aria-label="Runde löschen"
-                    onClick={() => deleteLapHandler(lap.id)}
-                  >
-                    <Icon name="TrashIcon" />
-                  </button>
-                </ListItem>
-              ))}
-            <div className="w-full text-center text-sm">Neuesten 30 Runden</div>
+            {newestLaps ? (
+              <>
+                {newestLaps
+                  .sort((a, b) => {
+                    return (
+                      // @ts-ignore
+                      b.timestamp - a.timestamp
+                    );
+                  })
+                  .map((lap) => (
+                    <ListItem
+                      key={lap.id}
+                      number={runners[lap.runnerId]?.number}
+                      mainContent={runners[lap.runnerId]?.name || 'Unbekannt'}
+                    >
+                      <button
+                        className="btn-outline btn-error btn-square btn-sm btn hidden text-error md:flex"
+                        aria-label="Runde löschen"
+                        onClick={async () => {
+                          themedPromiseToast(deleteLap(lap.id), {
+                            pending: 'Runde wird gelöscht',
+                            success: 'Runde erfolgreich gelöscht',
+                            error: {
+                              render: ({ data }: any) => {
+                                if (data.message) {
+                                  return data.message;
+                                } else if (typeof data === 'string') {
+                                  return data;
+                                }
+                                return 'Fehler beim Löschen der Runde';
+                              },
+                            },
+                          });
+                        }}
+                      >
+                        <Icon name="TrashIcon" />
+                      </button>
+                    </ListItem>
+                  ))}
+                <div className="w-full text-center text-sm">
+                  Neuesten 30 Runden
+                </div>
+              </>
+            ) : (
+              <span className="loading loading-lg" />
+            )}
           </section>
         </div>
       </main>

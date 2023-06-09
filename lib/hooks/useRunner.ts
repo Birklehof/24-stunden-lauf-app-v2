@@ -7,18 +7,20 @@ import {
   onSnapshot,
 } from '@firebase/firestore';
 import { db } from '@/lib/firebase';
-import { User, Student, Runner, Staff } from '@/lib/interfaces';
+import { User, Runner } from '@/lib/interfaces';
 import { useEffect, useState } from 'react';
 import useAuth from './useAuth';
+import { getRunnerPosition } from '@/lib/firebase/frontendUtils';
 
 export default function useRunner() {
   const { isLoggedIn, user, role } = useAuth();
-  const [runner, setRunner] = useState<Runner>();
-  const [lapCount, setLapCount] = useState<number>(0);
+  const [runner, setRunner] = useState<Runner | null>(null);
+  const [lapCount, setLapCount] = useState<number | null>(null);
+  const [position, setPosition] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!isLoggedIn || !user) return;
-    getRunner(user).then((runner) => {
+    if (!isLoggedIn || !user?.email) return;
+    getRunnerByEmail(user.email).then((runner) => {
       setRunner(runner);
       if (runner) {
         syncLapCount(runner);
@@ -26,37 +28,50 @@ export default function useRunner() {
     });
   }, [isLoggedIn, user, role]);
 
-  async function getRunner(user: User): Promise<Runner | undefined> {
-    if (!user) {
+  useEffect(() => {
+    if (!runner || !lapCount || lapCount == 0) {
       return;
-    } else {
-      const q = query(
-        collection(db, '/apps/24-stunden-lauf/runners'),
-        where('email', '==', user.email)
-      );
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.docs.length == 0) {
-        throw new Error('Runner not found');
-      }
-      return {
-        id: querySnapshot.docs[0].id,
-        ...querySnapshot.docs[0].data(),
-      } as Runner;
     }
+
+    getRunnerPosition({
+      ...runner,
+      lapCount,
+    }).then((position) => {
+      setPosition(position);
+    });
+  }, [runner, lapCount]);
+
+  async function getRunnerByEmail(email: string): Promise<Runner | null> {
+    const userSnapshot = await getDocs(
+      query(
+        collection(db, '/apps/24-stunden-lauf/runners'),
+        where('email', '==', email)
+      )
+    );
+
+    if (userSnapshot.docs.length == 0) {
+      throw new Error('Runner not found');
+    }
+
+    return {
+      id: userSnapshot.docs[0].id,
+      ...userSnapshot.docs[0].data(),
+    } as Runner;
   }
 
   async function syncLapCount(runner: Runner) {
-    const q = query(
+    const lapCountQuery = query(
       collection(db, '/apps/24-stunden-lauf/laps'),
       where('runnerId', '==', runner.id)
     );
-    const lapCount = await getCountFromServer(q);
-    setLapCount(lapCount.data().count);
+    const lapCountSnapshot = await getCountFromServer(lapCountQuery);
+    const lapCount = lapCountSnapshot.data().count || 0;
+    setLapCount(lapCount);
 
-    onSnapshot(q, (query) => {
-      setLapCount(query.docs.length);
+    onSnapshot(lapCountQuery, (snapshot) => {
+      setLapCount(snapshot.docs.length);
     });
   }
 
-  return { runner, lapCount };
+  return { runner, lapCount, position };
 }
