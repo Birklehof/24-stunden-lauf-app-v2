@@ -53,7 +53,7 @@ export default function RunnerRanking({
   return (
     <>
       <Head title="Läufer" />
-      <main className="main">
+      <main className="main !py-0">
         <SearchBar
           searchValue={filterName}
           setSearchValue={setFilterName}

@@ -61,7 +61,7 @@ export default function AssistantIndex() {
   return (
     <>
       <Head title="Assistent" />
-      <main className="main !p-0">
+      <main className="main !py-0">
         <div className="grid !h-screen grid-cols-2 gap-2">
           <section className="flex flex-col items-center justify-center gap-2">
             <div className="card bg-base-100 shadow-xl">

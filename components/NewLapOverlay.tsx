@@ -1,5 +1,5 @@
 import useRunner from '@/lib/hooks/useRunner';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 
 export default function NewLapOverlay() {

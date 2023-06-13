@@ -33,11 +33,11 @@
 }
 
 .search-bar {
-  @apply menu rounded-box menu-horizontal absolute z-10 w-[calc(100%-1rem)] lg:w-[calc(100%-1rem)] max-w-xl bg-base-100 p-2 shadow-md;
+  @apply menu rounded-box menu-horizontal absolute z-10 w-[calc(100%-1rem)] lg:w-[calc(100%-1rem)] max-w-xl bg-base-100 p-2 shadow-md mt-2;
 }
 
 .search-bar + * {
-  @apply !pt-[calc(0.5rem+48px)];
+  @apply !pt-[calc(1rem+48px)];
 }
 
 .vertical-list {
