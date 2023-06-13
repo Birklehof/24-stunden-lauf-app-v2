@@ -4,13 +4,25 @@ import useAuth from '@/lib/hooks/useAuth';
 import router from 'next/router';
 import { useEffect } from 'react';
 import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
+import { toast } from 'react-toastify';
 
 export default function Index() {
-  const { isLoggedIn, user, role } = useAuth();
+  const { isLoggedIn, user, role, logout } = useAuth();
   const { appName } = useRemoteConfig();
 
   useEffect(() => {
-    if (isLoggedIn && user && role) {
+    if (isLoggedIn && user) {
+      if (role === '') {
+        logout();
+        toast.error('Du hast keine Berechtigung für diese App', {
+          theme:
+            localStorage.getItem('usehooks-ts-dark-mode') === 'true'
+              ? 'dark'
+              : 'light',
+        });
+        return;
+      }
+
       redirect(role).then((path) => {
         router.push(path);
       });
@@ -20,8 +32,10 @@ export default function Index() {
   async function redirect(role: string): Promise<string> {
     if (role === 'assistant') {
       return '/assistant';
-    } else {
+    } else if (role === 'runner') {
       return '/runner';
+    } else {
+      throw new Error('Unknown role');
     }
   }
 

@@ -2,7 +2,7 @@ import router from 'next/router';
 import { useEffect, useState } from 'react';
 import { auth, db } from '@/lib/firebase';
 import { User } from '@/lib/interfaces';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 
 export default function useAuth() {
   const [user, setUser] = useState<User>();
@@ -29,10 +29,21 @@ export default function useAuth() {
     if (!user || !user.email) {
       return '';
     }
-    const userRole = await getDoc(
+    const roleSnapshot = await getDoc(
       doc(db, '/apps/24-stunden-lauf/roles', user.email)
     );
-    const role = userRole.data()?.role || 'runner';
+    const role = roleSnapshot.data()?.role || '';
+
+    if (!role) {
+      const runnerQuery = query(collection(db, '/apps/24-stunden-lauf/runners'), where('email', '==', user.email));
+      const runnerSnapshot = await getDocs(runnerQuery);
+      if (runnerSnapshot.empty) {
+        return '';
+      }
+
+      return 'runner';
+    }
+
     return role;
   }
 
