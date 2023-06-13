@@ -6,7 +6,7 @@ import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firesto
 
 export default function useAuth() {
   const [user, setUser] = useState<User | undefined>(undefined);
-  const [role, setRole] = useState<string | undefined>(undefined);
+  const [role, setRole] = useState<string | undefined>(undefined); // '' (no role) | 'assistant' | 'runner'
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
