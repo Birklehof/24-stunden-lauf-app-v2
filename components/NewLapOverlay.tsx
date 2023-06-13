@@ -12,6 +12,8 @@ export default function NewLapOverlay() {
     if (lapCount > lastLapCount) {
       setLastLapCount(lapCount);
       animateGrow();
+    } else  if (lapCount < lastLapCount) {
+      setLastLapCount(lapCount);
     }
   }, [lapCount]);
 
