@@ -21,3 +21,16 @@ export function themedPromiseToast(
     }
   );
 }
+
+export function themedErrorToast(
+  message: string,
+  options?: ToastOptions<{}> | undefined
+) {
+  return toast.error(message, {
+    ...options,
+    theme:
+      localStorage.getItem('usehooks-ts-dark-mode') === 'true'
+        ? 'dark'
+        : 'light',
+  });
+}

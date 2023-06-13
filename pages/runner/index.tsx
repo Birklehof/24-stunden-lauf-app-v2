@@ -4,11 +4,24 @@ import Head from '@/components/Head';
 import NewLapOverlay from '@/components/NewLapOverlay';
 import useRunner from '@/lib/hooks/useRunner';
 import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
+import { useEffect } from 'react';
+import router from 'next/router';
+import { themedErrorToast } from '@/lib/utils';
 
 export default function RunnerIndex() {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
   const { runner, lapCount, position } = useRunner();
   const { distancePerLap } = useRemoteConfig();
+
+  useEffect(() => {
+    // If the runner does not exist, logout and redirect to login
+    if (runner === null) {
+      themedErrorToast('Dein Account ist nicht als Läufer registriert');
+      logout();
+      router.push('/');
+      return;
+    }
+  }, [runner]);
 
   // While loading, show loading screen
   if (!isLoggedIn) {
@@ -38,7 +51,7 @@ export default function RunnerIndex() {
             </div>
             <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
-              {lapCount ? (
+              {lapCount !== undefined ? (
               <h1 className="text-center text-3xl font-bold sm:text-5xl">
                 <div className="inline text-base-300">
                   {'0'.repeat(3 - lapCount.toString().length)}
@@ -54,7 +67,7 @@ export default function RunnerIndex() {
             <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
               <h1 className="text-center text-3xl font-bold sm:text-5xl">
-                {position ? (
+                {position !== undefined ? (
                   <>
                     <div className="inline text-base-300">
                       {'0'.repeat(3 - position.toString().length)}
@@ -71,7 +84,7 @@ export default function RunnerIndex() {
             </div>
             <div className="divider divider-vertical lg:divider-horizontal" />
             <div>
-                {lapCount ? (
+                {lapCount !== undefined ? (
                   <h1 className="text-center text-3xl font-bold sm:text-5xl">
                 {((lapCount * distancePerLap) / 1000).toFixed(
                   (lapCount * distancePerLap) / 1000 < 10

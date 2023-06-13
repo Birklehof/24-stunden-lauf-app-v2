@@ -4,7 +4,7 @@ import useAuth from '@/lib/hooks/useAuth';
 import router from 'next/router';
 import { useEffect } from 'react';
 import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
-import { toast } from 'react-toastify';
+import { themedErrorToast } from '@/lib/utils';
 
 export default function Index() {
   const { isLoggedIn, user, role, logout } = useAuth();
@@ -12,9 +12,13 @@ export default function Index() {
 
   useEffect(() => {
     if (isLoggedIn && user) {
+      if (role === undefined) return;
+
+      console.log(role);
+
       if (role === '') {
         logout();
-        toast.error('Du hast keine Berechtigung für diese App', {
+        themedErrorToast('Du hast keine Berechtigung für diese App', {
           theme:
             localStorage.getItem('usehooks-ts-dark-mode') === 'true'
               ? 'dark'

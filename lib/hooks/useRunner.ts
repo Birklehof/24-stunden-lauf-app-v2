@@ -14,9 +14,9 @@ import { getRunnerPosition } from '@/lib/firebase/frontendUtils';
 
 export default function useRunner() {
   const { isLoggedIn, user, role } = useAuth();
-  const [runner, setRunner] = useState<Runner | null>(null);
-  const [lapCount, setLapCount] = useState<number | null>(null);
-  const [position, setPosition] = useState<number | null>(null);
+  const [runner, setRunner] = useState<Runner | null | undefined>(undefined);
+  const [lapCount, setLapCount] = useState<number | undefined>(undefined);
+  const [position, setPosition] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     if (!isLoggedIn || !user?.email) return;
@@ -29,7 +29,7 @@ export default function useRunner() {
   }, [isLoggedIn, user, role]);
 
   useEffect(() => {
-    if (!runner || !lapCount || lapCount == 0) {
+    if (!runner || !lapCount) {
       return;
     }
 
@@ -50,7 +50,7 @@ export default function useRunner() {
     );
 
     if (userSnapshot.docs.length == 0) {
-      throw new Error('Runner not found');
+      return null;
     }
 
     return {
