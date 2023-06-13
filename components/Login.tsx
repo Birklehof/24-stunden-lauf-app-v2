@@ -42,24 +42,22 @@ export default function Login() {
   return (
     <>
       <button
-        className={`btn-outline btn-primary btn w-full ${
-          isLoggedIn ? 'btn-disabled loading' : ''
-        }`}
+        className="btn-primary btn-outline btn w-full"
         onClick={handleRunnerAuth}
         disabled={isLoggedIn}
       >
+        {isLoggedIn && <span className="loading loading-spinner" />}
         Läufer
       </button>
       <div className="divider">
         <p className="text-sm font-bold tracking-wider text-gray-300">ODER</p>
       </div>
       <button
-        className={`btn-outline btn-primary btn w-full ${
-          isLoggedIn ? 'btn-disabled loading' : ''
-        }`}
+        className="btn-primary btn-outline btn w-full"
         onClick={handleStaffAuth}
         disabled={isLoggedIn}
       >
+        {isLoggedIn && <span className="loading loading-spinner" />}
         Assistent
       </button>
     </>
