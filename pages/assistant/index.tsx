@@ -111,6 +111,7 @@ export default function AssistantIndex() {
                   value={Number(number).toString()}
                   min={0}
                   required
+                  inputMode='numeric'
                 />
               </div>
             </div>

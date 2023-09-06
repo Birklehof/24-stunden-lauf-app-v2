@@ -22,7 +22,7 @@ export default function RunnerIndex() {
       router.push('/');
       return;
     }
-  }, [runner]);
+  }, [runner, logout]);
 
   // While loading, show loading screen
   if (!isLoggedIn) {

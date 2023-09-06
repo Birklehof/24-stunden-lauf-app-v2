@@ -20,6 +20,7 @@ export default function Layout({ children }: PropsWithChildren) {
       <button
         className="btn-ghost btn-square btn absolute left-2 top-2 hidden landscape:flex"
         onClick={toggle}
+        aria-label='Dunkelmodus umschalten'
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +59,7 @@ export default function Layout({ children }: PropsWithChildren) {
             <Menu
               // Runner Menu
               navItems={[
-                { name: 'Start', href: '/runner', icon: 'HomeIcon' },
+                { name: 'Startseite', href: '/runner', icon: 'HomeIcon' },
                 {
                   name: 'Ranking',
                   href: '/shared/ranking',

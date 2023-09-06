@@ -34,7 +34,8 @@ export default function SearchBar({
         )}
         <input
           className="input-bordered input rounded-box input-sm w-10 grow"
-          type="text"
+          type="seach"
+          inputMode="search"
           placeholder="Suchen ..."
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
@@ -42,7 +43,7 @@ export default function SearchBar({
         {filters && (
           <div className="dropdown-bottom dropdown-end dropdown">
             <label
-              id='filter-button'
+              id="filter-button"
               tabIndex={0}
               className="btn-ghost btn-square btn-sm btn"
               aria-label="Filtern"
