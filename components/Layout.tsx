@@ -6,7 +6,7 @@ import Menu from './Menu';
 import useAuth from '@/lib/hooks/useAuth';
 
 export default function Layout({ children }: PropsWithChildren) {
-  const { isLoggedIn, role } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const { isDarkMode, toggle } = useDarkMode();
   const router = useRouter();
 
@@ -32,9 +32,9 @@ export default function Layout({ children }: PropsWithChildren) {
         </svg>
       </button>
 
-      {isLoggedIn && (
+      {isLoggedIn && user?.role && (
         <>
-          {role === 'assistant' ? (
+          {user.role === 'assistant' ? (
             <Menu
               // Assistant Menu
               navItems={[

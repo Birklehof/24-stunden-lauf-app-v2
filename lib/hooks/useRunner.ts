@@ -13,7 +13,7 @@ import useAuth from './useAuth';
 import { getRunnerPosition } from '@/lib/firebase/frontendUtils';
 
 export default function useRunner() {
-  const { isLoggedIn, user, role } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const [runner, setRunner] = useState<Runner | null | undefined>(undefined);
   const [lapCount, setLapCount] = useState<number | undefined>(undefined);
   const [position, setPosition] = useState<number | undefined>(undefined);
@@ -26,7 +26,7 @@ export default function useRunner() {
         syncLapCount(runner);
       }
     });
-  }, [isLoggedIn, user, role]);
+  }, [isLoggedIn, user]);
 
   useEffect(() => {
     if (!runner || !lapCount) {

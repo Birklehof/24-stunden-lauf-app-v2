@@ -7,31 +7,16 @@ import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
 import { themedErrorToast } from '@/lib/utils';
 
 export default function Index() {
-  const { isLoggedIn, user, role, logout } = useAuth();
+  const { isLoggedIn, user, logout } = useAuth();
   const { appName } = useRemoteConfig();
 
   useEffect(() => {
     if (isLoggedIn && user) {
-      if (role === undefined) return;
-
-      console.log(role);
-
-      if (role === '') {
-        logout();
-        themedErrorToast('Du hast keine Berechtigung für diese App', {
-          theme:
-            localStorage.getItem('usehooks-ts-dark-mode') === 'true'
-              ? 'dark'
-              : 'light',
-        });
-        return;
-      }
-
-      redirect(role).then((path) => {
+      redirect(user.role).then((path) => {
         router.push(path);
       });
     }
-  }, [isLoggedIn, user, role, logout]);
+  }, [isLoggedIn, user, logout]);
 
   async function redirect(role: string): Promise<string> {
     if (role === 'assistant') {

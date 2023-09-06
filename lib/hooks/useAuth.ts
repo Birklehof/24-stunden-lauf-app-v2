@@ -1,57 +1,62 @@
 import router from 'next/router';
 import { useEffect, useState } from 'react';
-import { auth, db } from '@/lib/firebase';
+import { auth } from '@/lib/firebase';
 import { User } from '@/lib/interfaces';
-import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+import { themedErrorToast } from '../utils';
 
 export default function useAuth() {
   const [user, setUser] = useState<User | undefined>(undefined);
-  const [role, setRole] = useState<string | undefined>(undefined); // '' (no role) | 'assistant' | 'runner'
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     auth.onAuthStateChanged((authenticatedUser) => {
-      if (user !== authenticatedUser) {
+      if (!authenticatedUser) {
         setIsLoggedIn(false);
-        if (authenticatedUser && authenticatedUser.uid) {
-          const newUser = authenticatedUser as User;
-          setUser(newUser);
-          getUserRole(newUser).then((role) => {
-            setRole(role);
-          });
+        setUser(undefined);
+        return;
+      }
+
+      if (user?.uid !== authenticatedUser.uid) {
+        if (
+          authenticatedUser &&
+          authenticatedUser.uid ===
+            process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID
+        ) {
           setIsLoggedIn(true);
+          setUser({
+            uid: authenticatedUser.uid,
+            email: 'assistant@birklehof.de',
+            displayName: 'Assistant',
+            role: 'assistant',
+          });
+        } else if (
+          authenticatedUser &&
+          authenticatedUser.uid &&
+          authenticatedUser.email &&
+          (authenticatedUser.email.endsWith('@s.birklehof.de') ||
+            authenticatedUser.email.endsWith('@birklehof.de'))
+        ) {
+          setIsLoggedIn(true);
+          const newUser = {
+            ...authenticatedUser,
+            role: 'runner',
+          } as User;
+          setUser(newUser);
+        } else {
+          auth.signOut();
+          setIsLoggedIn(true);
+          setUser(undefined);
+
+          themedErrorToast('Du hast keine Berechtigung für diese App', {
+            theme:
+              localStorage.getItem('usehooks-ts-dark-mode') === 'true'
+                ? 'dark'
+                : 'light',
+          });
         }
       }
     });
   }, []);
-
-  async function getUserRole(user: User): Promise<string | undefined> {
-    if (!user || !user.email) {
-      return;
-    }
-    const roleSnapshot = await getDoc(
-      doc(db, '/apps/24-stunden-lauf/roles', user.email)
-    );
-    const role = roleSnapshot.data()?.role || '';
-
-    if (user.email.endsWith('@s.birklehof.de') || user.email.endsWith('@birklehof.de')) {
-      return 'runner';
-    }
-
-    // The following code could be used to check if the user is a runner, but then the information on the runners would be public
-    //
-    // if (!role) {
-    //   const runnerQuery = query(collection(db, '/apps/24-stunden-lauf/runners'), where('email', '==', user.email));
-    //   const runnerSnapshot = await getDocs(runnerQuery);
-    //   if (runnerSnapshot.empty) {
-    //     return '';
-    //   }
-
-    //   return 'runner';
-    // }
-
-    return role;
-  }
 
   async function logout() {
     return auth
@@ -64,5 +69,5 @@ export default function useAuth() {
       });
   }
 
-  return { user, role, isLoggedIn, logout };
+  return { user, isLoggedIn, logout };
 }
