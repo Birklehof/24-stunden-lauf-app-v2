@@ -8,7 +8,7 @@ import {
 import useAuth from '@/lib/hooks/useAuth';
 import { themedPromiseToast } from '@/lib/utils';
 
-export default function Login() {
+export default function LoginOptions() {
   const { isLoggedIn } = useAuth();
 
   const handleRunnerAuth = async () => {

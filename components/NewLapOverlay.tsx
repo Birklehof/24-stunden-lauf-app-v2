@@ -15,7 +15,7 @@ export default function NewLapOverlay() {
     } else  if (lapCount < lastLapCount) {
       setLastLapCount(lapCount);
     }
-  }, [lapCount]);
+  }, [lapCount, lastLapCount, setLastLapCount]);
 
   function animateGrow() {
     // Animation currently not working because of there is no way to call the animation when the value of laps changes

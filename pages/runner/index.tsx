@@ -7,6 +7,7 @@ import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
 import { useEffect } from 'react';
 import router from 'next/router';
 import { themedErrorToast } from '@/lib/utils';
+import RunnerStat from '@/components/Runner/RunnerStat';
 
 export default function RunnerIndex() {
   const { isLoggedIn, logout } = useAuth();
@@ -33,74 +34,26 @@ export default function RunnerIndex() {
       <Head title="Läufer" />
       <main className="hero min-h-screen bg-base-200">
         <NewLapOverlay />
-        <div className="flex w-full justify-center pb-20 lg:pb-0">
-          <div className="flex flex-col lg:w-1/2 lg:flex-row lg:justify-evenly">
-            <div>
-              {runner ? (
-              <h1 className="text-center text-3xl font-bold sm:text-5xl">
-                <div className="inline text-base-300">
-                  {'0'.repeat(3 - runner.number.toString().length)}
-                </div>
-                {runner.number.toString()}
-              </h1>) : (
-                <span className="loading loading-dots loading-lg" />
-              )}
-              <h2 className="text-base-400 text-center text-sm font-bold opacity-80 sm:text-xl">
-                Nr.
-              </h2>
-            </div>
-            <div className="divider divider-vertical lg:divider-horizontal" />
-            <div>
-              {lapCount !== undefined ? (
-              <h1 className="text-center text-3xl font-bold sm:text-5xl">
-                <div className="inline text-base-300">
-                  {'0'.repeat(3 - lapCount.toString().length)}
-                </div>
-                {lapCount}
-              </h1> ) : (
-                <span className="loading loading-dots loading-lg" />
-              )}
-              <h2 className="text-base-400 text-center text-sm font-bold opacity-80 sm:text-xl">
-                {lapCount === 1 ? 'Runde' : 'Runden'}
-              </h2>
-            </div>
-            <div className="divider divider-vertical lg:divider-horizontal" />
-            <div>
-              <h1 className="text-center text-3xl font-bold sm:text-5xl">
-                {position !== undefined ? (
-                  <>
-                    <div className="inline text-base-300">
-                      {'0'.repeat(3 - position.toString().length)}
-                    </div>
-                    {position}
-                  </>
-                ) : (
-                  <span className="loading loading-dots loading-lg" />
-                )}
-              </h1>
-              <h2 className="text-base-400 text-center text-sm font-bold opacity-80 sm:text-xl">
-                Platz
-              </h2>
-            </div>
-            <div className="divider divider-vertical lg:divider-horizontal" />
-            <div>
-                {lapCount !== undefined ? (
-                  <h1 className="text-center text-3xl font-bold sm:text-5xl">
-                {((lapCount * distancePerLap) / 1000).toFixed(
-                  (lapCount * distancePerLap) / 1000 < 10
-                    ? 2
-                    : (lapCount * distancePerLap) / 1000 < 100
-                    ? 1
-                    : 0
-                )}
-              </h1>) : (
-                <span className="loading loading-dots loading-lg" />
-              )}
-              <h2 className="text-base-400 text-center text-sm font-bold opacity-80 sm:text-xl">
-                km
-              </h2>
-            </div>
-          </div>
+        <div className="flex flex-col landscape:flex-row gap-3 mb-10 landscape:mb-0">
+          <RunnerStat value={runner?.number} label="Nr." />
+          <div className="divider divider-vertical landscape:divider-horizontal my-0" />
+          <RunnerStat value={lapCount} label="Runden" />
+          <div className="divider divider-vertical landscape:divider-horizontal my-0" />
+          <RunnerStat value={position} label="Platz" />
+          <div className="divider divider-vertical landscape:divider-horizontal my-0" />
+          <RunnerStat
+            value={
+              lapCount &&
+              ((lapCount * distancePerLap) / 1000).toFixed(
+                (lapCount * distancePerLap) / 1000 < 10
+                  ? 2
+                  : (lapCount * distancePerLap) / 1000 < 100
+                  ? 1
+                  : 0
+              )
+            }
+            label="km"
+          />
         </div>
       </main>
     </>

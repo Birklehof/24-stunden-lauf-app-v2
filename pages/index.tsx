@@ -1,4 +1,4 @@
-import Login from '@/components/Login';
+import LoginOptions from '@/components/LoginOptions';
 import Head from '@/components/Head';
 import useAuth from '@/lib/hooks/useAuth';
 import router from 'next/router';
@@ -31,7 +31,7 @@ export default function Index() {
         router.push(path);
       });
     }
-  }, [isLoggedIn, user, role]);
+  }, [isLoggedIn, user, role, logout]);
 
   async function redirect(role: string): Promise<string> {
     if (role === 'assistant') {
@@ -46,20 +46,13 @@ export default function Index() {
   return (
     <>
       <Head title="Anmeldung" />
-      <main className="hero min-h-screen bg-base-200">
-        <div className="hero-content flex w-full justify-around">
-          <div className="hidden lg:block">
-            <h1 className="text-right text-5xl font-bold">{appName}</h1>
-          </div>
-          <div className="w-full max-w-sm lg:max-w-md">
-            <div className="card w-full bg-base-100 shadow-xl">
-              <div className="card-body">
-                <h1 className="mb-3 text-center text-xl font-bold lg:hidden">
-                  {appName}
-                </h1>
-                <Login />
-              </div>
-            </div>
+      <main className="md:p-4 flex h-screen flex-col items-center justify-center gap-x-16 gap-y-6 bg-base-200 md:flex-row">
+        <h1 className="text-3xl font-bold md:text-right md:text-5xl">
+          {appName}
+        </h1>
+        <div className="card card-compact w-full max-w-md md:card-normal md:bg-base-100 md:shadow-xl">
+          <div className="card-body">
+            <LoginOptions />
           </div>
         </div>
       </main>

@@ -18,7 +18,7 @@ export default function Layout({ children }: PropsWithChildren) {
   return (
     <>
       <button
-        className="btn-ghost btn-square btn absolute left-2 top-2 hidden md:flex"
+        className="btn-ghost btn-square btn absolute left-2 top-2 hidden landscape:flex"
         onClick={toggle}
       >
         <svg

@@ -4,24 +4,22 @@
 
 /* Inspiration: https://merakiui.gumroad.com/l/fdsmt */
 
+/* Scroll bar styles */
 /* width */
 ::-webkit-scrollbar {
   display: none;
   width: 15px;
 }
-
 /* Track */
 ::-webkit-scrollbar-track {
   background: rgb(230, 230, 230);
 }
-
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 10px;
   border: 4px solid rgb(230, 230, 230);
 }
-
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
