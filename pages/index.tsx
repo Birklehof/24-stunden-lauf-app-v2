@@ -47,7 +47,7 @@ export default function Index() {
     <>
       <Head title="Anmeldung" />
       <main className="md:p-4 flex h-screen flex-col items-center justify-center gap-x-16 gap-y-6 bg-base-200 md:flex-row">
-        <h1 className="text-3xl font-bold md:text-right md:text-5xl">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold md:text-right">
           {appName}
         </h1>
         <div className="card card-compact w-full max-w-md md:card-normal md:bg-base-100 md:shadow-xl">
