@@ -15,7 +15,10 @@ export default function Loading() {
     <>
       <Head title="Lädt ..." />
       <main className="flex min-h-screen w-full items-center justify-center bg-base-200">
-        <span className="loading loading-dots loading-lg" />
+        <span
+          aria-label="Ladeanimation"
+          className="loading loading-dots loading-lg"
+        />
       </main>
     </>
   );

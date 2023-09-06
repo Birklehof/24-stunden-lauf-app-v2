@@ -1,5 +1,5 @@
 import React from 'react';
-import { signInWithPopup } from 'firebase/auth';
+import { signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import {
   auth,
   githubOAuthProvider,
@@ -41,6 +41,14 @@ export default function Login() {
 
   return (
     <>
+      {/* This button is only for the e2e tests because the popup fails */}
+      <button
+        id="cypress-e2e-login"
+        className="btn-primary btn-outline btn hidden"
+        onClick={() => signInWithRedirect(auth, microsoftOAuthProvider)}
+      >
+        Cypress e2e Login
+      </button>
       <button
         className="btn-primary btn-outline btn w-full"
         onClick={handleRunnerAuth}

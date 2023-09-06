@@ -24,7 +24,11 @@ export default function SearchBar({
     <div className="search-bar">
       <div className="form-control flex grow flex-row justify-between gap-3">
         {backLink && (
-          <Link href={backLink} className="btn-ghost btn-square btn-sm btn">
+          <Link
+            href={backLink}
+            aria-label="Zurück"
+            className="btn-ghost btn-square btn-sm btn"
+          >
             <Icon name="ArrowLeftIcon" />
           </Link>
         )}
@@ -38,6 +42,7 @@ export default function SearchBar({
         {filters && (
           <div className="dropdown-bottom dropdown-end dropdown">
             <label
+              id='filter-button'
               tabIndex={0}
               className="btn-ghost btn-square btn-sm btn"
               aria-label="Filtern"
