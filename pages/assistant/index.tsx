@@ -43,12 +43,10 @@ export default function AssistantIndex() {
     setSubmitting(true);
 
     await createLap(number, runners, user)
-      .then(() => {
+      .then((newLap) => {
         setNumber(0);
 
-        getNewestLaps(30).then((laps) => {
-          setLaps(laps);
-        });
+        setLaps([newLap, ...(newestLaps || [])]);
       })
       .finally(() => {
         setSubmitting(false);
@@ -56,6 +54,26 @@ export default function AssistantIndex() {
         // Focus input
         (document.getElementById('number') as HTMLInputElement).focus();
       });
+  }
+
+  async function deleteLapHandler(lapId: string) {
+    themedPromiseToast(deleteLap(lapId), {
+      pending: 'Runde wird gelöscht',
+      success: 'Runde erfolgreich gelöscht',
+      error: {
+        render: ({ data }: any) => {
+          if (data.message) {
+            return data.message;
+          } else if (typeof data === 'string') {
+            return data;
+          }
+          return 'Fehler beim Löschen der Runde';
+        },
+      },
+    }).then(() => {
+      // Filer out deleted lap
+      setLaps(newestLaps?.filter((lap) => lap.id !== lapId) || null);
+    });
   }
 
   return (
@@ -111,7 +129,7 @@ export default function AssistantIndex() {
                   value={Number(number).toString()}
                   min={0}
                   required
-                  inputMode='numeric'
+                  inputMode="numeric"
                 />
               </div>
             </div>
@@ -137,24 +155,9 @@ export default function AssistantIndex() {
                       mainContent={runners[lap.runnerId]?.name || 'Unbekannt'}
                     >
                       <button
-                        className="btn-outline btn-error btn-square btn-sm btn hidden text-error md:flex"
+                        className="btn-error btn-outline btn-square btn-sm btn hidden text-error md:flex"
                         aria-label="Runde löschen"
-                        onClick={async () => {
-                          themedPromiseToast(deleteLap(lap.id), {
-                            pending: 'Runde wird gelöscht',
-                            success: 'Runde erfolgreich gelöscht',
-                            error: {
-                              render: ({ data }: any) => {
-                                if (data.message) {
-                                  return data.message;
-                                } else if (typeof data === 'string') {
-                                  return data;
-                                }
-                                return 'Fehler beim Löschen der Runde';
-                              },
-                            },
-                          });
-                        }}
+                        onClick={async () => await deleteLapHandler(lap.id)}
                       >
                         <Icon name="TrashIcon" />
                       </button>

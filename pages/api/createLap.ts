@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { auth, db } from '@/lib/firebase/firebase-admin';
 import { Lap } from '@/lib/interfaces';
-import { Timestamp } from 'firebase/firestore';
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,6 +14,7 @@ export default async function handler(
     return res.status(401).json({ error: 'Access token required' });
   }
 
+  // Verify access token
   try {
     const token = await auth.verifyIdToken(
       req.headers.authorization.toString()
@@ -32,6 +32,8 @@ export default async function handler(
   if (!runnerId) {
     return res.status(400).json({ error: 'Missing runnerId' });
   }
+
+  // TODO: Make sure the user exists
 
   // Get last lap of runner
   const querySnapshot = await db
@@ -53,18 +55,21 @@ export default async function handler(
     }
   }
 
-  const lap: {
-    runnerId: string;
-    createdAt: Date;
-  } = { runnerId, createdAt: new Date() };
+  const now = new Date();
+
+  // Create new lap
   await db
     .collection('apps/24-stunden-lauf/laps')
-    .add(lap)
+    .add({ runnerId, createdAt: now })
     .catch((err) => {
       console.error(err);
       return res.status(500).end();
     })
-    .then(() => {
-      res.status(200).end();
+    .then((docRef) => {
+      res.status(200).json({
+        id: docRef.id,
+        runnerId,
+        createdAt: now,
+      });
     });
 }

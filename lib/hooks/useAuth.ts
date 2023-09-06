@@ -22,7 +22,6 @@ export default function useAuth() {
           authenticatedUser.uid ===
             process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID
         ) {
-          console.log(authenticatedUser);
           setIsLoggedIn(true);
           setUser({
             uid: authenticatedUser.uid,

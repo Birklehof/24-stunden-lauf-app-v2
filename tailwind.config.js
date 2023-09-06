@@ -96,5 +96,5 @@ module.exports = {
       sans: ['var(--montserrat-font)', ...fontFamily.sans],
     },
   },
-  plugins: [require('daisyui')],
+  plugins: [require('daisyui'), require('@tailwindcss/line-clamp')],
 };

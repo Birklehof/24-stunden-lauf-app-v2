@@ -13,7 +13,7 @@ export default async function handler(
     return res.status(400).json({ error: 'Missing code' });
   }
 
-  // Check if code exists
+  // Check if code exists in database
   const querySnapshot = await db
     .collection('apps/24-stunden-lauf/codes')
     .doc(req.body.code)
@@ -23,6 +23,7 @@ export default async function handler(
     return res.status(400).json({ error: 'Code invalid' });
   }
 
+  // Send auth token to client
   auth
     .createCustomToken(
       process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID || 'some-uid',
@@ -31,7 +32,6 @@ export default async function handler(
       }
     )
     .then((customToken) => {
-      // Send token back to client
       res.status(200).json({ token: customToken });
     })
     .catch((error) => {

@@ -50,7 +50,7 @@ export async function createLap(
   runnerNumber: number,
   runners: { [id: string]: Runner },
   user: User | undefined
-) {
+): Promise<Lap> {
   // Convert runnerNumber to valid runnerId
   if (runnerNumber <= 0) {
     throw new Error('Ungültige Startnummer');
@@ -72,11 +72,11 @@ export async function createLap(
     body: JSON.stringify({ runnerId }),
   });
 
-  if (res.status == 200) {
-    return;
-  }
-
   const body = await res.text();
+
+  if (res.status == 200) {
+    return Promise.resolve(JSON.parse(body));
+  }
 
   if (res.status == 401 || res.status == 403) {
     return Promise.reject('Zugriff verweigert');

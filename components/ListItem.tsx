@@ -21,7 +21,7 @@ export default function ListItem({
     <div className={`centered-card ${glass && '!bg-opacity-60'}`}>
       <div className="card-body w-full flex-row p-1">
         <div className="flex grow flex-col justify-center overflow-hidden text-ellipsis pl-1">
-          <div className="font-semibold">
+          <div className="font-semibold line-clamp-1">
             {number != undefined && (
               <>
                 <span className="opacity-20">
@@ -34,7 +34,7 @@ export default function ListItem({
           </div>
 
           {secondaryContent && (
-            <span className="flex overflow-hidden text-ellipsis whitespace-nowrap">
+            <span className="flex overflow-hidden text-ellipsis whitespace-nowrap line-clamp-1">
               {secondaryContent}
             </span>
           )}
