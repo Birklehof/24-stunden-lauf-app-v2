@@ -9,7 +9,7 @@ export default function useAuth() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    auth.onAuthStateChanged((authenticatedUser) => {
+    auth.onAuthStateChanged(async (authenticatedUser) => {
       if (!authenticatedUser) {
         setIsLoggedIn(false);
         setUser(undefined);
@@ -22,12 +22,14 @@ export default function useAuth() {
           authenticatedUser.uid ===
             process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID
         ) {
+          console.log(authenticatedUser);
           setIsLoggedIn(true);
           setUser({
             uid: authenticatedUser.uid,
             email: 'assistant@birklehof.de',
             displayName: 'Assistant',
             role: 'assistant',
+            accessToken: await authenticatedUser.getIdToken(),
           });
         } else if (
           authenticatedUser &&
@@ -40,6 +42,7 @@ export default function useAuth() {
           const newUser = {
             ...authenticatedUser,
             role: 'runner',
+            accessToken: await authenticatedUser.getIdToken(),
           } as User;
           setUser(newUser);
         } else {

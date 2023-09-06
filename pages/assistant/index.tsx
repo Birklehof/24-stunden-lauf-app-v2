@@ -127,7 +127,7 @@ export default function AssistantIndex() {
                   .sort((a, b) => {
                     return (
                       // @ts-ignore
-                      b.timestamp - a.timestamp
+                      b.createdAt - a.createdAt
                     );
                   })
                   .map((lap) => (

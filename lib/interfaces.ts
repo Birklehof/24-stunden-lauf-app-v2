@@ -3,7 +3,7 @@ import { Timestamp } from 'firebase/firestore';
 export interface Lap {
   id: string;
   runnerId: string;
-  timestamp: Timestamp;
+  createdAt: Timestamp;
 }
 
 export interface Runner {
@@ -45,5 +45,6 @@ export interface User {
   displayName?: string;
   uid: string;
   email: string;
+  accessToken: string;
   role: string;
 }

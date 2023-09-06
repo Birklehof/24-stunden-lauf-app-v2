@@ -55,7 +55,7 @@ export default function RunnerGraphs() {
   function groupLapsByHour(_laps: Lap[]): { [key: string]: number } {
     const groupedLaps: { [key: string]: number } = {};
     _laps.forEach((lap) => {
-      const hour = (lap.timestamp.seconds / 60 / 60).toFixed(0);
+      const hour = (lap.createdAt.seconds / 60 / 60).toFixed(0);
       if (groupedLaps[hour]) {
         groupedLaps[hour]++;
       } else {

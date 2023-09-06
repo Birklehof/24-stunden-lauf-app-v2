@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { auth, db } from '@/lib/firebase/firebase-admin';
 import { Lap } from '@/lib/interfaces';
+import { Timestamp } from 'firebase/firestore';
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,20 +20,11 @@ export default async function handler(
       req.headers.authorization.toString()
     );
 
-    if (!token.email) {
+    if (!token.role || token.role !== 'assistant') {
       return res.status(401).json({ error: 'Access token invalid' });
     }
-
-    const role = await db
-      .collection('apps/24-stunden-lauf/roles')
-      .doc(token.email)
-      .get();
-
-    if (!role.exists || role.data()?.role !== 'assistant') {
-      throw new Error('Insufficient permissions');
-    }
-  } catch (error: any) {
-    return res.status(401).json({ error: error.message });
+  } catch {
+    return res.status(500);
   }
 
   const { runnerId } = req.body;
@@ -45,13 +37,13 @@ export default async function handler(
   const querySnapshot = await db
     .collection('apps/24-stunden-lauf/laps')
     .where('runnerId', '==', runnerId)
-    .orderBy('timestamp', 'desc')
+    .orderBy('createdAt', 'desc')
     .limit(1)
     .get();
 
   if (!querySnapshot.empty) {
     const lastLapOfRunner = querySnapshot.docs[0].data() as Lap;
-    const lastLapDate = lastLapOfRunner.timestamp.toDate();
+    const lastLapDate = lastLapOfRunner.createdAt.toDate();
 
     const now = new Date();
 
@@ -61,7 +53,10 @@ export default async function handler(
     }
   }
 
-  const lap = { runnerId, timestamp: new Date() };
+  const lap: {
+    runnerId: string;
+    createdAt: Date;
+  } = { runnerId, createdAt: new Date() };
   await db
     .collection('apps/24-stunden-lauf/laps')
     .add(lap)

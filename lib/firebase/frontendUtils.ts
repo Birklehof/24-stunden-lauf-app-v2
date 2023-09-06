@@ -95,7 +95,7 @@ export async function createLap(
 export async function getNewestLaps(numberOfLaps: number): Promise<Lap[]> {
   const lapsQuery = query(
     collection(db, 'apps/24-stunden-lauf/laps'),
-    orderBy('timestamp', 'desc'),
+    orderBy('createdAt', 'desc'),
     limit(numberOfLaps)
   );
   const lapsSnapshot = await getDocs(lapsQuery);
