@@ -17,7 +17,8 @@ import {
 } from 'chart.js';
 import { Lap } from '@/lib/interfaces';
 import useCollectionAsList from '@/lib/hooks/useCollectionAsList';
-import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
+import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
+import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues';
 
 export default function RunnerGraphs() {
   const [laps, lapsLoading, lapsError] = useCollectionAsList<Lap>(
@@ -30,7 +31,7 @@ export default function RunnerGraphs() {
 
   const { isLoggedIn, user } = useAuth();
   const { runner } = useRunner();
-  const { classes, houses, distancePerLap } = useRemoteConfig();
+  const [distancePerLap] = useRemoteConfig('distancePerLap', defaultDistancePerLap);
 
   // While loading, show loading screen
   if (

@@ -58,6 +58,8 @@ export default function useAuth() {
         }
       }
     });
+  // The user mustn't be included in the dependency array because auth.onAuthStateChanged is a listener that is called whenever the user (or it's auth state) changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function logout() {

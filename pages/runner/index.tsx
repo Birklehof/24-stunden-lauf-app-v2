@@ -3,16 +3,17 @@ import Loading from '@/components/Loading';
 import Head from '@/components/Head';
 import NewLapOverlay from '@/components/NewLapOverlay';
 import useRunner from '@/lib/hooks/useRunner';
-import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
+import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
 import { useEffect } from 'react';
 import router from 'next/router';
 import { themedErrorToast } from '@/lib/utils';
 import RunnerStat from '@/components/Runner/RunnerStat';
+import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues';
 
 export default function RunnerIndex() {
   const { isLoggedIn, logout } = useAuth();
   const { runner, lapCount, position } = useRunner();
-  const { distancePerLap } = useRemoteConfig();
+  const [distancePerLap] = useRemoteConfig('distancePerLap', defaultDistancePerLap);
 
   useEffect(() => {
     // If the runner does not exist, logout and redirect to login

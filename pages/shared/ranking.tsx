@@ -1,13 +1,14 @@
 import useAuth from '@/lib/hooks/useAuth';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Loading from '@/components/Loading';
 import Head from '@/components/Head';
-import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
+import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
 import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
 import SearchBar from '@/components/SearchBar';
 import ListItem from '@/components/ListItem';
 import { getRunnersWithLapCount } from '@/lib/firebase/backendUtils';
 import Icon from '@/components/Icon';
+import { defaultClasses, defaultDistancePerLap, defaultHouses } from '@/lib/firebase/remoteConfigDefaultValues';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
@@ -28,7 +29,9 @@ export default function RunnerRanking({
   lastUpdated: number;
 }) {
   const { isLoggedIn } = useAuth();
-  const { classes, houses, distancePerLap } = useRemoteConfig();
+  const [distancePerLap] = useRemoteConfig('distancePerLap', defaultDistancePerLap);
+  const [classes] = useRemoteConfig('classes', defaultClasses);
+  const [houses] = useRemoteConfig('houses', defaultHouses);
 
   // Variables for filtering
   const [filterName, setFilterName] = useState('');

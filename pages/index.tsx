@@ -3,12 +3,12 @@ import Head from '@/components/Head';
 import useAuth from '@/lib/hooks/useAuth';
 import router from 'next/router';
 import { useEffect } from 'react';
-import useRemoteConfig from '@/lib/hooks/useRemoteConfig';
-import { themedErrorToast } from '@/lib/utils';
+import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
+import { defaultAppName } from '@/lib/firebase/remoteConfigDefaultValues';
 
 export default function Index() {
   const { isLoggedIn, user, logout } = useAuth();
-  const { appName } = useRemoteConfig();
+  const [appName] = useRemoteConfig('appName24StundenLauf', defaultAppName);
 
   useEffect(() => {
     if (isLoggedIn && user) {

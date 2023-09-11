@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { auth, db } from '@/lib/firebase/firebase-admin';
+import { auth, db } from '@/lib/firebase/admin';
 import { Lap } from '@/lib/interfaces';
 
 export default async function handler(
@@ -61,15 +61,15 @@ export default async function handler(
   await db
     .collection('apps/24-stunden-lauf/laps')
     .add({ runnerId, createdAt: now })
-    .catch((err) => {
-      console.error(err);
-      return res.status(500).end();
-    })
     .then((docRef) => {
       res.status(200).json({
-        id: docRef.id,
+        id: docRef.id, // @ts-ignore
         runnerId,
         createdAt: now,
       });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).end();
     });
 }
