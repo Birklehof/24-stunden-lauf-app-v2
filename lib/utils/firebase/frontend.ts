@@ -10,13 +10,8 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import {
-  User,
-  Runner,
-  RunnerWithLapCount,
-  Lap,
-} from '@/lib/interfaces';
-import { db } from '.';
+import { User, Runner, RunnerWithLapCount, Lap } from '@/lib/interfaces';
+import { db } from '@/lib/firebase';
 
 // Used in pages/assistant/create-runner.tsx
 export async function createRunner(name: string): Promise<number> {
@@ -49,7 +44,7 @@ export async function deleteLap(lapId: string) {
 export async function createLap(
   runnerNumber: number,
   runners: { [id: string]: Runner },
-  user: User | undefined
+  token: string | null,
 ): Promise<Lap> {
   // Convert runnerNumber to valid runnerId
   if (runnerNumber <= 0) {
@@ -67,7 +62,7 @@ export async function createLap(
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: user?.accessToken || '',
+      Authorization: token || '',
     },
     body: JSON.stringify({ runnerId }),
   });
@@ -111,13 +106,11 @@ export async function getNewestLaps(numberOfLaps: number): Promise<Lap[]> {
   return laps;
 }
 
-// Used in lib/hooks/useRunner.ts
-export async function getRunnerPosition(
-  runner: RunnerWithLapCount
-): Promise<number> {
+// Used in lib/hooks/usePosition.ts
+export async function getPosition(lapCount: number): Promise<number> {
   const positionQuery = query(
     collection(db, 'apps/24-stunden-lauf/runners'),
-    where('lapCount', '>', runner.lapCount)
+    where('lapCount', '>', lapCount)
   );
   const positionSnapshot = await getCountFromServer(positionQuery);
   const position = positionSnapshot.data().count || 0;

@@ -1,20 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Head from '@/components/Head';
-import Loading from '@/components/Loading';
-import useAuth from '@/lib/hooks/useAuth';
-import { createRunner } from '@/lib/firebase/frontendUtils';
-import { themedPromiseToast } from '@/lib/utils';
+import { createRunner } from '@/lib/utils/firebase/frontend';
+import { themedPromiseToast } from '@/lib/utils/frontend';
+import { AuthAction, withUser } from 'next-firebase-auth';
 
-export default function AssistantCreateRunner() {
-  const { isLoggedIn } = useAuth();
-
+function AssistantCreateRunnerPage() {
   const [submitting, setSubmitting] = useState(false);
   const [number, setNumber] = useState(0);
-
-  // While loading, show loading screen
-  if (!isLoggedIn) {
-    return <Loading />;
-  }
 
   async function createRunnerHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -112,3 +104,7 @@ export default function AssistantCreateRunner() {
     </>
   );
 }
+
+export default withUser({
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+})(AssistantCreateRunnerPage)

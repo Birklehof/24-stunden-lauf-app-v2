@@ -1,4 +1,3 @@
-import useAuth from '@/lib/hooks/useAuth';
 import { useState } from 'react';
 import Loading from '@/components/Loading';
 import Head from '@/components/Head';
@@ -6,9 +5,10 @@ import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
 import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
 import SearchBar from '@/components/SearchBar';
 import ListItem from '@/components/ListItem';
-import { getRunnersWithLapCount } from '@/lib/firebase/backendUtils';
+import { getRunnersWithLapCount } from '@/lib/utils/firebase/backend';
 import Icon from '@/components/Icon';
 import { defaultClasses, defaultDistancePerLap, defaultHouses } from '@/lib/firebase/remoteConfigDefaultValues';
+import { AuthAction, withUser } from 'next-firebase-auth';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
@@ -21,14 +21,13 @@ export async function getStaticProps() {
   };
 }
 
-export default function RunnerRanking({
+function RankingPage({
   runnersWithLapCount,
   lastUpdated,
 }: {
   runnersWithLapCount: RunnerWithLapCount[];
   lastUpdated: number;
 }) {
-  const { isLoggedIn } = useAuth();
   const [distancePerLap] = useRemoteConfig('distancePerLap', defaultDistancePerLap);
   const [classes] = useRemoteConfig('classes', defaultClasses);
   const [houses] = useRemoteConfig('houses', defaultHouses);
@@ -46,11 +45,6 @@ export default function RunnerRanking({
       .findIndex(
         (runnerWithLapCount) => runnerWithLapCount.lapCount == runner.lapCount
       );
-  }
-
-  // While loading, show loading screen
-  if (!isLoggedIn) {
-    return <Loading />;
   }
 
   return (
@@ -210,3 +204,10 @@ function filterRunner(
 
   return !filterName || runner.name?.includes(filterName);
 }
+
+export default withUser({
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  LoaderComponent: Loading,
+  // @ts-ignore
+})(RankingPage);

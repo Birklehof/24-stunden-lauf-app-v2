@@ -1,14 +1,15 @@
 import React, { PropsWithChildren, useEffect } from 'react';
-import Icon from './Icon';
 import { useDarkMode } from 'usehooks-ts';
 import { useRouter } from 'next/router';
 import Menu from './Menu';
-import useAuth from '@/lib/hooks/useAuth';
+
+// FIXME: Fix the menu which is shown based on the user's auth state
 
 export default function Layout({ children }: PropsWithChildren) {
-  const { isLoggedIn, user } = useAuth();
   const { isDarkMode, toggle } = useDarkMode();
   const router = useRouter();
+
+  let role = 'runner' // Just test -> remove !!! -> based on url route?
 
   useEffect(() => {
     const body = document.body;
@@ -32,9 +33,9 @@ export default function Layout({ children }: PropsWithChildren) {
         </svg>
       </button>
 
-      {isLoggedIn && user?.role && (
+      {role && (
         <>
-          {user.role === 'assistant' ? (
+          {role === 'assistant' ? (
             <Menu
               // Assistant Menu
               navItems={[

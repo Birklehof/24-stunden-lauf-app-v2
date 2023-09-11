@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   signInWithPopup,
   signInWithRedirect,
   signInWithCustomToken,
 } from 'firebase/auth';
 import { auth, microsoftOAuthProvider } from '@/lib/firebase';
-import useAuth from '@/lib/hooks/useAuth';
-import { themedErrorToast, themedPromiseToast } from '@/lib/utils';
+import { themedErrorToast, themedPromiseToast } from '@/lib/utils/frontend';
 
 export default function LoginOptions() {
-  const { isLoggedIn } = useAuth();
+  const [pending, setPending] = useState(false);
 
   const handleRunnerAuth = async () => {
-    themedPromiseToast(signInWithPopup(auth, microsoftOAuthProvider), {
+    setPending(true);
+    await themedPromiseToast(signInWithPopup(auth, microsoftOAuthProvider), {
       pending: 'Anmeldung läuft...',
       success: {
         render: () => {
@@ -22,10 +22,12 @@ export default function LoginOptions() {
         type: 'info',
       },
       error: 'Fehler beim Anmelden!',
-    });
+    })
   };
 
   const handleStaffAuth = async () => {
+    setPending(true);
+
     // Ask user for a six digit code
     const code = prompt('Bitte gib den 6-stelligen Code ein:', '');
 
@@ -48,7 +50,7 @@ export default function LoginOptions() {
       return;
     }
 
-    themedPromiseToast(
+    await themedPromiseToast(
       signInWithCustomToken(auth, (await response.json()).token),
       {
         pending: 'Anmeldung läuft...',
@@ -76,10 +78,14 @@ export default function LoginOptions() {
       </button>
       <button
         className="btn-primary btn-outline btn w-full"
-        onClick={handleRunnerAuth}
-        disabled={isLoggedIn}
+        onClick={() => {
+          handleRunnerAuth().finally(() => {
+            setPending(false);
+          });
+        }}
+        disabled={pending}
       >
-        {isLoggedIn && <span className="loading loading-spinner" />}
+        {pending && <span className="loading loading-spinner" />}
         Läufer
       </button>
       <div className="divider">
@@ -87,10 +93,14 @@ export default function LoginOptions() {
       </div>
       <button
         className="btn-primary btn-outline btn w-full"
-        onClick={handleStaffAuth}
-        disabled={isLoggedIn}
+        onClick={() => {
+          handleStaffAuth().finally(() => {
+            setPending(false);
+          });
+        }}
+        disabled={pending}
       >
-        {isLoggedIn && <span className="loading loading-spinner" />}
+        {pending && <span className="loading loading-spinner" />}
         Assistent
       </button>
     </>

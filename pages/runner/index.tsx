@@ -1,47 +1,58 @@
-import useAuth from '@/lib/hooks/useAuth';
 import Loading from '@/components/Loading';
 import Head from '@/components/Head';
 import NewLapOverlay from '@/components/NewLapOverlay';
-import useRunner from '@/lib/hooks/useRunner';
 import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
-import { useEffect } from 'react';
-import router from 'next/router';
-import { themedErrorToast } from '@/lib/utils';
 import RunnerStat from '@/components/Runner/RunnerStat';
 import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues';
+import { getRunner } from '@/lib/utils/firebase/backend';
+import { Runner } from '@/lib/interfaces';
+import usePosition from '@/lib/hooks/usePosition';
+import {
+  AuthAction,
+  withUser,
+  withUserSSR,
+} from 'next-firebase-auth';
 
-export default function RunnerIndex() {
-  const { isLoggedIn, logout } = useAuth();
-  const { runner, lapCount, position } = useRunner();
-  const [distancePerLap] = useRemoteConfig('distancePerLap', defaultDistancePerLap);
-
-  useEffect(() => {
-    // If the runner does not exist, logout and redirect to login
-    if (runner === null) {
-      themedErrorToast('Dein Account ist nicht als Läufer registriert');
-      logout();
-      router.push('/');
-      return;
-    }
-  }, [runner, logout]);
-
-  // While loading, show loading screen
-  if (!isLoggedIn) {
-    return <Loading />;
+export const getServerSideProps = withUserSSR({
+  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
+  // @ts-ignore
+})(async ({ user }) => {
+  // Get the user with the email
+  if (user && user.email) {
+    const runner = await getRunner(user.email);
+    return {
+      props: {
+        runner,
+      },
+    };
   }
+
+  return {
+    props: {
+      runner: null,
+    },
+  };
+});
+
+function RunnerIndexPage({ runner }: { runner: Runner }) {
+  const { lapCount, position } = usePosition(runner?.id);
+  const [distancePerLap] = useRemoteConfig(
+    'distancePerLap',
+    defaultDistancePerLap
+  );
 
   return (
     <>
       <Head title="Läufer" />
       <main className="hero min-h-screen bg-base-200">
-        <NewLapOverlay />
-        <div className="flex flex-col landscape:flex-row gap-3 mb-10 landscape:mb-0">
+        <NewLapOverlay lapCount={lapCount} />
+        <div className="mb-10 flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row">
           <RunnerStat value={runner?.number} label="Nr." />
-          <div className="divider divider-vertical landscape:divider-horizontal my-0" />
+          <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
           <RunnerStat value={lapCount} label="Runden" />
-          <div className="divider divider-vertical landscape:divider-horizontal my-0" />
+          <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
           <RunnerStat value={position} label="Platz" />
-          <div className="divider divider-vertical landscape:divider-horizontal my-0" />
+          <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
           <RunnerStat
             value={
               lapCount &&
@@ -60,3 +71,10 @@ export default function RunnerIndex() {
     </>
   );
 }
+
+export default withUser({
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  LoaderComponent: Loading,
+  // @ts-ignore
+})(RunnerIndexPage);

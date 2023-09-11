@@ -1,7 +1,7 @@
 import { PossibleIcons } from 'heroicons-lookup';
 import Link from 'next/link';
-import useAuth from '@/lib/hooks/useAuth';
 import Icon from '@/components/Icon';
+import { auth } from '@/lib/firebase';
 
 interface MenuProps {
   navItems: NavItem[];
@@ -14,7 +14,13 @@ interface NavItem {
 }
 
 export default function Menu({ navItems }: MenuProps) {
-  const { isLoggedIn, logout } = useAuth();
+  async function logout() {
+    return auth
+      .signOut()
+      .catch((e) => {
+        console.error(e);
+      });
+  }
 
   return (
     <>
@@ -33,7 +39,6 @@ export default function Menu({ navItems }: MenuProps) {
         </ul>
         <div className="divider divider-horizontal !m-0 landscape:divider-vertical" />
         <button
-          disabled={!isLoggedIn}
           onClick={logout}
           className="btn-ghost btn-square btn text-error btn-sm sm:btn-md"
           aria-label="Logout"

@@ -1,4 +1,4 @@
-import { RunnerWithLapCount } from '@/lib/interfaces';
+import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
 import { db } from '@/lib/firebase/admin';
 
 // Used in pages/shared/ranking.tsx
@@ -26,4 +26,14 @@ export async function getRunnersWithLapCount(): Promise<RunnerWithLapCount[]> {
   );
 
   return runnersWithLaps;
+}
+
+export async function getRunner(email: string): Promise<Runner> {
+  const runner = await db.collection('apps/24-stunden-lauf/runners').where('email', '==', email).get();
+
+  if (runner.docs.length == 0) {
+    throw new Error('Runner not found');
+  }
+
+  return runner.docs[0].data() as Runner;
 }

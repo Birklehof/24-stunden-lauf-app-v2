@@ -6,8 +6,8 @@ export default function RunnerStat({
   label: string;
 }) {
   return (
-    <div>
-      {value ? (
+    <div className="flex flex-col items-center">
+      {value !== undefined ? (
         <h1 className="text-center text-3xl font-bold sm:text-5xl">
           <div className="inline text-base-300">
             {'0'.repeat(Math.max(3 - value.toString().length, 0))}

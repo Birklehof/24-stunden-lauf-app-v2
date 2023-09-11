@@ -1,25 +1,24 @@
 import { useEffect, useState } from 'react';
 import Head from '@/components/Head';
 import Loading from '@/components/Loading';
-import useAuth from '@/lib/hooks/useAuth';
 import Icon from '@/components/Icon';
 import { Lap, Runner } from '@/lib/interfaces';
-import { themedPromiseToast } from '@/lib/utils';
+import { themedPromiseToast } from '@/lib/utils/frontend';
 import {
   createLap,
   deleteLap,
   getNewestLaps,
-} from '@/lib/firebase/frontendUtils';
+} from '@/lib/utils/firebase/frontend';
 import ListItem from '@/components/ListItem';
 import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
+import { AuthAction, useUser, withUser } from 'next-firebase-auth'
 
-export default function AssistantIndex() {
+function AssistantIndexPage() {
+  const user = useUser()
   const [newestLaps, setLaps] = useState<Lap[] | null>(null);
   const [runners, runnersLoading, runnersError] = useCollectionAsDict<Runner>(
     'apps/24-stunden-lauf/runners'
   );
-
-  const { isLoggedIn, user } = useAuth();
 
   const [number, setNumber] = useState(0);
   const [submitting, setSubmitting] = useState(false);
@@ -30,11 +29,6 @@ export default function AssistantIndex() {
     });
   }, []);
 
-  // While loading, show loading screen
-  if (!isLoggedIn) {
-    return <Loading />;
-  }
-
   async function createNewLapHandler() {
     if (submitting) {
       return;
@@ -42,7 +36,7 @@ export default function AssistantIndex() {
 
     setSubmitting(true);
 
-    await createLap(number, runners, user)
+    await createLap(number, runners, await user.getIdToken())
       .then((newLap) => {
         setNumber(0);
 
@@ -176,3 +170,9 @@ export default function AssistantIndex() {
     </>
   );
 }
+
+export default withUser({
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  LoaderComponent: Loading,
+})(AssistantIndexPage)

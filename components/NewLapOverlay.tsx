@@ -1,18 +1,20 @@
-import useRunner from '@/lib/hooks/useRunner';
 import { useEffect } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 
-export default function NewLapOverlay() {
-  const { lapCount } = useRunner();
+export default function NewLapOverlay({
+  lapCount,
+}: {
+  lapCount: number | undefined;
+}) {
   const [lastLapCount, setLastLapCount] = useLocalStorage('lastLapCount', 0);
 
   useEffect(() => {
-    if (!lapCount) return
+    if (!lapCount) return;
 
     if (lapCount > lastLapCount) {
       setLastLapCount(lapCount);
       animateGrow();
-    } else  if (lapCount < lastLapCount) {
+    } else if (lapCount < lastLapCount) {
       setLastLapCount(lapCount);
     }
   }, [lapCount, lastLapCount, setLastLapCount]);

@@ -1,8 +1,4 @@
-import useAuth from '@/lib/hooks/useAuth';
-import { useEffect } from 'react';
-import Loading from '@/components/Loading';
 import Head from '@/components/Head';
-import useRunner from '@/lib/hooks/useRunner';
 import { Line } from 'react-chartjs-2';
 import {
   Chart,
@@ -15,12 +11,35 @@ import {
   Legend,
   Filler,
 } from 'chart.js';
-import { Lap } from '@/lib/interfaces';
+import { Lap, Runner } from '@/lib/interfaces';
 import useCollectionAsList from '@/lib/hooks/useCollectionAsList';
 import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
 import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues';
+import { AuthAction, withUser, withUserSSR } from 'next-firebase-auth';
+import { getRunner } from '@/lib/utils/firebase/backend';
 
-export default function RunnerGraphs() {
+export const getServerSideProps = withUserSSR({
+  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
+  // @ts-ignore
+})(async ({ user }) => {
+  // Get the user with the email
+  if (user && user.email) {
+    const runner = await getRunner(user.email);
+    return {
+      props: {
+        runner,
+      },
+    };
+  }
+
+  return {
+    props: {
+      runner: null,
+    },
+  };
+});
+
+function RunnerGraphsPage({ runner }: { runner: Runner }) {
   const [laps, lapsLoading, lapsError] = useCollectionAsList<Lap>(
     'apps/24-stunden-lauf/laps'
   );
@@ -29,18 +48,7 @@ export default function RunnerGraphs() {
   const runnerCount = 0
   const lapsCount = 0
 
-  const { isLoggedIn, user } = useAuth();
-  const { runner } = useRunner();
   const [distancePerLap] = useRemoteConfig('distancePerLap', defaultDistancePerLap);
-
-  // While loading, show loading screen
-  if (
-    !user ||
-    !runner ||
-    lapsLoading
-  ) {
-    return <Loading />;
-  }
 
   Chart.register({
     CategoryScale,
@@ -258,3 +266,8 @@ export default function RunnerGraphs() {
     </>
   );
 }
+
+export default withUser({
+  whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  // @ts-ignore
+})(RunnerGraphsPage);

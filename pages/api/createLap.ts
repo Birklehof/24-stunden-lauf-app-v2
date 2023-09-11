@@ -15,16 +15,15 @@ export default async function handler(
   }
 
   // Verify access token
-  try {
-    const token = await auth.verifyIdToken(
-      req.headers.authorization.toString()
-    );
+  const token = await auth.verifyIdToken(
+    req.headers.authorization.toString()
+  ).catch(() => {
+    return res.status(401).json({ error: 'Access token invalid' });
+  });
 
-    if (!token.role || token.role !== 'assistant') {
-      return res.status(401).json({ error: 'Access token invalid' });
-    }
-  } catch {
-    return res.status(500);
+  // @ts-ignore token has role as custom claim
+  if (!token.role || token.role !== 'assistant') {
+    return res.status(401).json({ error: 'Access token invalid' });
   }
 
   const { runnerId } = req.body;

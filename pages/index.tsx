@@ -1,32 +1,12 @@
 import LoginOptions from '@/components/LoginOptions';
 import Head from '@/components/Head';
-import useAuth from '@/lib/hooks/useAuth';
-import router from 'next/router';
-import { useEffect } from 'react';
 import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
 import { defaultAppName } from '@/lib/firebase/remoteConfigDefaultValues';
+import { withUser, AuthAction } from 'next-firebase-auth'
+import Loading from '@/components/Loading';
 
-export default function Index() {
-  const { isLoggedIn, user, logout } = useAuth();
+function IndexPage() {
   const [appName] = useRemoteConfig('appName24StundenLauf', defaultAppName);
-
-  useEffect(() => {
-    if (isLoggedIn && user) {
-      redirect(user.role).then((path) => {
-        router.push(path);
-      });
-    }
-  }, [isLoggedIn, user, logout]);
-
-  async function redirect(role: string): Promise<string> {
-    if (role === 'assistant') {
-      return '/assistant';
-    } else if (role === 'runner') {
-      return '/runner';
-    } else {
-      throw new Error('Unknown role');
-    }
-  }
 
   return (
     <>
@@ -44,3 +24,10 @@ export default function Index() {
     </>
   );
 }
+
+export default withUser({
+  whenAuthed: AuthAction.REDIRECT_TO_APP,
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+  whenUnauthedAfterInit: AuthAction.RENDER,
+  LoaderComponent: Loading,
+})(IndexPage)
