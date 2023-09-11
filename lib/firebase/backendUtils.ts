@@ -1,5 +1,5 @@
-import { RunnerWithLapCount } from '../interfaces';
-import { db } from './admin';
+import { RunnerWithLapCount } from '@/lib/interfaces';
+import { db } from '@/lib/firebase/admin';
 
 // Used in pages/shared/ranking.tsx
 export async function getRunnersWithLapCount(): Promise<RunnerWithLapCount[]> {
