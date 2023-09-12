@@ -40,7 +40,7 @@ function check_frontend_path(path) {
   cy.title().should('include', 'Lädt ...');
   cy.get('span').should('have.attr', 'aria-label', 'Ladeanimation');
 
-  cy.wait(10000);
+  cy.wait(100);
 
   // The user should be redirected to the login page
   cy.url().should('eq', 'http://localhost:3000/');

@@ -2,8 +2,12 @@ import LoginOptions from '@/components/LoginOptions';
 import Head from '@/components/Head';
 import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
 import { defaultAppName } from '@/lib/firebase/remoteConfigDefaultValues';
-import { withUser, AuthAction } from 'next-firebase-auth'
+import { withUser, AuthAction, withUserTokenSSR } from 'next-firebase-auth'
 import Loading from '@/components/Loading';
+
+export const getServerSideProps = withUserTokenSSR({
+  whenAuthed: AuthAction.REDIRECT_TO_APP,
+})()
 
 function IndexPage() {
   const [appName] = useRemoteConfig('appName24StundenLauf', defaultAppName);
@@ -27,7 +31,4 @@ function IndexPage() {
 
 export default withUser({
   whenAuthed: AuthAction.REDIRECT_TO_APP,
-  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
-  whenUnauthedAfterInit: AuthAction.RENDER,
-  LoaderComponent: Loading,
 })(IndexPage)

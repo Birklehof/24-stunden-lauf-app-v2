@@ -5,6 +5,7 @@ import { auth } from '@/lib/firebase';
 
 interface MenuProps {
   navItems: NavItem[];
+  signOut: () => Promise<void>;
 }
 
 interface NavItem {
@@ -13,15 +14,7 @@ interface NavItem {
   icon: PossibleIcons;
 }
 
-export default function Menu({ navItems }: MenuProps) {
-  async function logout() {
-    return auth
-      .signOut()
-      .catch((e) => {
-        console.error(e);
-      });
-  }
-
+export default function Menu({ navItems, signOut: signOutAction }: MenuProps) {
   return (
     <>
       <div className="menu w-max rounded-box menu-horizontal absolute bottom-3 left-1/2 z-40 -translate-x-1/2 bg-base-100 p-2 shadow-xl landscape:bottom-1/2 landscape:left-2 landscape:translate-x-0 landscape:translate-y-1/2 landscape:gap-2 landscape:menu-vertical">
@@ -39,7 +32,7 @@ export default function Menu({ navItems }: MenuProps) {
         </ul>
         <div className="divider divider-horizontal !m-0 landscape:divider-vertical" />
         <button
-          onClick={logout}
+          onClick={signOutAction}
           className="btn-ghost btn-square btn text-error btn-sm sm:btn-md"
           aria-label="Logout"
         >

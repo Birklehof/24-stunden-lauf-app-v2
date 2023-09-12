@@ -1,15 +1,29 @@
-import React, { PropsWithChildren, useEffect } from 'react';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { useDarkMode } from 'usehooks-ts';
 import { useRouter } from 'next/router';
 import Menu from './Menu';
+import { auth } from '@/lib/firebase';
 
 // FIXME: Fix the menu which is shown based on the user's auth state
 
 export default function Layout({ children }: PropsWithChildren) {
   const { isDarkMode, toggle } = useDarkMode();
-  const router = useRouter();
+  const [role, setRole] = useState<string | null>(null);
 
-  let role = 'runner' // Just test -> remove !!! -> based on url route?
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        if (user.uid === process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID) {
+          setRole('assistant');
+        } else {
+          setRole('runner');
+        }
+      } else {
+        setRole(null);
+      }
+    });
+  }, []);
+
 
   useEffect(() => {
     const body = document.body;
@@ -46,7 +60,7 @@ export default function Layout({ children }: PropsWithChildren) {
                 },
                 {
                   name: 'Ranking',
-                  href: '/shared/ranking',
+                  href: '/ranking',
                   icon: 'TrendingUpIcon',
                 },
                 {
@@ -55,6 +69,7 @@ export default function Layout({ children }: PropsWithChildren) {
                   icon: 'UserAddIcon',
                 },
               ]}
+              signOut={() => auth.signOut()}
             />
           ) : (
             <Menu
@@ -63,10 +78,11 @@ export default function Layout({ children }: PropsWithChildren) {
                 { name: 'Startseite', href: '/runner', icon: 'HomeIcon' },
                 {
                   name: 'Ranking',
-                  href: '/shared/ranking',
+                  href: '/ranking',
                   icon: 'TrendingUpIcon',
                 },
               ]}
+              signOut={() => auth.signOut()}
             />
           )}
         </>

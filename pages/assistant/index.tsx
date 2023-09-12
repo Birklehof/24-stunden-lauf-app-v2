@@ -4,30 +4,20 @@ import Loading from '@/components/Loading';
 import Icon from '@/components/Icon';
 import { Lap, Runner } from '@/lib/interfaces';
 import { themedPromiseToast } from '@/lib/utils/frontend';
-import {
-  createLap,
-  deleteLap,
-  getNewestLaps,
-} from '@/lib/utils/firebase/frontend';
+import { createLap, deleteLap } from '@/lib/utils/firebase/frontend';
 import ListItem from '@/components/ListItem';
 import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
-import { AuthAction, useUser, withUser } from 'next-firebase-auth'
+import { AuthAction, useUser, withUser } from 'next-firebase-auth';
 
 function AssistantIndexPage() {
-  const user = useUser()
-  const [newestLaps, setLaps] = useState<Lap[] | null>(null);
+  const user = useUser();
+  const [createdLaps, setCreatedLaps] = useState<Lap[]>([]);
   const [runners, runnersLoading, runnersError] = useCollectionAsDict<Runner>(
     'apps/24-stunden-lauf/runners'
   );
 
   const [number, setNumber] = useState(0);
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    getNewestLaps(30).then((laps) => {
-      setLaps(laps);
-    });
-  }, []);
 
   async function createNewLapHandler() {
     if (submitting) {
@@ -40,7 +30,7 @@ function AssistantIndexPage() {
       .then((newLap) => {
         setNumber(0);
 
-        setLaps([newLap, ...(newestLaps || [])]);
+        setCreatedLaps([newLap, ...(createdLaps || [])]);
       })
       .finally(() => {
         setSubmitting(false);
@@ -66,7 +56,7 @@ function AssistantIndexPage() {
       },
     }).then(() => {
       // Filer out deleted lap
-      setLaps(newestLaps?.filter((lap) => lap.id !== lapId) || null);
+      setCreatedLaps(createdLaps?.filter((lap) => lap.id !== lapId) || null);
     });
   }
 
@@ -74,14 +64,14 @@ function AssistantIndexPage() {
     <>
       <Head title="Assistent" />
       <main className="main !py-0">
-        <div className="grid !h-screen grid-cols-2 gap-2">
+        <div className="w-full grid !h-screen grid-cols-2 justify-around landscape:pl-10">
           <section className="flex flex-col items-center justify-center gap-2">
             <div className="card bg-base-100 shadow-xl">
               <div className="card-body p-2">
                 <input
                   id="number"
                   name="number"
-                  className={`font-serif input-bordered input rounded-box box-border h-full w-full max-w-[18rem] text-center text-4xl font-medium tracking-widest md:text-7xl ${
+                  className={`font-serif input-bordered input rounded-box box-border h-full w-full max-w-[18rem] text-center text-5xl font-medium tracking-widest sm:text-9xl ${
                     Object.values(runners).find(
                       (runner) => runner.number == number
                     ) != undefined
@@ -132,10 +122,10 @@ function AssistantIndexPage() {
               zählen
             </div>
           </section>
-          <section className="vertical-list">
-            {newestLaps ? (
+          <section className="vertical-list !flex">
+            {createdLaps.length > 0 ? (
               <>
-                {newestLaps
+                {createdLaps
                   .sort((a, b) => {
                     return (
                       // @ts-ignore
@@ -149,7 +139,7 @@ function AssistantIndexPage() {
                       mainContent={runners[lap.runnerId]?.name || 'Unbekannt'}
                     >
                       <button
-                        className="btn-error btn-outline btn-square btn-sm btn hidden text-error md:flex"
+                        className="btn-outline btn-error btn-square btn-sm btn hidden text-error md:flex"
                         aria-label="Runde löschen"
                         onClick={async () => await deleteLapHandler(lap.id)}
                       >
@@ -158,11 +148,13 @@ function AssistantIndexPage() {
                     </ListItem>
                   ))}
                 <div className="w-full text-center text-sm">
-                  Neuesten 30 Runden
+                  Zuletzt erstellte Runden
                 </div>
               </>
             ) : (
-              <span className="loading loading-lg" />
+              <div className="w-full text-center text-sm">
+                Du hast noch keine Runden erstellt
+              </div>
             )}
           </section>
         </div>
@@ -175,4 +167,4 @@ export default withUser({
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
   LoaderComponent: Loading,
-})(AssistantIndexPage)
+})(AssistantIndexPage);
