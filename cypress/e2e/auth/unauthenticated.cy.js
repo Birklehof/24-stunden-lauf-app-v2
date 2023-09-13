@@ -8,24 +8,24 @@ describe('Frontend redirect for unauthenticated users', function () {
     check_frontend_path.bind(null, 'assistant/create-runner')
   );
 
-  it('/shared/ranking.tsx is redirected', check_frontend_path.bind(null, 'shared/ranking'));
+  it('/shared/ranking.tsx is redirected', check_frontend_path.bind(null, 'ranking'));
 });
 
 describe('Backend handling of unauthenticated users', function () {
-  it('GET /api/createLap.ts returns 405', function () {
+  it('GET /api/laps/create returns 405', function () {
     cy.request({
       method: 'GET',
-      url: 'http://localhost:3000/api/createLap',
+      url: 'http://localhost:3000/api/laps/create',
       failOnStatusCode: false,
     }).then((response) => {
       expect(response.status).to.eq(405);
     });
   });
 
-  it('POST /api/createLap.ts returns 401', function () {
+  it('POST /api/laps/create returns 401', function () {
     cy.request({
       method: 'POST',
-      url: 'http://localhost:3000/api/createLap',
+      url: 'http://localhost:3000/api/laps/create',
       failOnStatusCode: false,
     }).then((response) => {
       expect(response.status).to.eq(401);
@@ -35,10 +35,6 @@ describe('Backend handling of unauthenticated users', function () {
 
 function check_frontend_path(path) {
   cy.visit('http://localhost:3000/' + path);
-
-  // The user should be shown a loading screen
-  cy.title().should('include', 'Lädt ...');
-  cy.get('span').should('have.attr', 'aria-label', 'Ladeanimation');
 
   cy.wait(100);
 

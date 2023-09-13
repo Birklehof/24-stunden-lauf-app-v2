@@ -17,6 +17,7 @@ export default function usePosition(runnerId: string) {
     if (!runnerId) {
       return;
     }
+    console.log('sync lap count');
     syncLapCount(runnerId);
   }, [runnerId]);
 

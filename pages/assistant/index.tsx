@@ -26,7 +26,7 @@ function AssistantIndexPage() {
 
     setSubmitting(true);
 
-    await createLap(number, runners, await user.getIdToken())
+    await createLap(number, runners)
       .then((newLap) => {
         setNumber(0);
 

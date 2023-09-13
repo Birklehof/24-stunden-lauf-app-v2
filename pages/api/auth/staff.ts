@@ -6,11 +6,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).end();
   }
 
   if (!req.body.code) {
-    return res.status(400).json({ error: 'Missing code' });
+    return res.status(400).end();
   }
 
   // Check if code exists in database
@@ -20,7 +20,7 @@ export default async function handler(
     .get();
 
   if (!querySnapshot.exists) {
-    return res.status(400).json({ error: 'Code invalid' });
+    return res.status(401).end();
   }
 
   // Send auth token to client

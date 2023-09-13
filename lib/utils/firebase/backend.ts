@@ -35,5 +35,8 @@ export async function getRunner(email: string): Promise<Runner> {
     throw new Error('Runner not found');
   }
 
-  return runner.docs[0].data() as Runner;
+  return {
+    id: runner.docs[0].id,
+    ...runner.docs[0].data(),
+  } as Runner;
 }

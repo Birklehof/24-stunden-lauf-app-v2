@@ -31,4 +31,6 @@ function IndexPage() {
 
 export default withUser({
   whenAuthed: AuthAction.REDIRECT_TO_APP,
+  whenAuthedBeforeRedirect: AuthAction.SHOW_LOADER,
+  LoaderComponent: Loading
 })(IndexPage)

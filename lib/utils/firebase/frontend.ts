@@ -43,8 +43,7 @@ export async function deleteLap(lapId: string) {
 // Used in pages/assistant/index.tsx
 export async function createLap(
   runnerNumber: number,
-  runners: { [id: string]: Runner },
-  token: string | null,
+  runners: { [id: string]: Runner }
 ): Promise<Lap> {
   // Convert runnerNumber to valid runnerId
   if (runnerNumber <= 0) {
@@ -57,12 +56,11 @@ export async function createLap(
     return Promise.reject('Kein Läufer mit dieser Startnummer');
   }
 
-  // Make api request to /api/createLap to create a lap with the corresponding runnerId
-  const res = await fetch('/api/createLap', {
+  // Make api request to /api/laps/create to create a lap with the corresponding runnerId
+  const res = await fetch('/api/laps/create', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token || '',
     },
     body: JSON.stringify({ runnerId }),
   });

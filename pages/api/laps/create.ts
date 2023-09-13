@@ -1,29 +1,33 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { auth, db } from '@/lib/firebase/admin';
 import { Lap } from '@/lib/interfaces';
+import { getUserFromCookies } from 'next-firebase-auth'
+
+import initAuth from '@/lib/next-firebase-auth';
+
+initAuth()
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).end();
   }
 
-  if (!req.headers.authorization) {
-    return res.status(401).json({ error: 'Access token required' });
+  let user;
+  try {
+    user = await getUserFromCookies({ req })
+  } catch (e) {
+    return res.status(500).end();
   }
 
-  // Verify access token
-  const token = await auth.verifyIdToken(
-    req.headers.authorization.toString()
-  ).catch(() => {
-    return res.status(401).json({ error: 'Access token invalid' });
-  });
+  if (!user || !user.id) {
+    return res.status(401).end();
+  }
 
-  // @ts-ignore token has role as custom claim
-  if (!token.role || token.role !== 'assistant') {
-    return res.status(401).json({ error: 'Access token invalid' });
+  if (user.id !== process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID) {
+    return res.status(403).end();
   }
 
   const { runnerId } = req.body;
