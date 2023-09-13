@@ -1,5 +1,5 @@
 import { ToastOptions, ToastPromiseParams, toast } from 'react-toastify';
-import { Lap } from '@/lib/interfaces';
+import { Lap, Runner } from '@/lib/interfaces';
 import { PossibleIcons } from 'heroicons-lookup';
 
 export interface NavItem {
@@ -91,4 +91,50 @@ export function groupLapsByHour(_laps: Lap[]): { [key: string]: number } {
       sortedGroupedLaps[key] = groupedLaps[key];
     });
   return sortedGroupedLaps;
+}
+
+// Used in ranking.tsx
+export function filterRunner(
+  runner: Runner,
+  {
+    filterType,
+    filterName,
+    filterClasses,
+    filterHouse,
+  }: {
+    filterType?: string;
+    filterName?: string;
+    filterClasses?: string;
+    filterHouse?: string;
+  }
+) {
+  if (filterType) {
+    if (filterType === 'student' && runner.type !== 'student') {
+      return false;
+    }
+    if (filterType === 'staff' && runner.type !== 'staff') {
+      return false;
+    }
+    if (
+      filterType === 'other' &&
+      (runner.type === 'student' || runner.type === 'staff')
+    ) {
+      return false;
+    }
+  }
+
+  if (filterClasses || filterHouse) {
+    if (runner.type === 'student') {
+      if (filterClasses && runner.class !== filterClasses) {
+        return false;
+      }
+      if (filterHouse && runner.house !== filterHouse) {
+        return false;
+      }
+    } else {
+      return false || (filterHouse == 'Extern (Kollegium)' && !filterClasses);
+    }
+  }
+
+  return !filterName || runner.name?.includes(filterName);
 }

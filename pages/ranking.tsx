@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Loading from '@/components/Loading';
 import Head from '@/components/Head';
 import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
-import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
+import { RunnerWithLapCount } from '@/lib/interfaces';
 import SearchBar from '@/components/SearchBar';
 import ListItem from '@/components/ListItem';
 import { getRunnersWithLapCount } from '@/lib/utils/firebase/backend';
@@ -13,6 +13,7 @@ import {
   defaultHouses,
 } from '@/lib/firebase/remoteConfigDefaultValues';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
+import { filterRunner } from '@/lib/utils';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
@@ -173,51 +174,6 @@ function RankingPage({
       </main>
     </>
   );
-}
-
-function filterRunner(
-  runner: Runner,
-  {
-    filterType,
-    filterName,
-    filterClasses,
-    filterHouse,
-  }: {
-    filterType?: string;
-    filterName?: string;
-    filterClasses?: string;
-    filterHouse?: string;
-  }
-) {
-  if (filterType) {
-    if (filterType === 'student' && runner.type !== 'student') {
-      return false;
-    }
-    if (filterType === 'staff' && runner.type !== 'staff') {
-      return false;
-    }
-    if (
-      filterType === 'other' &&
-      (runner.type === 'student' || runner.type === 'staff')
-    ) {
-      return false;
-    }
-  }
-
-  if (filterClasses || filterHouse) {
-    if (runner.type === 'student') {
-      if (filterClasses && runner.class !== filterClasses) {
-        return false;
-      }
-      if (filterHouse && runner.house !== filterHouse) {
-        return false;
-      }
-    } else {
-      return false || (filterHouse == 'Extern (Kollegium)' && !filterClasses);
-    }
-  }
-
-  return !filterName || runner.name?.includes(filterName);
 }
 
 export default withUser({

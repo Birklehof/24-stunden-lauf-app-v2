@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { auth, db } from '@/lib/firebase/admin';
+import { db } from '@/lib/firebase/admin';
 import { Lap } from '@/lib/interfaces';
 import { getUserFromCookies } from 'next-firebase-auth'
 
