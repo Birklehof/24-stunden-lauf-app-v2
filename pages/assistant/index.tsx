@@ -3,19 +3,31 @@ import Head from '@/components/Head';
 import Loading from '@/components/Loading';
 import Icon from '@/components/Icon';
 import { Lap, Runner } from '@/lib/interfaces';
-import { assistantNavItems, themedPromiseToast } from '@/lib/utils/frontend';
+import { assistantNavItems, themedPromiseToast } from '@/lib/utils/';
 import { createLap, deleteLap } from '@/lib/utils/firebase/frontend';
 import ListItem from '@/components/ListItem';
-import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
-import { AuthAction, useUser, withUser } from 'next-firebase-auth';
+import { AuthAction, useUser, withUser, withUserSSR } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
+import { getRunnersDict } from '@/lib/utils/firebase/backend';
 
-function AssistantIndexPage() {
+export const getServerSideProps = withUserSSR({
+  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
+})(async () => {  
+  return {
+    props: {
+      runners: await getRunnersDict(),
+    },
+    revalidate: 60 * 30, // Revalidate at most every 3 minutes
+  };
+});
+
+function AssistantIndexPage({
+  runners,
+}: {
+  runners: { [id: string]: Runner };
+}) {
   const user = useUser();
   const [createdLaps, setCreatedLaps] = useState<Lap[]>([]);
-  const [runners, runnersLoading, runnersError] = useCollectionAsDict<Runner>(
-    'apps/24-stunden-lauf/runners'
-  );
 
   const [number, setNumber] = useState(0);
   const [submitting, setSubmitting] = useState(false);
@@ -169,4 +181,5 @@ export default withUser({
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
   LoaderComponent: Loading,
+  // @ts-ignore
 })(AssistantIndexPage);

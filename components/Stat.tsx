@@ -1,4 +1,4 @@
-export default function RunnerStat({
+export default function Stat({
   value,
   label,
 }: {
@@ -17,7 +17,7 @@ export default function RunnerStat({
       ) : (
         <span className="loading loading-dots loading-lg" />
       )}
-      <h2 className="text-base-400 text-center text-sm font-bold opacity-80 sm:text-xl">
+      <h2 className="text-base-400 text-center text-sm font-bold opacity-80 sm:text-xl max-w-[150px] sm:max-w-[200px]">
         {label}
       </h2>
     </div>

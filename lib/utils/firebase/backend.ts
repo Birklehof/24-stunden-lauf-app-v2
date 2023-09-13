@@ -29,7 +29,10 @@ export async function getRunnersWithLapCount(): Promise<RunnerWithLapCount[]> {
 }
 
 export async function getRunner(email: string): Promise<Runner> {
-  const runner = await db.collection('apps/24-stunden-lauf/runners').where('email', '==', email).get();
+  const runner = await db
+    .collection('apps/24-stunden-lauf/runners')
+    .where('email', '==', email)
+    .get();
 
   if (runner.docs.length == 0) {
     throw new Error('Runner not found');
@@ -39,4 +42,19 @@ export async function getRunner(email: string): Promise<Runner> {
     id: runner.docs[0].id,
     ...runner.docs[0].data(),
   } as Runner;
+}
+
+export async function getRunnersDict(): Promise<{ [id: string]: Runner }> {
+  const runners = await db.collection('apps/24-stunden-lauf/runners').get();
+
+  const runnersDict: { [id: string]: Runner } = {};
+
+  runners.docs.forEach((runner) => {
+    runnersDict[runner.id] = {
+      id: runner.id,
+      ...runner.data(),
+    } as Runner;
+  });
+
+  return runnersDict;
 }

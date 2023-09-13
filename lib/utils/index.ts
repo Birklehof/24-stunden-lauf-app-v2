@@ -1,5 +1,5 @@
 import { ToastOptions, ToastPromiseParams, toast } from 'react-toastify';
-import { NavItem } from '@/lib/interfaces';
+import { Lap, NavItem } from '@/lib/interfaces';
 
 export function themedPromiseToast(
   promise: Promise<any> | (() => Promise<any>),
@@ -42,6 +42,11 @@ export const runnerNavItems: NavItem[] = [
     href: '/ranking',
     icon: 'TrendingUpIcon',
   },
+  {
+    name: 'Statistik',
+    href: '/runner/charts',
+    icon: 'ChartBarIcon',
+  },
 ];
 
 export const assistantNavItems: NavItem[] = [
@@ -61,3 +66,23 @@ export const assistantNavItems: NavItem[] = [
     icon: 'UserAddIcon',
   },
 ];
+
+
+export function groupLapsByHour(_laps: Lap[]): { [key: string]: number } {
+  const groupedLaps: { [key: string]: number } = {};
+  _laps.forEach((lap) => {
+    const hour = (lap.createdAt.seconds / 60 / 60).toFixed(0);
+    if (groupedLaps[hour]) {
+      groupedLaps[hour]++;
+    } else {
+      groupedLaps[hour] = 1;
+    }
+  });
+  const sortedGroupedLaps: { [key: string]: number } = {};
+  Object.keys(groupedLaps)
+    .sort()
+    .forEach((key) => {
+      sortedGroupedLaps[key] = groupedLaps[key];
+    });
+  return sortedGroupedLaps;
+}

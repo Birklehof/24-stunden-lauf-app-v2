@@ -2,7 +2,7 @@ import Loading from '@/components/Loading';
 import Head from '@/components/Head';
 import NewLapOverlay from '@/components/NewLapOverlay';
 import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
-import RunnerStat from '@/components/Runner/RunnerStat';
+import Stat from '@/components/Stat';
 import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues';
 import { getRunner } from '@/lib/utils/firebase/backend';
 import { Runner } from '@/lib/interfaces';
@@ -18,7 +18,7 @@ import {
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import Menu from '@/components/Menu';
-import { runnerNavItems } from '@/lib/utils/frontend';
+import { runnerNavItems } from '@/lib/utils/';
 
 export const getServerSideProps = withUserSSR({
   whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
@@ -86,17 +86,17 @@ function RunnerIndexPage({ runner }: { runner: Runner }) {
   return (
     <>
       <Head title="Läufer" />
-      <main className="hero min-h-screen bg-base-200">
+      <main className="hero min-h-screen bg-base-200 pb-16">
         <Menu navItems={runnerNavItems} signOut={user.signOut}/>
         <NewLapOverlay lapCount={lapCount} />
-        <div className="mb-10 flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row">
-          <RunnerStat value={runner?.number} label="Nr." />
+        <div className="flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row">
+          <Stat value={runner?.number} label="Nr." />
           <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
-          <RunnerStat value={lapCount} label="Runden" />
+          <Stat value={lapCount} label="Runden" />
           <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
-          <RunnerStat value={position} label="Platz" />
+          <Stat value={position} label="Platz" />
           <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
-          <RunnerStat
+          <Stat
             value={
               lapCount &&
               ((lapCount * distancePerLap) / 1000).toFixed(

@@ -1,5 +1,5 @@
 import Head from '@/components/Head';
-import { Line } from 'react-chartjs-2';
+import { Line, Pie } from 'react-chartjs-2';
 import {
   Chart,
   CategoryScale,
@@ -10,96 +10,123 @@ import {
   Tooltip,
   Legend,
   Filler,
+  ArcElement,
 } from 'chart.js';
-import { Lap, Runner } from '@/lib/interfaces';
-import useCollectionAsList from '@/lib/hooks/useCollectionAsList';
+import { Lap, Runner, RunnerWithLapCount } from '@/lib/interfaces';
 import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
 import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues';
-import { AuthAction, withUser, withUserSSR } from 'next-firebase-auth';
-import { getRunner } from '@/lib/utils/firebase/backend';
+import { AuthAction, useUser, withUser } from 'next-firebase-auth';
+import { getRunnersWithLapCount } from '@/lib/utils/firebase/backend';
+import Menu from '@/components/Menu';
+import { runnerNavItems, groupLapsByHour } from '@/lib/utils';
+import Stat from '@/components/Stat';
+import { db } from '@/lib/firebase/admin';
+import Loading from '@/components/Loading';
+import runner from '.';
 
-export const getServerSideProps = withUserSSR({
-  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
-  // @ts-ignore
-})(async ({ user }) => {
-  // Get the user with the email
-  if (user && user.email) {
-    const runner = await getRunner(user.email);
-    return {
-      props: {
-        runner,
-      },
-    };
-  }
+// Incremental static regeneration to reduce load on backend
+export async function getStaticProps() {
+  const runnersWithLapCount = await getRunnersWithLapCount();
+
+  // Count how many laps each house has, the house is a property of the runner
+  const lapCountByHouse = runnersWithLapCount.reduce(
+    (acc, cur) => ({
+      ...acc,
+      // @ts-ignore
+      [cur.house || '']: (acc[cur.house || ''] || 0) + cur.lapCount,
+    }),
+    {}
+  );
+
+  // Count how many laps each class has, the class is a property of the runner
+  const lapCountByClass = runnersWithLapCount.reduce(
+    (acc, cur) => ({
+      ...acc,
+      // @ts-ignore
+      [cur.class || '']: (acc[cur.class || ''] || 0) + cur.lapCount,
+    }),
+    {}
+  );
 
   return {
     props: {
-      runner: null,
+      runnerCount: runnersWithLapCount.length,
+      lapsTotal: runnersWithLapCount.reduce(
+        (acc, cur) => acc + cur.lapCount,
+        0
+      ),
+      lastUpdated: Date.now(),
+      lapCountByHouse,
+      lapCountByClass,
     },
+    revalidate: 60 * 10, // Revalidate at most every 10 minutes
   };
-});
+}
 
-function RunnerGraphsPage({ runner }: { runner: Runner }) {
-  const [laps, lapsLoading, lapsError] = useCollectionAsList<Lap>(
-    'apps/24-stunden-lauf/laps'
+function RunnerGraphsPage({
+  runnerCount,
+  lapsTotal,
+  lastUpdated,
+  // lapCountByHour,
+  lapCountByHouse,
+  lapCountByClass,
+}: {
+  runnerCount: number;
+  lapsTotal: number;
+  lastUpdated: number;
+  // lapCountByHour: { [key: number]: number };
+  lapCountByHouse: { [key: string]: number };
+  lapCountByClass: { [key: string]: number };
+}) {
+  const user = useUser();
+
+  const [distancePerLap] = useRemoteConfig(
+    'distancePerLap',
+    defaultDistancePerLap
   );
-
-  // TODO: Implement runnerCount and lapsCount
-  const runnerCount = 0
-  const lapsCount = 0
-
-  const [distancePerLap] = useRemoteConfig('distancePerLap', defaultDistancePerLap);
 
   Chart.register({
     CategoryScale,
     LinearScale,
     PointElement,
     LineElement,
+    ArcElement,
     Title,
     Tooltip,
     Legend,
     Filler,
   });
 
-  function groupLapsByHour(_laps: Lap[]): { [key: string]: number } {
-    const groupedLaps: { [key: string]: number } = {};
-    _laps.forEach((lap) => {
-      const hour = (lap.createdAt.seconds / 60 / 60).toFixed(0);
-      if (groupedLaps[hour]) {
-        groupedLaps[hour]++;
-      } else {
-        groupedLaps[hour] = 1;
-      }
-    });
-    const sortedGroupedLaps: { [key: string]: number } = {};
-    Object.keys(groupedLaps)
-      .sort()
-      .forEach((key) => {
-        sortedGroupedLaps[key] = groupedLaps[key];
-      });
-    return sortedGroupedLaps;
-  }
-
-  const sortedGroupedLapsAll = groupLapsByHour(laps);
-
   // All hours from first hour to last hour
-  const firstHour = Number(Object.keys(sortedGroupedLapsAll)[0]);
-  const lastHour = Number(
-    Object.keys(sortedGroupedLapsAll)[
-      Object.keys(sortedGroupedLapsAll).length - 1
-    ]
-  );
-  const allHours = [];
-  for (let i = firstHour; i <= lastHour; i++) {
-    allHours.push(i);
-  }
+  // const firstHour = Number(Object.keys(lapCountByHour)[0]);
+  // const lastHour = Number(
+  //   Object.keys(lapCountByHour)[Object.keys(lapCountByHour).length - 1]
+  // );
+  // const allHours = [];
+  // for (let i = firstHour; i <= lastHour; i++) {
+  //   allHours.push(i);
+  // }
 
-  let dataAll = {
-    labels: allHours.map((hour) => hour.toString()),
+  // const lapCountByHourData = {
+  //   labels: allHours.map((hour) => hour.toString()),
+  //   datasets: [
+  //     {
+  //       label: 'Laps',
+  //       data: allHours.map((hour) => lapCountByHour[hour] || 0),
+  //       fill: 'start',
+  //       backgroundColor: 'rgba(255, 99, 132, 0.2)',
+  //       borderColor: 'rgba(255, 99, 132, 1)',
+  //       borderWidth: 1,
+  //     },
+  //   ],
+  // };
+
+  const lapCountByHouseData = {
+    labels: Object.keys(lapCountByHouse),
     datasets: [
       {
         label: 'Laps',
-        data: allHours.map((hour) => sortedGroupedLapsAll[hour] || 0),
+        data: Object.values(lapCountByHouse),
         fill: 'start',
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132, 1)',
@@ -108,16 +135,12 @@ function RunnerGraphsPage({ runner }: { runner: Runner }) {
     ],
   };
 
-  const sortedGroupedLapsPersonal = groupLapsByHour(
-    laps.filter((lap: Lap) => lap.runnerId === runner.id)
-  );
-
-  let dataPersonal = {
-    labels: allHours.map((hour) => hour.toString()),
+  const lapCountByClassData = {
+    labels: Object.keys(lapCountByClass),
     datasets: [
       {
         label: 'Laps',
-        data: allHours.map((hour) => sortedGroupedLapsPersonal[hour] || 0),
+        data: Object.values(lapCountByClass),
         fill: 'start',
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132, 1)',
@@ -126,7 +149,25 @@ function RunnerGraphsPage({ runner }: { runner: Runner }) {
     ],
   };
 
-  const options = {
+  // const sortedGroupedLapsPersonal = groupLapsByHour(
+  //   laps.filter((lap: Lap) => lap.runnerId === runner.id)
+  // );
+
+  // let dataPersonal = {
+  //   labels: allHours.map((hour) => hour.toString()),
+  //   datasets: [
+  //     {
+  //       label: 'Laps',
+  //       data: allHours.map((hour) => sortedGroupedLapsPersonal[hour] || 0),
+  //       fill: 'start',
+  //       backgroundColor: 'rgba(255, 99, 132, 0.2)',
+  //       borderColor: 'rgba(255, 99, 132, 1)',
+  //       borderWidth: 1,
+  //     },
+  //   ],
+  // };
+
+  const lineOptions = {
     plugins: {
       legend: {
         display: false,
@@ -172,83 +213,85 @@ function RunnerGraphsPage({ runner }: { runner: Runner }) {
     },
   };
 
+  const pieOptions = {
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    borderWidth: 2,
+  }
+
   return (
     <>
       <Head title="Läufer Details" />
-      <main className="main">
-        <div className="vertical-list">
-          <div className="large-card">
-            <div className="card-body">
-              <div className="flex flex-wrap items-center justify-evenly">
-                <div className="stat w-full text-center md:w-1/3">
-                  <div className="stat-value">{runnerCount}</div>
-                  <div className="stat-desc">Teilnehmer</div>
-                </div>
-                <div className="stat w-full text-center md:w-1/3">
-                  <div className="stat-value">{lapsCount}</div>
-                  <div className="stat-desc">Runden gesamt</div>
-                </div>
-                <div className="stat w-full text-center md:w-1/3">
-                  <div className="stat-value">
-                    {Math.floor(lapsCount / runnerCount)}
-                  </div>
-                  <div className="stat-desc">Runden pro Teilnehmer</div>
-                </div>
-                <div className="stat w-full text-center md:w-1/2">
-                  <div className="stat-value">
-                    {(
-                      ((lapsCount / runnerCount) * distancePerLap) /
-                      1000
-                    ).toFixed(2)}{' '}
-                    km
-                  </div>
-                  <div className="stat-desc">Strecke pro Teilnehmer</div>
-                </div>
-                <div className="stat w-full text-center md:w-1/2">
-                  <div className="stat-value">
-                    {((lapsCount * distancePerLap) / 1000).toFixed(2)} km
-                  </div>
-                  <div className="stat-desc">Gesamtstrecke</div>
-                </div>
-              </div>
-            </div>
+      <main className="main gap-14 overflow-auto">
+        <Menu navItems={runnerNavItems} signOut={user.signOut} />
+        <section className="hero mt-14 h-full bg-base-200">
+          <div className="flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row">
+            <Stat value={runnerCount} label="Teilnehmer" />
+            <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
+            <Stat value={lapsTotal} label="Runden gesamt" />
+            <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
+            <Stat
+              value={Math.ceil(lapsTotal / runnerCount)}
+              label="Ø Runden pro Teilnehmer"
+            />
+            <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
+            <Stat
+              value={(
+                ((lapsTotal / runnerCount) * distancePerLap) /
+                1000
+              ).toFixed(2)}
+              label="km pro Teilnehmer"
+            />
+            <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
+            <Stat
+              value={
+                lapsTotal &&
+                ((lapsTotal * distancePerLap) / 1000).toFixed(
+                  (lapsTotal * distancePerLap) / 1000 < 10
+                    ? 2
+                    : (lapsTotal * distancePerLap) / 1000 < 100
+                    ? 1
+                    : 0
+                )
+              }
+              label="km Gesamtstrecke"
+            />
           </div>
-          <div className="large-card">
-            <div className="card-body">
-              <h2 className="card-title">Persönlicher Fortschritt</h2>
-              <progress
-                className="progress progress-primary h-5 w-full rounded-full bg-base-200 shadow-inner"
-                value="40"
-                max="100"
-              ></progress>
-            </div>
+        </section>
+        {/* <section>
+          <h2 className="card-title">Persönlicher Fortschritt</h2>
+          <progress
+            className="progress-primary progress h-5 w-full rounded-full bg-base-200 shadow-inner"
+            value="40"
+            max="100"
+          ></progress>
+        </section>
+        <section className="hero h-full bg-base-200">
+          <div className="flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row">
+            <Stat value={0} label="Ø Runden pro Stunde" />
+            <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
+            <Stat value={0} label="Ø km pro Stunde" />
+            <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
+            <Stat value={0} label="Ø km pro Stunde" />
           </div>
-          <div className="large-card">
-            <div className="card-body">
-              <h2 className="card-title">Runden pro Stunde (alle)</h2>
-              <Line data={dataAll} options={options} />
-            </div>
-          </div>
-          <div className="large-card">
-            <div className="card-body">
-              <h2 className="card-title">Runden pro Stunde (persönlich)</h2>
-              <Line data={dataPersonal} options={options} />
-            </div>
-          </div>
-        </div>
+        </section> */}
+        {/* <section>
+          <h2 className="card-title">Runden pro Stunde (alle)</h2>
+          <Line data={lapCountByHourData} options={lineOptions} />
+        </section> */}
+        <section>
+          <h2 className="card-title">Runden pro Haus</h2>
+          <Pie data={lapCountByHouseData} options={pieOptions} />
+        </section>
+        <section>
+          <h2 className="card-title">Runden pro Klasse</h2>
+          <Pie data={lapCountByClassData} options={pieOptions} />
+        </section>
 
         {/* <div className="flex flex-col items-start overflow-y-auto h-screen px-2 lg:px-0 pt-2 pb-2 gap-2">
-          <div className="card bg-base-100 shadow-xl w-full">
-            <div className="card-body">
-              <h2 className="card-title">Persönlicher Fortschritt</h2>
-              <progress
-                className="progress progress-primary w-full bg-base-200 h-5 shadow-inner rounded-full"
-                value="40"
-                max="100"
-              ></progress>
-            </div>
-          </div>
-
           <div className="card bg-base-100 shadow-xl w-full">
             <div className="card-body">
               <h2 className="card-title">Runden pro Stunde (alle)</h2>
@@ -268,6 +311,8 @@ function RunnerGraphsPage({ runner }: { runner: Runner }) {
 }
 
 export default withUser({
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  LoaderComponent: Loading,
   // @ts-ignore
 })(RunnerGraphsPage);

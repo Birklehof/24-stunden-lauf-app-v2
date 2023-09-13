@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Head from '@/components/Head';
 import { createRunner } from '@/lib/utils/firebase/frontend';
-import { assistantNavItems, themedPromiseToast } from '@/lib/utils/frontend';
+import { assistantNavItems, themedPromiseToast } from '@/lib/utils/';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
 
