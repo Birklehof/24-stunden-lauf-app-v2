@@ -104,7 +104,7 @@ export async function getNewestLaps(numberOfLaps: number): Promise<Lap[]> {
   return laps;
 }
 
-// Used in lib/hooks/usePosition.ts
+// Used in pages/runner/index.tsx
 export async function getPosition(lapCount: number): Promise<number> {
   const positionQuery = query(
     collection(db, 'apps/24-stunden-lauf/runners'),

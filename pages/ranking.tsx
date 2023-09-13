@@ -7,8 +7,12 @@ import SearchBar from '@/components/SearchBar';
 import ListItem from '@/components/ListItem';
 import { getRunnersWithLapCount } from '@/lib/utils/firebase/backend';
 import Icon from '@/components/Icon';
-import { defaultClasses, defaultDistancePerLap, defaultHouses } from '@/lib/firebase/remoteConfigDefaultValues';
-import { AuthAction, withUser } from 'next-firebase-auth';
+import {
+  defaultClasses,
+  defaultDistancePerLap,
+  defaultHouses,
+} from '@/lib/firebase/remoteConfigDefaultValues';
+import { AuthAction, useUser, withUser } from 'next-firebase-auth';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
@@ -28,7 +32,12 @@ function RankingPage({
   runnersWithLapCount: RunnerWithLapCount[];
   lastUpdated: number;
 }) {
-  const [distancePerLap] = useRemoteConfig('distancePerLap', defaultDistancePerLap);
+  const user = useUser();
+
+  const [distancePerLap] = useRemoteConfig(
+    'distancePerLap',
+    defaultDistancePerLap
+  );
   const [classes] = useRemoteConfig('classes', defaultClasses);
   const [houses] = useRemoteConfig('houses', defaultHouses);
 
@@ -52,6 +61,11 @@ function RankingPage({
       <Head title="Läufer" />
       <main className="main !py-0">
         <SearchBar
+          backLink={
+            user?.id === process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID
+              ? '/assistant'
+              : '/runner'
+          }
           searchValue={filterName}
           setSearchValue={setFilterName}
           filters={[
@@ -112,6 +126,7 @@ function RankingPage({
             .map((runnerWithLapCount) => {
               return (
                 <ListItem
+                  highlight={runnerWithLapCount.email === user?.email}
                   key={runnerWithLapCount.number}
                   number={getPosition(runnerWithLapCount) + 1}
                   mainContent={

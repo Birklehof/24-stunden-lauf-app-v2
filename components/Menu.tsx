@@ -1,17 +1,10 @@
-import { PossibleIcons } from 'heroicons-lookup';
 import Link from 'next/link';
 import Icon from '@/components/Icon';
-import { auth } from '@/lib/firebase';
+import { NavItem } from '@/lib/interfaces';
 
 interface MenuProps {
   navItems: NavItem[];
   signOut: () => Promise<void>;
-}
-
-interface NavItem {
-  name: string;
-  href: string;
-  icon: PossibleIcons;
 }
 
 export default function Menu({ navItems, signOut: signOutAction }: MenuProps) {

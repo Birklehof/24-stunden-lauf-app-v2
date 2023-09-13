@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import Head from '@/components/Head';
 import { createRunner } from '@/lib/utils/firebase/frontend';
-import { themedPromiseToast } from '@/lib/utils/frontend';
-import { AuthAction, withUser } from 'next-firebase-auth';
+import { assistantNavItems, themedPromiseToast } from '@/lib/utils/frontend';
+import { AuthAction, useUser, withUser } from 'next-firebase-auth';
+import Menu from '@/components/Menu';
 
 function AssistantCreateRunnerPage() {
+  const user = useUser();
+
   const [submitting, setSubmitting] = useState(false);
   const [number, setNumber] = useState(0);
 
@@ -45,6 +48,7 @@ function AssistantCreateRunnerPage() {
     <>
       <Head title="Assistent" />
       <main className="main !justify-center">
+        <Menu navItems={assistantNavItems} signOut={user.signOut} />
         <div className="centered-card">
           <div className="card-body gap-3">
             {number != 0 ? (

@@ -1,10 +1,6 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { useDarkMode } from 'usehooks-ts';
-import { useRouter } from 'next/router';
-import Menu from './Menu';
 import { auth } from '@/lib/firebase';
-
-// FIXME: Fix the menu which is shown based on the user's auth state
 
 export default function Layout({ children }: PropsWithChildren) {
   const { isDarkMode, toggle } = useDarkMode();
@@ -24,7 +20,6 @@ export default function Layout({ children }: PropsWithChildren) {
     });
   }, []);
 
-
   useEffect(() => {
     const body = document.body;
     body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
@@ -35,7 +30,7 @@ export default function Layout({ children }: PropsWithChildren) {
       <button
         className="btn-ghost btn-square btn absolute left-2 top-2 hidden landscape:flex"
         onClick={toggle}
-        aria-label='Dunkelmodus umschalten'
+        aria-label="Dunkelmodus umschalten"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -47,46 +42,6 @@ export default function Layout({ children }: PropsWithChildren) {
         </svg>
       </button>
 
-      {role && (
-        <>
-          {role === 'assistant' ? (
-            <Menu
-              // Assistant Menu
-              navItems={[
-                {
-                  name: 'Runde zählen',
-                  href: '/assistant',
-                  icon: 'HomeIcon',
-                },
-                {
-                  name: 'Ranking',
-                  href: '/ranking',
-                  icon: 'TrendingUpIcon',
-                },
-                {
-                  name: 'Läufer hinzufügen',
-                  href: '/assistant/create-runner',
-                  icon: 'UserAddIcon',
-                },
-              ]}
-              signOut={() => auth.signOut()}
-            />
-          ) : (
-            <Menu
-              // Runner Menu
-              navItems={[
-                { name: 'Startseite', href: '/runner', icon: 'HomeIcon' },
-                {
-                  name: 'Ranking',
-                  href: '/ranking',
-                  icon: 'TrendingUpIcon',
-                },
-              ]}
-              signOut={() => auth.signOut()}
-            />
-          )}
-        </>
-      )}
       {children}
     </>
   );

@@ -1,4 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
+import { PossibleIcons } from 'heroicons-lookup';
 
 export interface Lap {
   id: string;
@@ -47,4 +48,10 @@ export interface User {
   email: string;
   accessToken: string;
   role: string;
+}
+
+export interface NavItem {
+  name: string;
+  href: string;
+  icon: PossibleIcons;
 }

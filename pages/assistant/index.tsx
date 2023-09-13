@@ -3,11 +3,12 @@ import Head from '@/components/Head';
 import Loading from '@/components/Loading';
 import Icon from '@/components/Icon';
 import { Lap, Runner } from '@/lib/interfaces';
-import { themedPromiseToast } from '@/lib/utils/frontend';
+import { assistantNavItems, themedPromiseToast } from '@/lib/utils/frontend';
 import { createLap, deleteLap } from '@/lib/utils/firebase/frontend';
 import ListItem from '@/components/ListItem';
 import useCollectionAsDict from '@/lib/hooks/useCollectionAsDict';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
+import Menu from '@/components/Menu';
 
 function AssistantIndexPage() {
   const user = useUser();
@@ -64,6 +65,7 @@ function AssistantIndexPage() {
     <>
       <Head title="Assistent" />
       <main className="main !py-0">
+        <Menu navItems={assistantNavItems} signOut={user.signOut} />
         <div className="w-full grid !h-screen grid-cols-2 justify-around landscape:pl-10">
           <section className="flex flex-col items-center justify-center gap-2">
             <div className="card bg-base-100 shadow-xl">
