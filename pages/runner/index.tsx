@@ -7,15 +7,7 @@ import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues'
 import { getRunner } from '@/lib/utils/firebase/backend';
 import { Runner } from '@/lib/interfaces';
 import { AuthAction, useUser, withUser, withUserSSR } from 'next-firebase-auth';
-import { db } from '@/lib/firebase';
-import { getPosition } from '@/lib/utils/firebase/frontend';
-import {
-  query,
-  collection,
-  where,
-  getCountFromServer,
-  onSnapshot,
-} from 'firebase/firestore';
+import { getPosition, syncLapCount } from '@/lib/utils/firebase/frontend';
 import { useEffect, useState } from 'react';
 import Menu from '@/components/Menu';
 import { runnerNavItems } from '@/lib/utils/';
@@ -56,7 +48,7 @@ function RunnerIndexPage({ runner }: { runner: Runner }) {
     if (!runner.id) {
       return;
     }
-    syncLapCount(runner.id);
+    syncLapCount(runner.id, setLapCount);
   }, [runner]);
 
   useEffect(() => {
@@ -68,20 +60,6 @@ function RunnerIndexPage({ runner }: { runner: Runner }) {
       setPosition(position);
     });
   }, [lapCount]);
-
-  async function syncLapCount(runnerId: string) {
-    const lapCountQuery = query(
-      collection(db, '/apps/24-stunden-lauf/laps'),
-      where('runnerId', '==', runnerId)
-    );
-    const lapCountSnapshot = await getCountFromServer(lapCountQuery);
-    const lapCount = lapCountSnapshot.data().count || 0;
-    setLapCount(lapCount);
-
-    onSnapshot(lapCountQuery, (snapshot) => {
-      setLapCount(snapshot.docs.length);
-    });
-  }
 
   return (
     <>

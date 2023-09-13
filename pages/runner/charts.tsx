@@ -12,7 +12,6 @@ import {
   Filler,
   ArcElement,
 } from 'chart.js';
-import { Lap, Runner, RunnerWithLapCount } from '@/lib/interfaces';
 import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
 import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
@@ -20,9 +19,7 @@ import { getRunnersWithLapCount } from '@/lib/utils/firebase/backend';
 import Menu from '@/components/Menu';
 import { runnerNavItems, groupLapsByHour } from '@/lib/utils';
 import Stat from '@/components/Stat';
-import { db } from '@/lib/firebase/admin';
 import Loading from '@/components/Loading';
-import runner from '.';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {

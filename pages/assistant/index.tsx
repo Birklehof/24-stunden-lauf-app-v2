@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Head from '@/components/Head';
 import Loading from '@/components/Loading';
 import Icon from '@/components/Icon';

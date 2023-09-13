@@ -6,12 +6,40 @@ import {
   getCountFromServer,
   getDocs,
   limit,
+  onSnapshot,
   orderBy,
   query,
   where,
 } from 'firebase/firestore';
-import { User, Runner, RunnerWithLapCount, Lap } from '@/lib/interfaces';
+import { Runner, Lap } from '@/lib/interfaces';
 import { db } from '@/lib/firebase';
+
+// Used in pages/runner/index.tsx
+export async function getPosition(lapCount: number): Promise<number> {
+  const positionQuery = query(
+    collection(db, 'apps/24-stunden-lauf/runners'),
+    where('lapCount', '>', lapCount)
+  );
+  const positionSnapshot = await getCountFromServer(positionQuery);
+  const position = positionSnapshot.data().count || 0;
+  return position + 1;
+}
+
+// Used in pages/runner/index.tsx
+export async function syncLapCount(runnerId: string, updateFunction: Function) {
+  const lapCountQuery = query(
+    collection(db, '/apps/24-stunden-lauf/laps'),
+    where('runnerId', '==', runnerId)
+  );
+  const lapCountSnapshot = await getCountFromServer(lapCountQuery);
+  const lapCount = lapCountSnapshot.data().count || 0;
+  updateFunction(lapCount);
+
+  // TODO: Find out many reads this causes
+  onSnapshot(lapCountQuery, (snapshot) => {
+    updateFunction(snapshot.docs.length);
+  });
+}
 
 // Used in pages/assistant/create-runner.tsx
 export async function createRunner(name: string): Promise<number> {
@@ -102,15 +130,4 @@ export async function getNewestLaps(numberOfLaps: number): Promise<Lap[]> {
   });
 
   return laps;
-}
-
-// Used in pages/runner/index.tsx
-export async function getPosition(lapCount: number): Promise<number> {
-  const positionQuery = query(
-    collection(db, 'apps/24-stunden-lauf/runners'),
-    where('lapCount', '>', lapCount)
-  );
-  const positionSnapshot = await getCountFromServer(positionQuery);
-  const position = positionSnapshot.data().count || 0;
-  return position + 1;
 }

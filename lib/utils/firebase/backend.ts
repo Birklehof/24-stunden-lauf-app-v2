@@ -1,7 +1,7 @@
 import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
 import { db } from '@/lib/firebase/admin';
 
-// Used in pages/shared/ranking.tsx
+// Used in pages/ranking.tsx
 export async function getRunnersWithLapCount(): Promise<RunnerWithLapCount[]> {
   const runners = await db.collection('apps/24-stunden-lauf/runners').get();
 
@@ -28,6 +28,7 @@ export async function getRunnersWithLapCount(): Promise<RunnerWithLapCount[]> {
   return runnersWithLaps;
 }
 
+// Used in runner/index.tsx
 export async function getRunner(email: string): Promise<Runner> {
   const runner = await db
     .collection('apps/24-stunden-lauf/runners')
@@ -44,6 +45,7 @@ export async function getRunner(email: string): Promise<Runner> {
   } as Runner;
 }
 
+// Used in assistant/index.tsx
 export async function getRunnersDict(): Promise<{ [id: string]: Runner }> {
   const runners = await db.collection('apps/24-stunden-lauf/runners').get();
 

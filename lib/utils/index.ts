@@ -1,5 +1,44 @@
 import { ToastOptions, ToastPromiseParams, toast } from 'react-toastify';
-import { Lap, NavItem } from '@/lib/interfaces';
+import { Lap } from '@/lib/interfaces';
+import { PossibleIcons } from 'heroicons-lookup';
+
+export interface NavItem {
+  name: string;
+  href: string;
+  icon: PossibleIcons;
+}
+
+// Used in runner/index.tsx, runner/charts.tsx, assistant/index.tsx, assistant/create-runner.tsx 
+export const runnerNavItems: NavItem[] = [
+  { name: 'Startseite', href: '/runner', icon: 'HomeIcon' },
+  {
+    name: 'Ranking',
+    href: '/ranking',
+    icon: 'TrendingUpIcon',
+  },
+  {
+    name: 'Statistik',
+    href: '/runner/charts',
+    icon: 'ChartBarIcon',
+  },
+];
+export const assistantNavItems: NavItem[] = [
+  {
+    name: 'Runde zählen',
+    href: '/assistant',
+    icon: 'HomeIcon',
+  },
+  {
+    name: 'Ranking',
+    href: '/ranking',
+    icon: 'TrendingUpIcon',
+  },
+  {
+    name: 'Läufer hinzufügen',
+    href: '/assistant/create-runner',
+    icon: 'UserAddIcon',
+  },
+];
 
 export function themedPromiseToast(
   promise: Promise<any> | (() => Promise<any>),
@@ -34,39 +73,6 @@ export function themedErrorToast(
       document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
   });
 }
-
-export const runnerNavItems: NavItem[] = [
-  { name: 'Startseite', href: '/runner', icon: 'HomeIcon' },
-  {
-    name: 'Ranking',
-    href: '/ranking',
-    icon: 'TrendingUpIcon',
-  },
-  {
-    name: 'Statistik',
-    href: '/runner/charts',
-    icon: 'ChartBarIcon',
-  },
-];
-
-export const assistantNavItems: NavItem[] = [
-  {
-    name: 'Runde zählen',
-    href: '/assistant',
-    icon: 'HomeIcon',
-  },
-  {
-    name: 'Ranking',
-    href: '/ranking',
-    icon: 'TrendingUpIcon',
-  },
-  {
-    name: 'Läufer hinzufügen',
-    href: '/assistant/create-runner',
-    icon: 'UserAddIcon',
-  },
-];
-
 
 export function groupLapsByHour(_laps: Lap[]): { [key: string]: number } {
   const groupedLaps: { [key: string]: number } = {};
