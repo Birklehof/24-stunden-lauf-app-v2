@@ -15,18 +15,25 @@ import {
 import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
 import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
-import { getRunnersWithLapCount } from '@/lib/utils/firebase/backend';
+import {
+  getLapsInHour,
+  getRunnersWithLapCount,
+} from '@/lib/utils/firebase/backend';
 import Menu from '@/components/Menu';
 import { runnerNavItems, groupLapsByHour } from '@/lib/utils';
 import Stat from '@/components/Stat';
 import Loading from '@/components/Loading';
+import { Md5 } from 'ts-md5';
+import { RunnerWithLapCount } from '@/lib/interfaces';
+import Icon from '@/components/Icon';
+import StatDivider from '@/components/StatDivider';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
   const runnersWithLapCount = await getRunnersWithLapCount();
 
   // Count how many laps each house has, the house is a property of the runner
-  const lapCountByHouse = runnersWithLapCount.reduce(
+  const lapCountByHouse: { [key: string]: number } = runnersWithLapCount.reduce(
     (acc, cur) => ({
       ...acc,
       // @ts-ignore
@@ -34,15 +41,36 @@ export async function getStaticProps() {
     }),
     {}
   );
+  delete lapCountByHouse[''];
 
   // Count how many laps each class has, the class is a property of the runner
-  const lapCountByClass = runnersWithLapCount.reduce(
+  const lapCountByClass: { [key: string]: number } = runnersWithLapCount.reduce(
     (acc, cur) => ({
       ...acc,
       // @ts-ignore
       [cur.class || '']: (acc[cur.class || ''] || 0) + cur.lapCount,
     }),
     {}
+  );
+  delete lapCountByClass[''];
+
+  const n = 23;
+  const lapCountByHour = Object.fromEntries(
+    await Promise.all(
+      Array.from({ length: n }, (_, i) => i + 1).map(async (i) => {
+        const currentHour = new Date().getHours();
+
+        const label = new Date(
+          (currentHour - i + 2) * 60 * 60 * 1000
+        ).toLocaleString('de-DE', {
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: 'Europe/Berlin',
+        });
+
+        return [label, await getLapsInHour(currentHour - i + 1)];
+      })
+    )
   );
 
   return {
@@ -53,10 +81,11 @@ export async function getStaticProps() {
         0
       ),
       lastUpdated: Date.now(),
+      lapCountByHour,
       lapCountByHouse,
       lapCountByClass,
     },
-    revalidate: 60 * 10, // Revalidate at most every 10 minutes
+    revalidate: 60 * 3, // Revalidate at most every 3 minutes
   };
 }
 
@@ -64,14 +93,14 @@ function RunnerGraphsPage({
   runnerCount,
   lapsTotal,
   lastUpdated,
-  // lapCountByHour,
+  lapCountByHour,
   lapCountByHouse,
   lapCountByClass,
 }: {
   runnerCount: number;
   lapsTotal: number;
   lastUpdated: number;
-  // lapCountByHour: { [key: number]: number };
+  lapCountByHour: { [hour: string]: number };
   lapCountByHouse: { [key: string]: number };
   lapCountByClass: { [key: string]: number };
 }) {
@@ -94,29 +123,34 @@ function RunnerGraphsPage({
     Filler,
   });
 
-  // All hours from first hour to last hour
-  // const firstHour = Number(Object.keys(lapCountByHour)[0]);
-  // const lastHour = Number(
-  //   Object.keys(lapCountByHour)[Object.keys(lapCountByHour).length - 1]
-  // );
-  // const allHours = [];
-  // for (let i = firstHour; i <= lastHour; i++) {
-  //   allHours.push(i);
-  // }
+  const lapCountByHourData = {
+    labels: Object.keys(lapCountByHour).reverse(),
+    datasets: [
+      {
+        label: 'Laps',
+        data: Object.values(lapCountByHour).reverse(),
+        fill: 'start',
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
 
-  // const lapCountByHourData = {
-  //   labels: allHours.map((hour) => hour.toString()),
-  //   datasets: [
-  //     {
-  //       label: 'Laps',
-  //       data: allHours.map((hour) => lapCountByHour[hour] || 0),
-  //       fill: 'start',
-  //       backgroundColor: 'rgba(255, 99, 132, 0.2)',
-  //       borderColor: 'rgba(255, 99, 132, 1)',
-  //       borderWidth: 1,
-  //     },
-  //   ],
-  // };
+  const stringToColour = (str: string) => {
+    let hash = 0;
+    // hash the string
+    str = Md5.hashStr(str).toString();
+    str.split('').forEach((char) => {
+      hash = char.charCodeAt(0) + ((hash << 5) - hash);
+    });
+    let colour = '#';
+    for (let i = 0; i < 3; i++) {
+      const value = (hash >> (i * 8)) & 0xff;
+      colour += value.toString(16).padStart(2, '0');
+    }
+    return colour;
+  };
 
   const lapCountByHouseData = {
     labels: Object.keys(lapCountByHouse),
@@ -125,9 +159,9 @@ function RunnerGraphsPage({
         label: 'Laps',
         data: Object.values(lapCountByHouse),
         fill: 'start',
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1,
+        backgroundColor: Object.keys(lapCountByHouse).map((house) =>
+          stringToColour(house)
+        ),
       },
     ],
   };
@@ -139,30 +173,12 @@ function RunnerGraphsPage({
         label: 'Laps',
         data: Object.values(lapCountByClass),
         fill: 'start',
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1,
+        backgroundColor: Object.keys(lapCountByClass).map((grade) =>
+          stringToColour(grade)
+        ),
       },
     ],
   };
-
-  // const sortedGroupedLapsPersonal = groupLapsByHour(
-  //   laps.filter((lap: Lap) => lap.runnerId === runner.id)
-  // );
-
-  // let dataPersonal = {
-  //   labels: allHours.map((hour) => hour.toString()),
-  //   datasets: [
-  //     {
-  //       label: 'Laps',
-  //       data: allHours.map((hour) => sortedGroupedLapsPersonal[hour] || 0),
-  //       fill: 'start',
-  //       backgroundColor: 'rgba(255, 99, 132, 0.2)',
-  //       borderColor: 'rgba(255, 99, 132, 1)',
-  //       borderWidth: 1,
-  //     },
-  //   ],
-  // };
 
   const lineOptions = {
     plugins: {
@@ -189,9 +205,6 @@ function RunnerGraphsPage({
         grid: {
           display: false,
         },
-        ticks: {
-          display: false,
-        },
       },
       y: {
         border: {
@@ -211,38 +224,47 @@ function RunnerGraphsPage({
   };
 
   const pieOptions = {
-    plugins: {
+    hoverOffset: 2,
+    clip: false,
+    plugin: {
       legend: {
-        display: false,
+        position: 'bottom',
       },
     },
-    borderWidth: 2,
-  }
+  };
 
   return (
     <>
       <Head title="Läufer Details" />
-      <main className="main gap-14 overflow-auto">
-        <Menu navItems={runnerNavItems} signOut={user.signOut} />
-        <section className="hero mt-14 h-full bg-base-200">
+      <Menu navItems={runnerNavItems} signOut={user.signOut} />
+      <main className="main relative flex flex-col gap-14 overflow-auto">
+        <div className="absolute flex w-full justify-center gap-1 text-sm">
+          <Icon name="InformationCircleIcon" />
+          Stand{' '}
+          {new Date(lastUpdated).toLocaleDateString('de-DE', {
+            weekday: 'long',
+            day: '2-digit',
+            month: '2-digit',
+            timeZone: 'Europe/Berlin',
+          })}{' '}
+          {new Date(lastUpdated).toLocaleString('de-DE', {
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: 'Europe/Berlin',
+          })}
+          Uhr
+        </div>
+        <section className="hero h-full min-h-screen bg-base-200 pb-14">
           <div className="flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row">
             <Stat value={runnerCount} label="Teilnehmer" />
-            <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
+            <StatDivider />
             <Stat value={lapsTotal} label="Runden gesamt" />
-            <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
+            <StatDivider />
             <Stat
               value={Math.ceil(lapsTotal / runnerCount)}
               label="Ø Runden pro Teilnehmer"
             />
-            <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
-            <Stat
-              value={(
-                ((lapsTotal / runnerCount) * distancePerLap) /
-                1000
-              ).toFixed(2)}
-              label="km pro Teilnehmer"
-            />
-            <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
+            <StatDivider />
             <Stat
               value={
                 lapsTotal &&
@@ -275,17 +297,29 @@ function RunnerGraphsPage({
             <Stat value={0} label="Ø km pro Stunde" />
           </div>
         </section> */}
-        {/* <section>
-          <h2 className="card-title">Runden pro Stunde (alle)</h2>
-          <Line data={lapCountByHourData} options={lineOptions} />
-        </section> */}
-        <section>
-          <h2 className="card-title">Runden pro Haus</h2>
-          <Pie data={lapCountByHouseData} options={pieOptions} />
-        </section>
-        <section>
-          <h2 className="card-title">Runden pro Klasse</h2>
-          <Pie data={lapCountByClassData} options={pieOptions} />
+
+        <section className="-mt-14 mb-16 flex w-full max-w-2xl flex-col justify-center gap-8 py-3 md:gap-16">
+          <article>
+            <h2 className="mb-1 text-center text-xl font-semibold md:mb-4 md:text-3xl">
+              Rundenverlauf
+            </h2>
+            <Line data={lapCountByHourData} options={lineOptions} />
+          </article>
+          <article>
+            <h2 className="mb-1 text-center text-xl font-semibold md:mb-4 md:text-3xl">
+              Runden pro Haus
+            </h2>
+            {/* @ts-ignore */}
+            <Pie data={lapCountByHouseData} options={pieOptions} />
+          </article>
+
+          <article>
+            <h2 className="mb-1 text-center text-xl font-semibold md:mb-4 md:text-3xl">
+              Runden pro Klasse
+            </h2>
+            {/* @ts-ignore */}
+            <Pie data={lapCountByClassData} options={pieOptions} />
+          </article>
         </section>
 
         {/* <div className="flex flex-col items-start overflow-y-auto h-screen px-2 lg:px-0 pt-2 pb-2 gap-2">
@@ -308,7 +342,7 @@ function RunnerGraphsPage({
 }
 
 export default withUser({
-  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+  // whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
   LoaderComponent: Loading,
   // @ts-ignore

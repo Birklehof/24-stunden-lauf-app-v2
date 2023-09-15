@@ -92,7 +92,7 @@ function AssistantCreateRunnerPage() {
                   minLength={3}
                 />
                 <button
-                  className={`btn-outline btn-primary btn ${
+                  className={`btn-primary btn-outline btn ${
                     submitting ? 'btn-disabled loading' : ''
                   }`}
                   type="submit"
@@ -111,4 +111,4 @@ function AssistantCreateRunnerPage() {
 
 export default withUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
-})(AssistantCreateRunnerPage)
+})(AssistantCreateRunnerPage);

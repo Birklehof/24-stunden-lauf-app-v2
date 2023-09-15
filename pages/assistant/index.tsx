@@ -10,16 +10,14 @@ import { AuthAction, useUser, withUser, withUserSSR } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
 import { getRunnersDict } from '@/lib/utils/firebase/backend';
 
-export const getServerSideProps = withUserSSR({
-  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
-})(async () => {  
+export async function getStaticProps() {
   return {
     props: {
       runners: await getRunnersDict(),
     },
-    revalidate: 60 * 30, // Revalidate at most every 3 minutes
+    revalidate: 60 * 30, // Revalidate at most every 30 minutes
   };
-});
+}
 
 function AssistantIndexPage({
   runners,
@@ -78,7 +76,7 @@ function AssistantIndexPage({
       <Head title="Assistent" />
       <main className="main !py-0">
         <Menu navItems={assistantNavItems} signOut={user.signOut} />
-        <div className="w-full grid !h-screen grid-cols-2 justify-around landscape:pl-10">
+        <div className="grid !h-screen w-full grid-cols-2 justify-around landscape:pl-10">
           <section className="flex flex-col items-center justify-center gap-2">
             <div className="card bg-base-100 shadow-xl">
               <div className="card-body p-2">
@@ -153,7 +151,7 @@ function AssistantIndexPage({
                       mainContent={runners[lap.runnerId]?.name || 'Unbekannt'}
                     >
                       <button
-                        className="btn-outline btn-error btn-square btn-sm btn hidden text-error md:flex"
+                        className="btn-error btn-outline btn-square btn-sm btn hidden text-error md:flex"
                         aria-label="Runde löschen"
                         onClick={async () => await deleteLapHandler(lap.id)}
                       >

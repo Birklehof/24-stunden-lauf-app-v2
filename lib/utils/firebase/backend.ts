@@ -33,6 +33,7 @@ export async function getRunner(email: string): Promise<Runner> {
   const runner = await db
     .collection('apps/24-stunden-lauf/runners')
     .where('email', '==', email)
+    .limit(1)
     .get();
 
   if (runner.docs.length == 0) {
@@ -59,4 +60,34 @@ export async function getRunnersDict(): Promise<{ [id: string]: Runner }> {
   });
 
   return runnersDict;
+}
+
+// Used in runner/charts.tsx
+export async function getLapsInHour(hour: number): Promise<number> {
+  let fromHour = new Date(Date.now())
+  let toHour = new Date(Date.now())
+
+  fromHour.setHours(hour)
+  fromHour.setMinutes(0)
+  fromHour.setSeconds(0)
+  fromHour.setMilliseconds(0)
+
+  toHour.setHours(hour)
+  toHour.setMinutes(59)
+  toHour.setSeconds(59)
+  toHour.setMilliseconds(999)
+
+  console.log('getLapsInHour');
+  console.log(hour);
+  console.log(fromHour);
+  console.log(toHour);
+
+  const lapCount = await db
+    .collection('apps/24-stunden-lauf/laps')
+    .where('createdAt', '>=', fromHour)
+    .where('createdAt', '<=', toHour)
+    .count()
+    .get();
+
+  return lapCount.data().count || 0;
 }

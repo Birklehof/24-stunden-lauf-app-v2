@@ -107,10 +107,12 @@ function RankingPage({
               weekday: 'long',
               day: '2-digit',
               month: '2-digit',
+              timeZone: 'Europe/Berlin',
             })}{' '}
             {new Date(lastUpdated).toLocaleString('de-DE', {
               hour: '2-digit',
               minute: '2-digit',
+              timeZone: 'Europe/Berlin',
             })}
             Uhr
           </div>

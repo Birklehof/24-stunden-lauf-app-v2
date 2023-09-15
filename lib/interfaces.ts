@@ -25,7 +25,7 @@ export interface Lap {
  * @property {string} id - The firestore id of the runner
  * @property {number} number - The starting number of the runner
  * @property {string} name - The full name of the runner
- * @property {string} type - The type of the runner (e.g. "student" or "guest")
+ * @property {string} type - The type of the runner (e.g. "student" or "staff")
  * @property {string} email - The email of the runner
  * 
  * @property {string} studentId [optional] - The firestore id of the associated student (only for runners of type "student")

@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/firebase/admin';
 import { Lap } from '@/lib/interfaces';
-import { getUserFromCookies } from 'next-firebase-auth'
+import { getUserFromCookies } from 'next-firebase-auth';
 
 import initAuth from '@/lib/next-firebase-auth';
 
-initAuth()
+initAuth();
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,7 +17,7 @@ export default async function handler(
 
   let user;
   try {
-    user = await getUserFromCookies({ req })
+    user = await getUserFromCookies({ req });
   } catch (e) {
     return res.status(500).end();
   }

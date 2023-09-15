@@ -8,8 +8,6 @@ export default function CustomErrorPage({
   statusCode: number;
   message?: string;
 }) {
-  console.log(message)
-
   return (
     <>
       <Head title="Seite nicht gefunden" />
