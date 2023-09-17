@@ -3,7 +3,7 @@ import {
   getRemoteConfig,
   getString,
 } from 'firebase/remote-config';
-import { app } from './index';
+import { app } from '@/lib/firebase';
 import { useEffect, useState } from 'react';
 
 export default function useRemoteConfig<ValueType>(

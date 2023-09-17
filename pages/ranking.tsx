@@ -1,19 +1,19 @@
 import { useState } from 'react';
-import Loading from '../components/Loading';
-import Head from '../components/Head';
-import useRemoteConfig from '../lib/firebase/useRemoteConfig';
-import { RunnerWithLapCount } from '../lib/interfaces';
-import SearchBar from '../components/SearchBar';
-import ListItem from '../components/ListItem';
-import { getRunnersWithLapCount } from '../lib/utils/firebase/backend';
-import Icon from '../components/Icon';
+import Loading from '@/components/Loading';
+import Head from '@/components/Head';
+import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
+import { RunnerWithLapCount } from '@/lib/interfaces';
+import SearchBar from '@/components/SearchBar';
+import ListItem from '@/components/ListItem';
+import { getRunnersWithLapCount } from '@/lib/utils/firebase/backend';
+import Icon from '@/components/Icon';
 import {
   defaultClasses,
   defaultDistancePerLap,
   defaultHouses,
-} from '../lib/firebase/remoteConfigDefaultValues';
+} from '@/lib/firebase/remoteConfigDefaultValues';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
-import { filterRunner } from '../lib/utils';
+import { filterRunner } from '@/lib/utils';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {

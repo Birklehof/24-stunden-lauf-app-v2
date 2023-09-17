@@ -1,5 +1,5 @@
 import admin from 'firebase-admin';
-import { firebaseConfig } from './firebaseConfig';
+import { firebaseConfig } from '@/lib/firebase/firebaseConfig';
 
 const serviceAccount = JSON.parse(
   process.env.FIREBASE_SERVICE_ACCOUNT?.toString() || '{}'

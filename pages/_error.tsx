@@ -1,4 +1,4 @@
-import Head from '../components/Head';
+import Head from '@/components/Head';
 import { NextPageContext } from 'next';
 
 export default function CustomErrorPage({
