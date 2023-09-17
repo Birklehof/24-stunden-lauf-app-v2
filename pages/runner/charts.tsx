@@ -25,58 +25,57 @@ import Stat from '@/components/Stat';
 import Loading from '@/components/Loading';
 import { Md5 } from 'ts-md5';
 import Icon from '@/components/Icon';
-import StatDivider from '@/components/StatDivider';
 import { useEffect, useState } from 'react';
 import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
 import { getRunner } from '@/lib/utils/firebase/frontend';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
-  // const runnersWithLapCount = await getRunnersWithLapCount();
+  const runnersWithLapCount = await getRunnersWithLapCount();
 
-  const runnersWithLapCount = [
-    {
-      id: '1',
-      name: 'Test',
-      email: 'paul.maier@s.birklehof.de',
-      type: 'student',
-      lapCount: 34,
-      class: '5a',
-      house: 'Haupthaus',
-    },
-    {
-      id: '2',
-      name: 'Test',
-      type: 'student',
-      lapCount: 11,
-      class: '6',
-      house: 'Test',
-    },
-    {
-      id: '2',
-      name: 'Test',
-      type: 'student',
-      lapCount: 10,
-      class: '6',
-      house: 'Why Not',
-    },
-    {
-      id: '2',
-      name: 'Test',
-      type: 'student',
-      lapCount: 12,
-      class: '7',
-      house: 'Studio',
-    },
-    {
-      id: '2',
-      name: 'Test',
-      type: 'student',
-      lapCount: 20,
-      class: '8',
-      house: 'Haupthaus',
-    },
-  ];
+  // const runnersWithLapCount = [
+  //   {
+  //     id: '1',
+  //     name: 'Test',
+  //     email: 'paul.maier@s.birklehof.de',
+  //     type: 'student',
+  //     lapCount: 34,
+  //     class: '5a',
+  //     house: 'Haupthaus',
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'Test',
+  //     type: 'student',
+  //     lapCount: 11,
+  //     class: '6',
+  //     house: 'Test',
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'Test',
+  //     type: 'student',
+  //     lapCount: 10,
+  //     class: '6',
+  //     house: 'Why Not',
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'Test',
+  //     type: 'student',
+  //     lapCount: 12,
+  //     class: '7',
+  //     house: 'Studio',
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'Test',
+  //     type: 'student',
+  //     lapCount: 20,
+  //     class: '8',
+  //     house: 'Haupthaus',
+  //   },
+  // ];
 
   // Count how many laps each house has, the house is a property of the runner
   const lapCountByHouse: { [key: string]: number } = runnersWithLapCount.reduce(
@@ -123,7 +122,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      runnersWithLapCount,
+      runnersWithLapCount: JSON.parse(JSON.stringify(runnersWithLapCount)),
       runnerCount: runnersWithLapCount.length,
       lapsTotal: runnersWithLapCount.reduce(
         (acc, cur) => acc + cur.lapCount,
@@ -155,6 +154,8 @@ function RunnerGraphsPage({
   lapCountByHouse: { [key: string]: number };
   lapCountByClass: { [key: string]: number };
 }) {
+  const [houseAbbreviationTranslations] = useRemoteConfig('houseAbbreviationTranslations', []);
+
   const user = useUser();
   const [runner, setRunner] = useState<Runner | null>(null);
 
@@ -213,7 +214,10 @@ function RunnerGraphsPage({
   };
 
   const lapCountByHouseData = {
-    labels: Object.keys(lapCountByHouse),
+    labels: Object.keys(lapCountByHouse).map((house) => {
+      // @ts-ignore
+      return houseAbbreviationTranslations.find((translation) => translation.name === house)?.abbreviation || house;
+    }),
     datasets: [
       {
         label: 'Laps',
@@ -286,7 +290,7 @@ function RunnerGraphsPage({
   const pieOptions = {
     hoverOffset: 2,
     clip: false,
-    plugin: {
+    plugins: {
       legend: {
         position: 'bottom',
       },
@@ -297,111 +301,106 @@ function RunnerGraphsPage({
     <>
       <Head title="Läufer Details" />
       <Menu navItems={runnerNavItems} signOut={user.signOut} />
-      <div className="fixed left-0 top-0 z-10 flex w-full justify-center gap-1 bg-base-200 p-2 text-sm">
-        <Icon name="InformationCircleIcon" />
-        Stand{' '}
-        {new Date(lastUpdated).toLocaleDateString('de-DE', {
-          weekday: 'long',
-          day: '2-digit',
-          month: '2-digit',
-          timeZone: 'Europe/Berlin',
-        })}{' '}
-        {new Date(lastUpdated).toLocaleString('de-DE', {
-          hour: '2-digit',
-          minute: '2-digit',
-          timeZone: 'Europe/Berlin',
-        })}
-        Uhr
-      </div>
-      <main className="main relative flex flex-col gap-14 overflow-auto">
-        <section className="hero min-h-screen bg-base-200 pb-14 landscape:min-h-min landscape:pt-[33vh]">
-          <div className="flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row">
-            <Stat value={runnerCount} label="Teilnehmer" />
-            <StatDivider />
-            <Stat value={lapsTotal} label="Runden gesamt" />
-            <StatDivider />
-            <Stat
-              value={Math.ceil(lapsTotal / runnerCount)}
-              label="Ø Runden pro Teilnehmer"
-            />
-            <StatDivider />
-            <Stat
-              value={
-                lapsTotal &&
-                ((lapsTotal * distancePerLap) / 1000).toFixed(
-                  (lapsTotal * distancePerLap) / 1000 < 10
-                    ? 2
-                    : (lapsTotal * distancePerLap) / 1000 < 100
-                    ? // eslint-disable-next-line indent
-                      1
-                    : // eslint-disable-next-line indent
-                      0
-                )
-              }
-              label="km Gesamtstrecke"
-            />
-          </div>
-        </section>
-        <section>
-          <h2 className="card-title">Persönlicher Fortschritt</h2>
-          <progress
-            className="progress-primary progress h-5 w-full rounded-full bg-base-200 shadow-inner"
-            value={
-              runnersWithLapCount.find(
-                (runnerWithLapCount) => runnerWithLapCount.email === user?.email
-              )?.lapCount || 0
-            }
-            max={runner?.goal || 0}
-          ></progress>
-        </section>
-        <section className="hero h-full bg-base-200">
-          <div className="flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row">
-            <Stat value={0} label="Ø Runden pro Stunde" />
-            <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
-            <Stat value={0} label="Ø km pro Stunde" />
-            <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
-            <Stat value={0} label="Ø km pro Stunde" />
-          </div>
-        </section>
 
-        <section className="-mt-14 mb-4 flex w-full max-w-2xl flex-col justify-center gap-8 py-3 md:gap-16 portrait:mb-16">
-          <article>
-            <h2 className="mb-1 text-center text-xl font-semibold md:mb-4 md:text-3xl">
-              Rundenverlauf
-            </h2>
-            <Line data={lapCountByHourData} options={lineOptions} />
-          </article>
-          <article>
-            <h2 className="mb-1 text-center text-xl font-semibold md:mb-4 md:text-3xl">
-              Runden pro Haus
-            </h2>
-            {/* @ts-ignore */}
-            <Pie data={lapCountByHouseData} options={pieOptions} />
-          </article>
-
-          <article>
-            <h2 className="mb-1 text-center text-xl font-semibold md:mb-4 md:text-3xl">
-              Runden pro Klasse
-            </h2>
-            {/* @ts-ignore */}
-            <Pie data={lapCountByClassData} options={pieOptions} />
-          </article>
-        </section>
-
-        {/* <div className="flex flex-col items-start overflow-y-auto h-screen px-2 lg:px-0 pt-2 pb-2 gap-2">
-          <div className="card bg-base-100 shadow-xl w-full">
+      <main className="main relative flex flex-col overflow-auto">
+        <div className="flex w-full max-w-2xl flex-col gap-4 bg-base-200 p-2 portrait:mb-16">
+          <div className="card card-compact bg-base-100">
             <div className="card-body">
-              <h2 className="card-title">Runden pro Stunde (alle)</h2>
-              <Line data={dataAll} options={options} />
+              <span className="flex gap-2">
+                <Icon name="InformationCircleIcon" />
+                Stand{' '}
+                {new Date(lastUpdated).toLocaleDateString('de-DE', {
+                  weekday: 'long',
+                  day: '2-digit',
+                  month: '2-digit',
+                  timeZone: 'Europe/Berlin',
+                })}{' '}
+                {new Date(lastUpdated).toLocaleString('de-DE', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  timeZone: 'Europe/Berlin',
+                })}
+                Uhr
+              </span>
             </div>
           </div>
-          <div className="card bg-base-100 shadow-xl w-full">
+          <div className="card card-compact bg-base-100">
             <div className="card-body">
-              <h2 className="card-title">Runden pro Stunde (persönlich)</h2>
-              <Line data={dataPersonal} options={options} />
+              <h2 className="card-title">Fortschritt</h2>
+              <p className="pb-2 text-base">
+                Hier siehst du, wie nah du deinem Ziel schon gekommen bist.
+              </p>
+              <progress
+                className="progress-primary progress h-5 w-full rounded-full bg-base-200 shadow-inner"
+                value={
+                  runnersWithLapCount.find(
+                    (runnerWithLapCount) =>
+                      runnerWithLapCount.email === user?.email
+                  )?.lapCount || 0
+                }
+                max={runner?.goal || 0}
+              ></progress>
+              <p className="font-semibold">
+                {runnersWithLapCount.find(
+                  (runnerWithLapCount) =>
+                    runnerWithLapCount.email === user?.email
+                )?.lapCount || 0}{' '}
+                / {runner?.goal || 0} Runden
+              </p>
             </div>
           </div>
-        </div> */}
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            <div className="card card-compact flex aspect-square items-center justify-center bg-base-100">
+              <Stat value={runnerCount} label="Teilnehmer" />
+            </div>
+            <div className="card card-compact flex aspect-square items-center justify-center bg-base-100">
+              <Stat value={lapsTotal} label="Runden gesamt" />
+            </div>
+            <div className="card card-compact flex aspect-square items-center justify-center bg-base-100">
+              <Stat
+                value={Math.ceil(lapsTotal / runnerCount)}
+                label="Ø Runden pro Teilnehmer"
+              />
+            </div>
+            <div className="card card-compact flex aspect-square items-center justify-center bg-base-100">
+              <Stat
+                value={
+                  lapsTotal &&
+                  ((lapsTotal * distancePerLap) / 1000).toFixed(
+                    (lapsTotal * distancePerLap) / 1000 < 10
+                      ? 2
+                      : (lapsTotal * distancePerLap) / 1000 < 100
+                      ? // eslint-disable-next-line indent
+                        1
+                      : // eslint-disable-next-line indent
+                        0
+                  )
+                }
+                label="km Gesamtstrecke"
+              />
+            </div>
+          </div>
+          <div className="card card-compact bg-base-100">
+            <div className="card-body">
+              <h2 className="card-title">Rundenverlauf</h2>
+              <Line data={lapCountByHourData} options={lineOptions} />
+            </div>
+          </div>
+          <div className="card card-compact bg-base-100">
+            <div className="card-body pb-5">
+              <h2 className="card-title">Runden pro Haus</h2>
+              {/* @ts-ignore */}
+              <Pie data={lapCountByHouseData} options={pieOptions} />
+            </div>
+          </div>
+          <div className="card card-compact bg-base-100">
+            <div className="card-body">
+              <h2 className="card-title">Runden pro Klasse</h2>
+              {/* @ts-ignore */}
+              <Pie data={lapCountByClassData} options={pieOptions} />
+            </div>
+          </div>
+        </div>
       </main>
     </>
   );
