@@ -2,7 +2,7 @@ import admin from 'firebase-admin';
 import { firebaseConfig } from '@/lib/firebase/firebaseConfig';
 
 const serviceAccount = JSON.parse(
-  process.env.FIREBASE_SERVICE_ACCOUNT.toString()
+  process.env.FIREBASE_SERVICE_ACCOUNT?.toString() || '{}'
 );
 
 try {
@@ -16,7 +16,7 @@ try {
    * We skip the "already exists" message which is
    * not an actual error when we're hot-reloading.
    */
-  if (!/already exists/u.test(error.message)) {
+  if (error instanceof Error && !/already exists/u.test(error.message)) {
     console.error('Firebase admin initialization error', error.stack);
   }
 }

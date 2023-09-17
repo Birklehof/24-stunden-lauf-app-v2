@@ -19,6 +19,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "cypress/support/e2e.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "lib/next-firebase-auth/index.js"],
   "exclude": ["node_modules"]
 }
