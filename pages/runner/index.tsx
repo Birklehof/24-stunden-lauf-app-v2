@@ -39,6 +39,7 @@ function RunnerIndexPage({ runner }: { runner: Runner }) {
 
   const [lapCount, setLapCount] = useState<number | undefined>(undefined);
   const [position, setPosition] = useState<number | undefined>(undefined);
+  const [newGoal, setNewGoal] = useState<string>('20');
 
   const [distancePerLap] = useRemoteConfig(
     'distancePerLap',
@@ -62,6 +63,57 @@ function RunnerIndexPage({ runner }: { runner: Runner }) {
     });
   }, [lapCount]);
 
+  async function setGoalHandler(newGoal: number) {
+    // make a post request to set the goal
+    await fetch('/api/runner/set-goal', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        goal: newGoal,
+      }),
+    });
+
+    // Reload the page
+    window.location.reload();
+  }
+
+  if (!runner.goal) {
+    return (
+      <>
+        <Head title="Läufer" />
+        <main className="hero min-h-screen bg-base-200 portrait:pb-16">
+          <Menu navItems={runnerNavItems} signOut={user.signOut} />
+          <NewLapOverlay lapCount={lapCount} />
+          <div className="flex max-w-md flex-col gap-4 p-8">
+            <h1 className="text-2xl font-bold">
+              Willkommen zum 24 Stunden Lauf!
+            </h1>
+            <p>
+              Wir freuen uns, dass du dieses Jahr dabei bist. Bevor es losgeht,
+              kannst du hier angeben, wie viele Runden du laufen möchtest.
+            </p>
+            <input
+              className="input-bordered input"
+              type="number"
+              value={newGoal}
+              inputMode="numeric"
+              onChange={(e) => setNewGoal(e.target.value)}
+            />
+            <button
+              className="btn-primary btn"
+              disabled={Number.isNaN(parseInt(newGoal))}
+              onClick={() => setGoalHandler(parseInt(newGoal))}
+            >
+              Los geht&apos;s!
+            </button>
+          </div>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <Head title="Läufer" />
@@ -82,10 +134,10 @@ function RunnerIndexPage({ runner }: { runner: Runner }) {
                 (lapCount * distancePerLap) / 1000 < 10
                   ? 2
                   : (lapCount * distancePerLap) / 1000 < 100
-                  // eslint-disable-next-line indent
-                  ? 1
-                  // eslint-disable-next-line indent
-                  : 0
+                  ? // eslint-disable-next-line indent
+                    1
+                  : // eslint-disable-next-line indent
+                    0
               )
             }
             label="km"

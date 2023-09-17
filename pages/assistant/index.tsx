@@ -30,31 +30,17 @@ function AssistantIndexPage({
   const [createdLaps, setCreatedLaps] = useState<Lap[]>([]);
 
   const [number, setNumber] = useState(0);
-  const [submitting, setSubmitting] = useState(false);
 
   const createLap = httpsCallable(functions, 'createLap');
 
   async function createNewLapHandler() {
-    if (submitting) {
-      return;
-    }
+    setNumber(0);
 
-    setSubmitting(true);
+    await createLap({ number }).then((result) => {
+      const newLap = result.data as Lap;
 
-    await createLap({ number })
-      .then((result) => {
-        setNumber(0);
-
-        const newLap = result.data as Lap;
-
-        setCreatedLaps([newLap as Lap, ...(createdLaps || [])]);
-      })
-      .finally(() => {
-        setSubmitting(false);
-
-        // Focus input
-        (document.getElementById('number') as HTMLInputElement).focus();
-      });
+      setCreatedLaps([newLap as Lap, ...(createdLaps || [])]);
+    });
   }
 
   async function deleteLapHandler(lapId: string) {
@@ -84,9 +70,10 @@ function AssistantIndexPage({
         <Menu navItems={assistantNavItems} signOut={user.signOut} />
         <div className="grid !h-screen w-full grid-cols-2 justify-around landscape:pl-10">
           <section className="flex flex-col items-center justify-center gap-2">
-            <div className="card bg-base-100 shadow-xl">
+            <div className="card rounded-xl bg-base-100 shadow-xl">
               <div className="card-body p-2">
                 <input
+                  aria-label="Startnummer"
                   id="number"
                   name="number"
                   className={`font-serif input-bordered input rounded-box box-border h-full w-full max-w-[18rem] text-center text-5xl font-medium tracking-widest sm:text-9xl ${
@@ -99,31 +86,28 @@ function AssistantIndexPage({
                   autoFocus
                   onChange={(e) => {
                     e.preventDefault();
-                    if (submitting) {
-                      return;
-                    }
                     if (!isNaN(+e.target.value)) {
                       setNumber(+e.target.value);
                     }
                   }}
                   onKeyDown={async (e) => {
-                    if (submitting) {
-                      return;
-                    }
                     if (e.key === 'Enter') {
                       themedPromiseToast(createNewLapHandler, {
-                        pending: 'Runde wird hinzugefügt',
-                        success: 'Runde erfolgreich hinzugefügt',
+                        pending: `[${number}] Runde wird hinzugefügt`,
+                        success: `[${number}] Runde erfolgreich hinzugefügt`,
                         error: {
                           render: ({ data }: any) => {
                             if (data.message) {
-                              return data.message;
+                              return `[${number}] ${data.message}`;
                             } else if (typeof data === 'string') {
-                              return data;
+                              return `[${number}] ${data}`;
                             }
-                            return 'Fehler beim Hinzufügen der Runde';
+                            return `[${number}] Fehler beim Hinzufügen der Runde]`
                           },
                         },
+                      }, {
+                        hideProgressBar: true,
+                        autoClose: 8000,
                       });
                     }
                   }}
@@ -136,8 +120,8 @@ function AssistantIndexPage({
               </div>
             </div>
             <div className="w-full text-center text-sm">
-              Drücke <kbd className="kbd kbd-sm bg-neutral">Enter</kbd>, um eine Runde zu
-              zählen
+              Drücke <kbd className="kbd kbd-sm bg-neutral">Enter</kbd>, um eine
+              Runde zu zählen
             </div>
           </section>
           <section className="vertical-list !flex">

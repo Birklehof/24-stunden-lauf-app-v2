@@ -26,10 +26,57 @@ import Loading from '@/components/Loading';
 import { Md5 } from 'ts-md5';
 import Icon from '@/components/Icon';
 import StatDivider from '@/components/StatDivider';
+import { useEffect, useState } from 'react';
+import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
+import { getRunner } from '@/lib/utils/firebase/frontend';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
-  const runnersWithLapCount = await getRunnersWithLapCount();
+  // const runnersWithLapCount = await getRunnersWithLapCount();
+
+  const runnersWithLapCount = [
+    {
+      id: '1',
+      name: 'Test',
+      email: 'paul.maier@s.birklehof.de',
+      type: 'student',
+      lapCount: 34,
+      class: '5a',
+      house: 'Haupthaus',
+    },
+    {
+      id: '2',
+      name: 'Test',
+      type: 'student',
+      lapCount: 11,
+      class: '6',
+      house: 'Test',
+    },
+    {
+      id: '2',
+      name: 'Test',
+      type: 'student',
+      lapCount: 10,
+      class: '6',
+      house: 'Why Not',
+    },
+    {
+      id: '2',
+      name: 'Test',
+      type: 'student',
+      lapCount: 12,
+      class: '7',
+      house: 'Studio',
+    },
+    {
+      id: '2',
+      name: 'Test',
+      type: 'student',
+      lapCount: 20,
+      class: '8',
+      house: 'Haupthaus',
+    },
+  ];
 
   // Count how many laps each house has, the house is a property of the runner
   const lapCountByHouse: { [key: string]: number } = runnersWithLapCount.reduce(
@@ -76,6 +123,7 @@ export async function getStaticProps() {
 
   return {
     props: {
+      runnersWithLapCount,
       runnerCount: runnersWithLapCount.length,
       lapsTotal: runnersWithLapCount.reduce(
         (acc, cur) => acc + cur.lapCount,
@@ -91,6 +139,7 @@ export async function getStaticProps() {
 }
 
 function RunnerGraphsPage({
+  runnersWithLapCount,
   runnerCount,
   lapsTotal,
   lastUpdated,
@@ -98,6 +147,7 @@ function RunnerGraphsPage({
   lapCountByHouse,
   lapCountByClass,
 }: {
+  runnersWithLapCount: RunnerWithLapCount[];
   runnerCount: number;
   lapsTotal: number;
   lastUpdated: number;
@@ -106,6 +156,15 @@ function RunnerGraphsPage({
   lapCountByClass: { [key: string]: number };
 }) {
   const user = useUser();
+  const [runner, setRunner] = useState<Runner | null>(null);
+
+  useEffect(() => {
+    if (user.email) {
+      getRunner(user.email).then(async (runner) => {
+        setRunner(runner);
+      });
+    }
+  }, [user]);
 
   const [distancePerLap] = useRemoteConfig(
     'distancePerLap',
@@ -238,23 +297,23 @@ function RunnerGraphsPage({
     <>
       <Head title="Läufer Details" />
       <Menu navItems={runnerNavItems} signOut={user.signOut} />
+      <div className="fixed left-0 top-0 z-10 flex w-full justify-center gap-1 bg-base-200 p-2 text-sm">
+        <Icon name="InformationCircleIcon" />
+        Stand{' '}
+        {new Date(lastUpdated).toLocaleDateString('de-DE', {
+          weekday: 'long',
+          day: '2-digit',
+          month: '2-digit',
+          timeZone: 'Europe/Berlin',
+        })}{' '}
+        {new Date(lastUpdated).toLocaleString('de-DE', {
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: 'Europe/Berlin',
+        })}
+        Uhr
+      </div>
       <main className="main relative flex flex-col gap-14 overflow-auto">
-        <div className="absolute flex w-full justify-center gap-1 text-sm">
-          <Icon name="InformationCircleIcon" />
-          Stand{' '}
-          {new Date(lastUpdated).toLocaleDateString('de-DE', {
-            weekday: 'long',
-            day: '2-digit',
-            month: '2-digit',
-            timeZone: 'Europe/Berlin',
-          })}{' '}
-          {new Date(lastUpdated).toLocaleString('de-DE', {
-            hour: '2-digit',
-            minute: '2-digit',
-            timeZone: 'Europe/Berlin',
-          })}
-          Uhr
-        </div>
         <section className="hero min-h-screen bg-base-200 pb-14 landscape:min-h-min landscape:pt-[33vh]">
           <div className="flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row">
             <Stat value={runnerCount} label="Teilnehmer" />
@@ -283,12 +342,16 @@ function RunnerGraphsPage({
             />
           </div>
         </section>
-        {/* <section>
+        <section>
           <h2 className="card-title">Persönlicher Fortschritt</h2>
           <progress
             className="progress-primary progress h-5 w-full rounded-full bg-base-200 shadow-inner"
-            value="40"
-            max="100"
+            value={
+              runnersWithLapCount.find(
+                (runnerWithLapCount) => runnerWithLapCount.email === user?.email
+              )?.lapCount || 0
+            }
+            max={runner?.goal || 0}
           ></progress>
         </section>
         <section className="hero h-full bg-base-200">
@@ -299,9 +362,9 @@ function RunnerGraphsPage({
             <div className="divider divider-vertical my-0 landscape:divider-horizontal" />
             <Stat value={0} label="Ø km pro Stunde" />
           </div>
-        </section> */}
+        </section>
 
-        <section className="-mt-14 mb-16 flex w-full max-w-2xl flex-col justify-center gap-8 py-3 md:gap-16">
+        <section className="-mt-14 mb-4 flex w-full max-w-2xl flex-col justify-center gap-8 py-3 md:gap-16 portrait:mb-16">
           <article>
             <h2 className="mb-1 text-center text-xl font-semibold md:mb-4 md:text-3xl">
               Rundenverlauf
@@ -345,7 +408,7 @@ function RunnerGraphsPage({
 }
 
 export default withUser({
-  // whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
   LoaderComponent: Loading,
   // @ts-ignore

@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { useState } from 'react';
 import Loading from '@/components/Loading';
 import Head from '@/components/Head';
@@ -19,7 +20,9 @@ import { filterRunner } from '@/lib/utils';
 export async function getStaticProps() {
   return {
     props: {
-      runnersWithLapCount: JSON.parse(JSON.stringify(await getRunnersWithLapCount())),
+      runnersWithLapCount: JSON.parse(
+        JSON.stringify(await getRunnersWithLapCount())
+      ),
       lastUpdated: Date.now(),
     },
     revalidate: 60 * 3, // Revalidate at most every 3 minutes
@@ -137,8 +140,8 @@ function RankingPage({
                       '') + runnerWithLapCount.name
                   }
                 >
-                  <div className="flex w-1/4 flex-row items-center justify-between pr-3">
-                    <div className="pr-1">
+                  <div className="flex w-1/4 flex-row items-center justify-between pr-1">
+                    <div className="pr-2">
                       <div className="stat-value text-center text-lg font-semibold md:text-xl">
                         {runnerWithLapCount.number}
                       </div>
@@ -146,7 +149,7 @@ function RankingPage({
                         Nr.
                       </div>
                     </div>
-                    <div className="pr-1">
+                    <div className="pr-2">
                       <div className="stat-value text-center text-lg font-semibold md:text-xl">
                         {runnerWithLapCount.lapCount.toString()}
                       </div>
@@ -154,12 +157,22 @@ function RankingPage({
                         Runden
                       </div>
                     </div>
-                    <div className="pr-1">
+                    <div className="pr-2">
                       <div className="stat-value text-center text-lg font-semibold md:text-xl">
                         {(
                           (runnerWithLapCount.lapCount * distancePerLap) /
                           1000
-                        ).toFixed(2)}
+                        ).toFixed(
+                          (runnerWithLapCount.lapCount * distancePerLap) /
+                            1000 <
+                            10
+                            ? 2
+                            : (runnerWithLapCount.lapCount * distancePerLap) /
+                                1000 <
+                              100
+                            ? 1
+                            : 0
+                        )}
                       </div>
                       <div className="stat-title -mt-2 text-center text-xs">
                         km

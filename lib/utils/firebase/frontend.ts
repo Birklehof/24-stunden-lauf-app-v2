@@ -40,6 +40,25 @@ export async function syncLapCount(runnerId: string, updateFunction: Function) {
   });
 }
 
+// Used in pages/runner/charts.tsx
+export async function getRunner(email: string): Promise<Runner> {
+  const runnerQuery = query(
+    collection(firebase, 'apps/24-stunden-lauf/runners'),
+    where('email', '==', email)
+  );
+  const runnerSnapshot = await getDocs(runnerQuery);
+  const runnerData = runnerSnapshot.docs[0].data();
+
+  if (!runnerData) {
+    throw new Error('Runner not found');
+  }
+
+  return {
+    id: runnerSnapshot.docs[0].id,
+    ...runnerData,
+  } as Runner;
+}
+
 // Used in pages/assistant/create-runner.tsx
 export async function createRunner(name: string): Promise<number> {
   if (!name) {

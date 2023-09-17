@@ -23,7 +23,7 @@ export default function ListItem({
     <div className={`centered-card ${glass && '!bg-opacity-60'} ${highlight && '!border border-primary'}`}>
       <div className="card-body w-full flex-row p-1">
         <div className="flex grow flex-col justify-center overflow-hidden text-ellipsis pl-1">
-          <div className="font-semibold line-clamp-1">
+          <div className="font-semibold line-clamp-1 text-lg">
             {number != undefined && (
               <>
                 <span className="opacity-20">

@@ -10,23 +10,26 @@ interface MenuProps {
 export default function Menu({ navItems, signOut: signOutAction }: MenuProps) {
   return (
     <>
-      <div className="menu w-max rounded-box menu-horizontal absolute bottom-3 left-1/2 z-40 -translate-x-1/2 bg-base-100 p-2 shadow-xl landscape:bottom-1/2 landscape:left-2 landscape:translate-x-0 landscape:translate-y-1/2 landscape:gap-2 landscape:menu-vertical">
-        <ul className="flex flex-row gap-2 landscape:flex-col">
+      <div
+        aria-label="Menu"
+        className="menu rounded-box menu-horizontal absolute bottom-3 left-1/2 z-40 w-max -translate-x-1/2 bg-base-100 p-2 shadow-xl landscape:menu-vertical landscape:bottom-1/2 landscape:left-2 landscape:translate-x-0 landscape:translate-y-1/2 landscape:gap-2"
+      >
+        <div className="flex flex-row gap-2 landscape:flex-col">
           {navItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className="btn-ghost btn-square btn justify-center btn-sm sm:btn-md"
+              className="btn-ghost btn-square btn-sm btn justify-center sm:btn-md"
               aria-label={item.name}
             >
               <Icon name={item.icon} />
             </Link>
           ))}
-        </ul>
+        </div>
         <div className="divider divider-horizontal !m-0 landscape:divider-vertical" />
         <button
           onClick={signOutAction}
-          className="btn-ghost btn-square btn text-error btn-sm sm:btn-md"
+          className="btn-ghost btn-square btn-sm btn text-error sm:btn-md"
           aria-label="Logout"
         >
           <Icon name="LogoutIcon" />
