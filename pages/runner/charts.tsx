@@ -33,10 +33,12 @@ export async function getStaticProps() {
 
   // Count how many laps each house has, the house is a property of the runner
   const lapCountByHouse: { [key: string]: number } = runnersWithLapCount.reduce(
-    (acc, cur) => ({
+    (acc: { [key: string]: number }, cur) => ({
       ...acc,
       // @ts-ignore
-      [cur.house || '']: (acc[cur.house || ''] || 0) + cur.lapCount,
+      [cur.type == 'student' ? cur.house || '' : 'Extern (Kollegium)']:
+        (acc[cur.type == 'student' ? cur.house || '' : 'Extern (Kollegium)'] ||
+          0) + cur.lapCount,
     }),
     {}
   );
@@ -271,10 +273,10 @@ function RunnerGraphsPage({
                   (lapsTotal * distancePerLap) / 1000 < 10
                     ? 2
                     : (lapsTotal * distancePerLap) / 1000 < 100
-                    // eslint-disable-next-line indent
-                    ? 1
-                    // eslint-disable-next-line indent
-                    : 0
+                    ? // eslint-disable-next-line indent
+                      1
+                    : // eslint-disable-next-line indent
+                      0
                 )
               }
               label="km Gesamtstrecke"
