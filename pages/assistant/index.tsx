@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import Head from '../../components/Head';
-import Loading from '../../components/Loading';
-import Icon from '../../components/Icon';
-import { Lap, Runner } from '../../lib/interfaces';
-import { assistantNavItems, themedPromiseToast } from '../../lib/utils/';
-import { deleteLap } from '../../lib/utils/firebase/frontend';
-import ListItem from '../../components/ListItem';
+import Head from '@/components/Head';
+import Loading from '@/components/Loading';
+import Icon from '@/components/Icon';
+import { Lap, Runner } from '@/lib/interfaces';
+import { assistantNavItems, themedPromiseToast } from '@/lib/utils/';
+import { deleteLap } from '@/lib/utils/firebase/frontend';
+import ListItem from '@/components/ListItem';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
-import Menu from '../../components/Menu';
-import { getRunnersDict } from '../../lib/utils/firebase/backend';
-import { functions } from '../../lib/firebase';
+import Menu from '@/components/Menu';
+import { getRunnersDict } from '@/lib/utils/firebase/backend';
+import { functions } from '@/lib/firebase';
 import { httpsCallable } from 'firebase/functions';
 
 export async function getStaticProps() {
