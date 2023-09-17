@@ -14,7 +14,7 @@
 // ***********************************************************
 
 // Import global css
-import '../../../styles/globals.css'
+import '../../styles/globals.css'
 
 // Import commands.js using ES2015 syntax:
 import './commands'
