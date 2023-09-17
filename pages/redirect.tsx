@@ -1,6 +1,6 @@
-import Head from '@/components/Head';
+import Head from '../components/Head';
 import { withUser, AuthAction, withUserTokenSSR } from 'next-firebase-auth';
-import Loading from '@/components/Loading';
+import Loading from '../components/Loading';
 
 export const getServerSideProps = withUserTokenSSR({
   whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,

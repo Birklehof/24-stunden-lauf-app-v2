@@ -1,5 +1,5 @@
 import { ToastOptions, ToastPromiseParams, toast } from 'react-toastify';
-import { Runner } from '@/lib/interfaces';
+import { Runner } from '../interfaces';
 import { PossibleIcons } from 'heroicons-lookup';
 
 export interface NavItem {

@@ -1,9 +1,9 @@
 import { useState, FormEvent } from 'react';
-import Head from '@/components/Head';
-import { createRunner } from '@/lib/utils/firebase/frontend';
-import { assistantNavItems, themedPromiseToast } from '@/lib/utils/';
+import Head from '../../components/Head';
+import { createRunner } from '../../lib/utils/firebase/frontend';
+import { assistantNavItems, themedPromiseToast } from '../../lib/utils/';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
-import Menu from '@/components/Menu';
+import Menu from '../../components/Menu';
 
 function AssistantCreateRunnerPage() {
   const user = useUser();

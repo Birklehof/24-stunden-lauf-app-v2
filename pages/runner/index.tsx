@@ -1,17 +1,17 @@
-import Loading from '@/components/Loading';
-import Head from '@/components/Head';
-import NewLapOverlay from '@/components/NewLapOverlay';
-import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
-import Stat from '@/components/Stat';
-import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues';
-import { getRunner } from '@/lib/utils/firebase/backend';
-import { Runner } from '@/lib/interfaces';
+import Loading from '../../components/Loading';
+import Head from '../../components/Head';
+import NewLapOverlay from '../../components/NewLapOverlay';
+import useRemoteConfig from '../../lib/firebase/useRemoteConfig';
+import Stat from '../../components/Stat';
+import { defaultDistancePerLap } from '../../lib/firebase/remoteConfigDefaultValues';
+import { getRunner } from '../../lib/utils/firebase/backend';
+import { Runner } from '../../lib/interfaces';
 import { AuthAction, useUser, withUser, withUserSSR } from 'next-firebase-auth';
-import { getPosition, syncLapCount } from '@/lib/utils/firebase/frontend';
+import { getPosition, syncLapCount } from '../../lib/utils/firebase/frontend';
 import { useEffect, useState } from 'react';
-import Menu from '@/components/Menu';
-import { runnerNavItems } from '@/lib/utils/';
-import StatDivider from '@/components/StatDivider';
+import Menu from '../../components/Menu';
+import { runnerNavItems } from '../../lib/utils/';
+import StatDivider from '../../components/StatDivider';
 
 export const getServerSideProps = withUserSSR({
   whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,

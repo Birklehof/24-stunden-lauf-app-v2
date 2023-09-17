@@ -1,4 +1,4 @@
-import { auth, firebase } from '@/lib/firebase/admin';
+import { auth, firebase } from '../../../lib/firebase/admin';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(

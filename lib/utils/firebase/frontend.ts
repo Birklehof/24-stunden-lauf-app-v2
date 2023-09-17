@@ -11,8 +11,8 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { Runner, Lap } from '@/lib/interfaces';
-import { firebase } from '@/lib/firebase';
+import { Runner, Lap } from '../../interfaces';
+import { firebase } from '../../firebase';
 
 // Used in pages/runner/index.tsx
 export async function getPosition(lapCount: number): Promise<number> {

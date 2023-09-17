@@ -1,4 +1,4 @@
-import Head from '@/components/Head';
+import Head from '../../components/Head';
 import { Line, Pie } from 'react-chartjs-2';
 import {
   Chart,
@@ -12,20 +12,20 @@ import {
   Filler,
   ArcElement,
 } from 'chart.js';
-import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
-import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues';
+import useRemoteConfig from '../../lib/firebase/useRemoteConfig';
+import { defaultDistancePerLap } from '../../lib/firebase/remoteConfigDefaultValues';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
 import {
   getLapsInHour,
   getRunnersWithLapCount,
-} from '@/lib/utils/firebase/backend';
-import Menu from '@/components/Menu';
-import { runnerNavItems } from '@/lib/utils';
-import Stat from '@/components/Stat';
-import Loading from '@/components/Loading';
+} from '../../lib/utils/firebase/backend';
+import Menu from '../../components/Menu';
+import { runnerNavItems } from '../../lib/utils';
+import Stat from '../../components/Stat';
+import Loading from '../../components/Loading';
 import { Md5 } from 'ts-md5';
-import Icon from '@/components/Icon';
-import StatDivider from '@/components/StatDivider';
+import Icon from '../../components/Icon';
+import StatDivider from '../../components/StatDivider';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
