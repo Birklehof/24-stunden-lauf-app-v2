@@ -4,18 +4,20 @@ import Loading from '@/components/Loading';
 import Icon from '@/components/Icon';
 import { Lap, Runner } from '@/lib/interfaces';
 import { assistantNavItems, themedPromiseToast } from '@/lib/utils/';
-import { createLap, deleteLap } from '@/lib/utils/firebase/frontend';
+import { deleteLap } from '@/lib/utils/firebase/frontend';
 import ListItem from '@/components/ListItem';
-import { AuthAction, useUser, withUser, withUserSSR } from 'next-firebase-auth';
+import { AuthAction, useUser, withUser } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
 import { getRunnersDict } from '@/lib/utils/firebase/backend';
+import { functions } from '@/lib/firebase';
+import { httpsCallable } from 'firebase/functions';
 
 export async function getStaticProps() {
   return {
     props: {
-      runners: await getRunnersDict(),
+      runners: JSON.parse(JSON.stringify(await getRunnersDict())),
     },
-    revalidate: 60 * 30, // Revalidate at most every 30 minutes
+    revalidate: 60 * 10,
   };
 }
 
@@ -30,6 +32,8 @@ function AssistantIndexPage({
   const [number, setNumber] = useState(0);
   const [submitting, setSubmitting] = useState(false);
 
+  const createLap = httpsCallable(functions, 'createLap');
+
   async function createNewLapHandler() {
     if (submitting) {
       return;
@@ -37,11 +41,13 @@ function AssistantIndexPage({
 
     setSubmitting(true);
 
-    await createLap(number, runners)
-      .then((newLap) => {
+    await createLap({ number })
+      .then((result) => {
         setNumber(0);
 
-        setCreatedLaps([newLap, ...(createdLaps || [])]);
+        const newLap = result.data as Lap;
+
+        setCreatedLaps([newLap as Lap, ...(createdLaps || [])]);
       })
       .finally(() => {
         setSubmitting(false);

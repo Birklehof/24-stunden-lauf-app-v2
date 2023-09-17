@@ -65,7 +65,7 @@ function RunnerIndexPage({ runner }: { runner: Runner }) {
   return (
     <>
       <Head title="Läufer" />
-      <main className="hero min-h-screen bg-base-200 pb-16">
+      <main className="hero min-h-screen bg-base-200 portrait:pb-16">
         <Menu navItems={runnerNavItems} signOut={user.signOut} />
         <NewLapOverlay lapCount={lapCount} />
         <div className="flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row">
@@ -82,7 +82,9 @@ function RunnerIndexPage({ runner }: { runner: Runner }) {
                 (lapCount * distancePerLap) / 1000 < 10
                   ? 2
                   : (lapCount * distancePerLap) / 1000 < 100
+                  // eslint-disable-next-line indent
                   ? 1
+                  // eslint-disable-next-line indent
                   : 0
               )
             }

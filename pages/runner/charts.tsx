@@ -20,11 +20,10 @@ import {
   getRunnersWithLapCount,
 } from '@/lib/utils/firebase/backend';
 import Menu from '@/components/Menu';
-import { runnerNavItems, groupLapsByHour } from '@/lib/utils';
+import { runnerNavItems } from '@/lib/utils';
 import Stat from '@/components/Stat';
 import Loading from '@/components/Loading';
 import { Md5 } from 'ts-md5';
-import { RunnerWithLapCount } from '@/lib/interfaces';
 import Icon from '@/components/Icon';
 import StatDivider from '@/components/StatDivider';
 
@@ -81,9 +80,9 @@ export async function getStaticProps() {
         0
       ),
       lastUpdated: Date.now(),
-      lapCountByHour,
-      lapCountByHouse,
-      lapCountByClass,
+      lapCountByHour: JSON.parse(JSON.stringify(lapCountByHour)),
+      lapCountByHouse: JSON.parse(JSON.stringify(lapCountByHouse)),
+      lapCountByClass: JSON.parse(JSON.stringify(lapCountByClass)),
     },
     revalidate: 60 * 3, // Revalidate at most every 3 minutes
   };
@@ -144,12 +143,12 @@ function RunnerGraphsPage({
     str.split('').forEach((char) => {
       hash = char.charCodeAt(0) + ((hash << 5) - hash);
     });
-    let colour = '#';
+    let color = '#';
     for (let i = 0; i < 3; i++) {
       const value = (hash >> (i * 8)) & 0xff;
-      colour += value.toString(16).padStart(2, '0');
+      color += value.toString(16).padStart(2, '0');
     }
-    return colour;
+    return color;
   };
 
   const lapCountByHouseData = {
@@ -254,7 +253,7 @@ function RunnerGraphsPage({
           })}
           Uhr
         </div>
-        <section className="hero h-full min-h-screen bg-base-200 pb-14">
+        <section className="hero min-h-screen bg-base-200 pb-14 landscape:min-h-min landscape:pt-[33vh]">
           <div className="flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row">
             <Stat value={runnerCount} label="Teilnehmer" />
             <StatDivider />
@@ -272,7 +271,9 @@ function RunnerGraphsPage({
                   (lapsTotal * distancePerLap) / 1000 < 10
                     ? 2
                     : (lapsTotal * distancePerLap) / 1000 < 100
+                    // eslint-disable-next-line indent
                     ? 1
+                    // eslint-disable-next-line indent
                     : 0
                 )
               }

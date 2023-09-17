@@ -1,16 +1,16 @@
 import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
-import { db } from '@/lib/firebase/admin';
+import { firebase } from '@/lib/firebase/admin';
 
 // Used in pages/ranking.tsx
 export async function getRunnersWithLapCount(): Promise<RunnerWithLapCount[]> {
-  const runners = await db.collection('apps/24-stunden-lauf/runners').get();
+  const runners = await firebase.collection('apps/24-stunden-lauf/runners').get();
 
   // Get lap count for each runner
   const runnersWithLaps = await Promise.all(
     runners.docs.map(async (docs) => {
       const runner = docs.data() as RunnerWithLapCount;
 
-      const lapCountSnapshot = await db
+      const lapCountSnapshot = await firebase
         .collection('apps/24-stunden-lauf/laps')
         .where('runnerId', '==', docs.id)
         .count()
@@ -28,9 +28,9 @@ export async function getRunnersWithLapCount(): Promise<RunnerWithLapCount[]> {
   return runnersWithLaps;
 }
 
-// Used in runner/index.tsx
+// Used in pages/runner/index.tsx
 export async function getRunner(email: string): Promise<Runner> {
-  const runner = await db
+  const runner = await firebase
     .collection('apps/24-stunden-lauf/runners')
     .where('email', '==', email)
     .limit(1)
@@ -42,13 +42,13 @@ export async function getRunner(email: string): Promise<Runner> {
 
   return {
     id: runner.docs[0].id,
-    ...runner.docs[0].data(),
+    ...JSON.parse(JSON.stringify(runner.docs[0].data())),
   } as Runner;
 }
 
-// Used in assistant/index.tsx
+// Used in pages/assistant/index.tsx
 export async function getRunnersDict(): Promise<{ [id: string]: Runner }> {
-  const runners = await db.collection('apps/24-stunden-lauf/runners').get();
+  const runners = await firebase.collection('apps/24-stunden-lauf/runners').get();
 
   const runnersDict: { [id: string]: Runner } = {};
 
@@ -62,7 +62,7 @@ export async function getRunnersDict(): Promise<{ [id: string]: Runner }> {
   return runnersDict;
 }
 
-// Used in runner/charts.tsx
+// Used in pages/runner/charts.tsx
 export async function getLapsInHour(hour: number): Promise<number> {
   let fromHour = new Date(Date.now())
   let toHour = new Date(Date.now())
@@ -77,12 +77,7 @@ export async function getLapsInHour(hour: number): Promise<number> {
   toHour.setSeconds(59)
   toHour.setMilliseconds(999)
 
-  console.log('getLapsInHour');
-  console.log(hour);
-  console.log(fromHour);
-  console.log(toHour);
-
-  const lapCount = await db
+  const lapCount = await firebase
     .collection('apps/24-stunden-lauf/laps')
     .where('createdAt', '>=', fromHour)
     .where('createdAt', '<=', toHour)

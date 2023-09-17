@@ -38,6 +38,7 @@ export interface Runner {
   name: string;
   type: string;
   email?: string;
+  lastLapCreatedAt?: Timestamp;
 
   // Attributes that only runners of type "student" have
   studentId?: string;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import Head from '@/components/Head';
 import { createRunner } from '@/lib/utils/firebase/frontend';
 import { assistantNavItems, themedPromiseToast } from '@/lib/utils/';
@@ -11,7 +11,7 @@ function AssistantCreateRunnerPage() {
   const [submitting, setSubmitting] = useState(false);
   const [number, setNumber] = useState(0);
 
-  async function createRunnerHandler(e: React.FormEvent<HTMLFormElement>) {
+  async function createRunnerHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (submitting) {

@@ -3,14 +3,14 @@ import Icon from './Icon';
 
 interface SearchBarProps {
   searchValue: string;
-  setSearchValue: (text: string) => void;
+  setSearchValue: Function;
   filters?: FilterInputs[];
   backLink?: string;
 }
 
 interface FilterInputs {
   filerValue: string;
-  setFilterValue: (text: string) => void;
+  setFilterValue: Function;
   filterOptions?: { value: string; label: string }[];
 }
 
@@ -34,7 +34,7 @@ export default function SearchBar({
         )}
         <input
           className="input-bordered input rounded-box input-sm w-10 grow"
-          type="seach"
+          type="search"
           inputMode="search"
           placeholder="Suchen ..."
           value={searchValue}

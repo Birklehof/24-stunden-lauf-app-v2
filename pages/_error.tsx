@@ -19,9 +19,7 @@ export default function CustomErrorPage({
           {message && (
             <>
               <div className="divider divider-vertical my-0 h-full landscape:divider-horizontal" />
-              <h1 className="text-center text-4xl font-semibold">
-                Seite nicht gefunden
-              </h1>
+              <h1 className="text-center text-4xl font-semibold">{message}</h1>
             </>
           )}
         </div>

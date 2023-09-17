@@ -9,7 +9,7 @@ export const getServerSideProps = withUserTokenSSR({
   whenAuthed: AuthAction.REDIRECT_TO_APP,
 })()
 
-function IndexPage() {
+function LoginPage() {
   const [appName] = useRemoteConfig('appName24StundenLauf', defaultAppName);
 
   return (
@@ -33,4 +33,4 @@ export default withUser({
   whenAuthed: AuthAction.REDIRECT_TO_APP,
   whenAuthedBeforeRedirect: AuthAction.SHOW_LOADER,
   LoaderComponent: Loading
-})(IndexPage)
+})(LoginPage)

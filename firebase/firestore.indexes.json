@@ -1,0 +1,19 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "laps",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "runnerId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

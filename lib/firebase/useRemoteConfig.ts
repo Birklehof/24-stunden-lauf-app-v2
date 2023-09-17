@@ -2,9 +2,9 @@ import {
   fetchAndActivate,
   getRemoteConfig,
   getString,
-} from "firebase/remote-config";
-import { app } from "@/lib/firebase";
-import { useEffect, useState } from "react";
+} from 'firebase/remote-config';
+import { app } from '@/lib/firebase';
+import { useEffect, useState } from 'react';
 
 export default function useRemoteConfig<ValueType>(
   name: string,
@@ -14,7 +14,7 @@ export default function useRemoteConfig<ValueType>(
 
   useEffect(() => {
     const remoteConfig = getRemoteConfig(app);
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       remoteConfig.settings.minimumFetchIntervalMillis = 3600000;
 
       fetchAndActivate(remoteConfig)
@@ -23,7 +23,10 @@ export default function useRemoteConfig<ValueType>(
 
           if (newValue) {
             // If collection type is string
-            if (typeof defaultValue === "string" || typeof defaultValue === "number") {
+            if (
+              typeof defaultValue === 'string' ||
+              typeof defaultValue === 'number'
+            ) {
               setValue(newValue as unknown as ValueType);
               return;
             }
@@ -31,7 +34,7 @@ export default function useRemoteConfig<ValueType>(
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err)
         });
     }
   }, [name, defaultValue]);

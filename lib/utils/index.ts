@@ -1,5 +1,5 @@
 import { ToastOptions, ToastPromiseParams, toast } from 'react-toastify';
-import { Lap, Runner } from '@/lib/interfaces';
+import { Runner } from '@/lib/interfaces';
 import { PossibleIcons } from 'heroicons-lookup';
 
 export interface NavItem {
@@ -8,7 +8,7 @@ export interface NavItem {
   icon: PossibleIcons;
 }
 
-// Used in runner/index.tsx, runner/charts.tsx, assistant/index.tsx, assistant/create-runner.tsx 
+// Used in pages/runner/index.tsx, pages/runner/charts.tsx, pages/assistant/index.tsx, pages/assistant/create-runner.tsx 
 export const runnerNavItems: NavItem[] = [
   { name: 'Startseite', href: '/runner', icon: 'HomeIcon' },
   {
@@ -40,6 +40,7 @@ export const assistantNavItems: NavItem[] = [
   },
 ];
 
+// Used in components/LoginOptions.tsx, pages/assistant/create-runner.tsx, pages/assistant/index.tsx
 export function themedPromiseToast(
   promise: Promise<any> | (() => Promise<any>),
   { pending, error, success }: ToastPromiseParams<any, unknown, unknown>,
@@ -60,13 +61,11 @@ export function themedPromiseToast(
   );
 }
 
+// Used in components/LoginOptions.tsx
 export function themedErrorToast(
   message: string,
   options?: ToastOptions<{}> | undefined
 ) {
-  console.log('themedErrorToast');
-  console.log(document.body.getAttribute('data-theme'));
-
   return toast.error(message, {
     ...options,
     theme:
@@ -74,26 +73,7 @@ export function themedErrorToast(
   });
 }
 
-export function groupLapsByHour(_laps: Lap[]): { [key: string]: number } {
-  const groupedLaps: { [key: string]: number } = {};
-  _laps.forEach((lap) => {
-    const hour = (lap.createdAt.seconds / 60 / 60).toFixed(0);
-    if (groupedLaps[hour]) {
-      groupedLaps[hour]++;
-    } else {
-      groupedLaps[hour] = 1;
-    }
-  });
-  const sortedGroupedLaps: { [key: string]: number } = {};
-  Object.keys(groupedLaps)
-    .sort()
-    .forEach((key) => {
-      sortedGroupedLaps[key] = groupedLaps[key];
-    });
-  return sortedGroupedLaps;
-}
-
-// Used in ranking.tsx
+// Used in pages/ranking.tsx
 export function filterRunner(
   runner: Runner,
   {

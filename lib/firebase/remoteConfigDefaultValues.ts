@@ -1,4 +1,4 @@
-const defaultClasses = ["5","6","7","8","9","10","Q1","Q2"]
+const defaultClasses = ['5', '6', '7', '8', '9', '10', 'Q1', 'Q2'];
 
 const defaultHouses = [
   'Extern (Kollegium)',

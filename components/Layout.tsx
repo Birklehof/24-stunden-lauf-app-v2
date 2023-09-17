@@ -1,24 +1,8 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react';
+import React, { PropsWithChildren, useEffect } from 'react';
 import { useDarkMode } from 'usehooks-ts';
-import { auth } from '@/lib/firebase';
 
 export default function Layout({ children }: PropsWithChildren) {
   const { isDarkMode, toggle } = useDarkMode();
-  const [role, setRole] = useState<string | null>(null);
-
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        if (user.uid === process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID) {
-          setRole('assistant');
-        } else {
-          setRole('runner');
-        }
-      } else {
-        setRole(null);
-      }
-    });
-  }, []);
 
   useEffect(() => {
     const body = document.body;

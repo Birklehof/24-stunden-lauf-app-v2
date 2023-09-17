@@ -19,10 +19,10 @@ import { filterRunner } from '@/lib/utils';
 export async function getStaticProps() {
   return {
     props: {
-      runnersWithLapCount: await getRunnersWithLapCount(),
+      runnersWithLapCount: JSON.parse(JSON.stringify(await getRunnersWithLapCount())),
       lastUpdated: Date.now(),
     },
-    revalidate: 60 * 30, // Revalidate at most every 3 minutes
+    revalidate: 60 * 3, // Revalidate at most every 3 minutes
   };
 }
 
