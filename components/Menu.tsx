@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import Icon from '@/components/Icon';
-import { NavItem } from '@/lib/utils';
+import Icon from './Icon';
+import { NavItem } from '../lib/utils';
 
 interface MenuProps {
   navItems: NavItem[];

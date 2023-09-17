@@ -4,8 +4,8 @@ import {
   signInWithRedirect,
   signInWithCustomToken,
 } from 'firebase/auth';
-import { auth, microsoftOAuthProvider } from '@/lib/firebase';
-import { themedErrorToast, themedPromiseToast } from '@/lib/utils/';
+import { auth, microsoftOAuthProvider } from '../lib/firebase';
+import { themedErrorToast, themedPromiseToast } from '../lib/utils/';
 
 export default function LoginOptions() {
   const [pending, setPending] = useState(false);

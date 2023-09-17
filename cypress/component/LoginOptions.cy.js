@@ -1,4 +1,4 @@
-import LoginOptions from '@/components/LoginOptions';
+import LoginOptions from '../../components/LoginOptions';
 
 describe('<LoginOptions />', () => {
   it('Basic render', () => {
