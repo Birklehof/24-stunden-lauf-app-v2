@@ -2,6 +2,7 @@ import { logger } from 'firebase-functions';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
+import { onDocumentDeleted } from 'firebase-functions/v2/firestore';
 
 initializeApp();
 
@@ -103,3 +104,26 @@ export const createLap = onCall(async (request) => {
     }
   }
 });
+
+export const resetLastLapCreatedAt = onDocumentDeleted(
+  'apps/24-stunden-lauf/laps/{lapId}',
+  async (event) => {
+    const firestore = getFirestore();
+    const snapshot = event.data;
+
+    if (!snapshot) {
+      return;
+    }
+    const data = snapshot.data();
+
+    const runnerId = data.runnerId;
+
+    if (!runnerId) {
+      return;
+    }
+
+    await firestore.doc(`apps/24-stunden-lauf/runners/${runnerId}`).update({
+      lastLapCreatedAt: null,
+    });
+  }
+);

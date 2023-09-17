@@ -136,7 +136,7 @@ function AssistantIndexPage({
               </div>
             </div>
             <div className="w-full text-center text-sm">
-              Drücke <kbd className="kbd kbd-sm">Enter</kbd>, um eine Runde zu
+              Drücke <kbd className="kbd kbd-sm bg-neutral">Enter</kbd>, um eine Runde zu
               zählen
             </div>
           </section>
@@ -171,7 +171,7 @@ function AssistantIndexPage({
               </>
             ) : (
               <div className="w-full text-center text-sm">
-                Du hast noch keine Runden erstellt
+                Du hast noch keine Runden gezählt
               </div>
             )}
           </section>
