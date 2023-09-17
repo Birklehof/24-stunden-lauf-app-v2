@@ -4,7 +4,7 @@ import {
   signInWithRedirect,
   signInWithCustomToken,
 } from 'firebase/auth';
-import { auth, microsoftOAuthProvider } from '../lib/firebase';
+import { auth, microsoftOAuthProvider } from '../lib/firebase/index';
 import { themedErrorToast, themedPromiseToast } from '../lib/utils/';
 
 export default function LoginOptions() {
