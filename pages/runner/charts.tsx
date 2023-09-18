@@ -20,7 +20,7 @@ import {
   getRunnersWithLapCount,
 } from '@/lib/utils/firebase/backend';
 import Menu from '@/components/Menu';
-import { formatKilometer, runnerNavItems } from '@/lib/utils';
+import { formatKilometer, hslToHex, runnerNavItems } from '@/lib/utils';
 import Stat from '@/components/Stat';
 import Loading from '@/components/Loading';
 import { Md5 } from 'ts-md5';
@@ -75,6 +75,46 @@ export async function getStaticProps() {
   //     class: '8',
   //     house: 'Haupthaus',
   //   },
+  //   {
+  //     id: '2',
+  //     name: 'Test',
+  //     type: 'student',
+  //     lapCount: 20,
+  //     class: '8',
+  //     house: 'Haupthauser',
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'Test',
+  //     type: 'student',
+  //     lapCount: 20,
+  //     class: '8',
+  //     house: 'asddasdsads',
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'Test',
+  //     type: 'student',
+  //     lapCount: 20,
+  //     class: '8',
+  //     house: 'fsfsadfa',
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'Test',
+  //     type: 'student',
+  //     lapCount: 20,
+  //     class: '8',
+  //     house: '423sd',
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'Test',
+  //     type: 'student',
+  //     lapCount: 20,
+  //     class: '8',
+  //     house: 'sfsdf fdfwfwe',
+  //   }
   // ];
 
   // Count how many laps each house has, the house is a property of the runner
@@ -164,6 +204,15 @@ function RunnerGraphsPage({
   const user = useUser();
   const [runner, setRunner] = useState<Runner | null>(null);
 
+  const [textColor, setTextColor] = useState<string>('black');
+  const [cardColor, setCardColor] = useState<string>('white');
+
+  useEffect(() => {
+    const style = getComputedStyle(document.body);
+    setTextColor(hslToHex(style.getPropertyValue('--tc')));
+    setCardColor(hslToHex(style.getPropertyValue('--b1')));
+  }, []);
+
   useEffect(() => {
     if (user.email) {
       getRunner(user.email).then(async (runner) => {
@@ -196,9 +245,10 @@ function RunnerGraphsPage({
         label: 'Laps',
         data: Object.values(lapCountByHour).reverse(),
         fill: 'start',
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1,
+        backgroundColor: 'rgba(165, 192, 42, 0.4)',
+        borderColor: 'rgba(165, 192, 42, 1)',
+        borderWidth: 1.5,
+        tension: 0.4,
       },
     ],
   };
@@ -235,6 +285,7 @@ function RunnerGraphsPage({
         backgroundColor: Object.keys(lapCountByHouse).map((house) =>
           stringToColour(house)
         ),
+        borderColor: cardColor,
       },
     ],
   };
@@ -249,6 +300,7 @@ function RunnerGraphsPage({
         backgroundColor: Object.keys(lapCountByClass).map((grade) =>
           stringToColour(grade)
         ),
+        borderColor: cardColor,
       },
     ],
   };
@@ -278,32 +330,38 @@ function RunnerGraphsPage({
         grid: {
           display: false,
         },
+        ticks: {
+          color: textColor,
+        },
       },
       y: {
         border: {
           display: false,
         },
-        grid: {
-          display: true,
-        },
         ticks: {
-          display: true,
+          color: textColor,
         },
       },
       xAxis: {
         display: false,
       },
     },
+    animation: false,
   };
 
   const pieOptions = {
+    aspectRatio: 0.75,
     hoverOffset: 2,
     clip: false,
     plugins: {
       legend: {
         position: 'bottom',
+        labels: {
+          color: textColor,
+        },
       },
     },
+    animation: false,
   };
 
   return (
@@ -381,6 +439,7 @@ function RunnerGraphsPage({
           <div className="card card-compact bg-base-100">
             <div className="card-body">
               <h2 className="card-title">Rundenverlauf</h2>
+              {/* @ts-ignore */}
               <Line data={lapCountByHourData} options={lineOptions} />
             </div>
           </div>
