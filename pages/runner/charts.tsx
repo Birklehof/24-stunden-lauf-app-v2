@@ -20,7 +20,7 @@ import {
   getRunnersWithLapCount,
 } from '@/lib/utils/firebase/backend';
 import Menu from '@/components/Menu';
-import { runnerNavItems } from '@/lib/utils';
+import { formatKilometer, runnerNavItems } from '@/lib/utils';
 import Stat from '@/components/Stat';
 import Loading from '@/components/Loading';
 import { Md5 } from 'ts-md5';
@@ -154,7 +154,10 @@ function RunnerGraphsPage({
   lapCountByHouse: { [key: string]: number };
   lapCountByClass: { [key: string]: number };
 }) {
-  const [houseAbbreviationTranslations] = useRemoteConfig('houseAbbreviationTranslations', []);
+  const [houseAbbreviationTranslations] = useRemoteConfig(
+    'houseAbbreviationTranslations',
+    []
+  );
 
   const user = useUser();
   const [runner, setRunner] = useState<Runner | null>(null);
@@ -216,7 +219,11 @@ function RunnerGraphsPage({
   const lapCountByHouseData = {
     labels: Object.keys(lapCountByHouse).map((house) => {
       // @ts-ignore
-      return houseAbbreviationTranslations.find((translation) => translation.name === house)?.abbreviation || house;
+      return (
+        houseAbbreviationTranslations.find(
+          (translation) => translation.name === house
+        )?.abbreviation || house
+      );
     }),
     datasets: [
       {
@@ -304,7 +311,7 @@ function RunnerGraphsPage({
 
       <main className="main relative flex flex-col overflow-auto">
         <div className="flex w-full max-w-2xl flex-col gap-4 bg-base-200 p-2 portrait:mb-16">
-          <div className="card card-compact bg-base-100">
+          <div className="card-compact card bg-base-100">
             <div className="card-body">
               <span className="flex gap-2">
                 <Icon name="InformationCircleIcon" />
@@ -324,7 +331,7 @@ function RunnerGraphsPage({
               </span>
             </div>
           </div>
-          <div className="card card-compact bg-base-100">
+          <div className="card-compact card bg-base-100">
             <div className="card-body">
               <h2 className="card-title">Fortschritt</h2>
               <p className="pb-2 text-base">
@@ -350,50 +357,39 @@ function RunnerGraphsPage({
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            <div className="card card-compact flex aspect-square items-center justify-center bg-base-100">
+            <div className="card-compact card flex aspect-square items-center justify-center bg-base-100">
               <Stat value={runnerCount} label="Teilnehmer" />
             </div>
-            <div className="card card-compact flex aspect-square items-center justify-center bg-base-100">
+            <div className="card-compact card flex aspect-square items-center justify-center bg-base-100">
               <Stat value={lapsTotal} label="Runden gesamt" />
             </div>
-            <div className="card card-compact flex aspect-square items-center justify-center bg-base-100">
+            <div className="card-compact card flex aspect-square items-center justify-center bg-base-100">
               <Stat
                 value={Math.ceil(lapsTotal / runnerCount)}
                 label="Ø Runden pro Teilnehmer"
               />
             </div>
-            <div className="card card-compact flex aspect-square items-center justify-center bg-base-100">
+            <div className="card-compact card flex aspect-square items-center justify-center bg-base-100">
               <Stat
-                value={
-                  lapsTotal &&
-                  ((lapsTotal * distancePerLap) / 1000).toFixed(
-                    (lapsTotal * distancePerLap) / 1000 < 10
-                      ? 2
-                      : (lapsTotal * distancePerLap) / 1000 < 100
-                      ? // eslint-disable-next-line indent
-                        1
-                      : // eslint-disable-next-line indent
-                        0
-                  )
-                }
+                value={lapsTotal && formatKilometer(lapsTotal * distancePerLap)}
                 label="km Gesamtstrecke"
               />
             </div>
           </div>
-          <div className="card card-compact bg-base-100">
+          <div className="card-compact card bg-base-100">
             <div className="card-body">
               <h2 className="card-title">Rundenverlauf</h2>
               <Line data={lapCountByHourData} options={lineOptions} />
             </div>
           </div>
-          <div className="card card-compact bg-base-100">
+          <div className="card-compact card bg-base-100">
             <div className="card-body pb-5">
               <h2 className="card-title">Runden pro Haus</h2>
               {/* @ts-ignore */}
               <Pie data={lapCountByHouseData} options={pieOptions} />
             </div>
           </div>
-          <div className="card card-compact bg-base-100">
+          <div className="card-compact card bg-base-100">
             <div className="card-body">
               <h2 className="card-title">Runden pro Klasse</h2>
               {/* @ts-ignore */}

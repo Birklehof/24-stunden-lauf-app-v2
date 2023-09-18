@@ -10,7 +10,7 @@ import { AuthAction, useUser, withUser, withUserSSR } from 'next-firebase-auth';
 import { getPosition, syncLapCount } from '@/lib/utils/firebase/frontend';
 import { useEffect, useState } from 'react';
 import Menu from '@/components/Menu';
-import { runnerNavItems } from '@/lib/utils/';
+import { formatKilometer, runnerNavItems } from '@/lib/utils/';
 import StatDivider from '@/components/StatDivider';
 
 export const getServerSideProps = withUserSSR({
@@ -84,7 +84,6 @@ function RunnerIndexPage({ runner }: { runner: Runner }) {
       <>
         <Head title="Läufer" />
         <main className="hero min-h-screen bg-base-200 portrait:pb-16">
-          <Menu navItems={runnerNavItems} signOut={user.signOut} />
           <NewLapOverlay lapCount={lapCount} />
           <div className="flex max-w-md flex-col gap-4 p-8">
             <h1 className="text-2xl font-bold">
@@ -127,21 +126,7 @@ function RunnerIndexPage({ runner }: { runner: Runner }) {
           <StatDivider />
           <Stat value={position} label="Platz" />
           <StatDivider />
-          <Stat
-            value={
-              lapCount &&
-              ((lapCount * distancePerLap) / 1000).toFixed(
-                (lapCount * distancePerLap) / 1000 < 10
-                  ? 2
-                  : (lapCount * distancePerLap) / 1000 < 100
-                  ? // eslint-disable-next-line indent
-                    1
-                  : // eslint-disable-next-line indent
-                    0
-              )
-            }
-            label="km"
-          />
+          <Stat value={lapCount && formatKilometer(lapCount * distancePerLap)} label="km" />
         </div>
       </main>
     </>

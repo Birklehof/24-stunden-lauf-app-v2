@@ -8,7 +8,7 @@ export interface NavItem {
   icon: PossibleIcons;
 }
 
-// Used in pages/runner/index.tsx, pages/runner/charts.tsx, pages/assistant/index.tsx, pages/assistant/create-runner.tsx 
+// Used in pages/runner/index.tsx, pages/runner/charts.tsx, pages/assistant/index.tsx, pages/assistant/create-runner.tsx
 export const runnerNavItems: NavItem[] = [
   { name: 'Startseite', href: '/runner', icon: 'HomeIcon' },
   {
@@ -117,4 +117,15 @@ export function filterRunner(
   }
 
   return !filterName || runner.name?.includes(filterName);
+}
+
+// TODO: Check if this works
+export function formatKilometer(number: number | null) {
+  if (!number) {
+    return '0.00'
+  }
+
+  return (number / 1000).toFixed(
+    number / 1000 < 10 ? 2 : number / 1000 < 100 ? 1 : 0
+  );
 }

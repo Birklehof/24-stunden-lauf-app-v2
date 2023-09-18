@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import { useState } from 'react';
 import Loading from '@/components/Loading';
 import Head from '@/components/Head';
@@ -14,7 +13,7 @@ import {
   defaultHouses,
 } from '@/lib/firebase/remoteConfigDefaultValues';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
-import { filterRunner } from '@/lib/utils';
+import { filterRunner, formatKilometer } from '@/lib/utils';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
@@ -159,20 +158,10 @@ function RankingPage({
                     </div>
                     <div className="pr-2">
                       <div className="stat-value text-center text-lg font-semibold md:text-xl">
-                        {(
-                          (runnerWithLapCount.lapCount * distancePerLap) /
-                          1000
-                        ).toFixed(
-                          (runnerWithLapCount.lapCount * distancePerLap) /
-                            1000 <
-                            10
-                            ? 2
-                            : (runnerWithLapCount.lapCount * distancePerLap) /
-                                1000 <
-                              100
-                            ? 1
-                            : 0
-                        )}
+                        {runnerWithLapCount.lapCount &&
+                          formatKilometer(
+                            runnerWithLapCount.lapCount * distancePerLap
+                          )}
                       </div>
                       <div className="stat-title -mt-2 text-center text-xs">
                         km
