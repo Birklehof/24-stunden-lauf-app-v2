@@ -20,90 +20,101 @@ class LapTooEarlyError extends Error {
   }
 }
 
-export const createLap = onCall(async (request) => {
-  // Check if the user is authenticated
-  if (!request.auth || request.auth.token.role !== 'assistant') {
-    throw new HttpsError('unauthenticated', 'Authentication required.');
-  }
+export const createLap = onCall(
+  {
+    region: 'europe-west1',
+    minInstances: 0, // TODO: Set to 4 before release
+    maxInstances: 10,
+  },
+  async (request) => {
+    // Check if the user is authenticated
+    if (!request.auth || request.auth.token.role !== 'assistant') {
+      throw new HttpsError('unauthenticated', 'Authentication required.');
+    }
 
-  // Ensure the request contains the 'number' field
-  const number = request.data.number as number;
-  if (!number) {
-    throw new HttpsError('invalid-argument', 'Missing field: number');
-  }
+    // Ensure the request contains the 'number' field
+    const number = request.data.number as number;
+    if (!number) {
+      throw new HttpsError('invalid-argument', 'Missing field: number');
+    }
 
-  const now = new Date();
+    const now = new Date();
 
-  const firestore = getFirestore();
+    const firestore = getFirestore();
 
-  // Check if there is a runner with the specified number
-  const runnerQuery = await firestore
-    .collection('apps/24-stunden-lauf/runners')
-    .where('number', '==', number)
-    .limit(1)
-    .get();
+    // Check if there is a runner with the specified number
+    const runnerQuery = await firestore
+      .collection('apps/24-stunden-lauf/runners')
+      .where('number', '==', number)
+      .limit(1)
+      .get();
 
-  if (runnerQuery.empty) {
-    throw new HttpsError('not-found', 'Läufer nicht gefunden.');
-  }
+    if (runnerQuery.empty) {
+      throw new HttpsError('not-found', 'Läufer nicht gefunden.');
+    }
 
-  const runner = {
-    id: runnerQuery.docs[0].id,
-    ...runnerQuery.docs[0].data(),
-  };
+    const runner = {
+      id: runnerQuery.docs[0].id,
+      ...runnerQuery.docs[0].data(),
+    };
 
-  const runnerRef = firestore.doc(`apps/24-stunden-lauf/runners/${runner.id}`);
+    const runnerRef = firestore.doc(
+      `apps/24-stunden-lauf/runners/${runner.id}`
+    );
 
-  try {
-    const newLap = await firestore.runTransaction(async (transaction) => {
-      const runnerDoc = await transaction.get(runnerRef);
+    try {
+      const newLap = await firestore.runTransaction(async (transaction) => {
+        const runnerDoc = await transaction.get(runnerRef);
 
-      const lastLapCreatedAt = runnerDoc.data()?.lastLapCreatedAt;
+        const lastLapCreatedAt = runnerDoc.data()?.lastLapCreatedAt;
 
-      // Check if the last lap was less than 2 minutes ago
-      if (lastLapCreatedAt) {
-        const lastLapDate = lastLapCreatedAt.toDate();
+        // Check if the last lap was less than 2 minutes ago
+        if (lastLapCreatedAt) {
+          const lastLapDate = lastLapCreatedAt.toDate();
 
-        if (now.getTime() - lastLapDate.getTime() < 2 * 60 * 1000) {
-          throw new LapTooEarlyError('Last lap less than 2 minutes ago.');
+          if (now.getTime() - lastLapDate.getTime() < 2 * 60 * 1000) {
+            throw new LapTooEarlyError('Last lap less than 2 minutes ago.');
+          }
         }
-      }
 
-      // Create a new lap
-      const newLap = {
-        runnerId: runner.id,
-        createdAt: now,
-      };
+        // Create a new lap
+        const newLap = {
+          runnerId: runner.id,
+          createdAt: now,
+        };
 
-      // Add the new lap
-      const newLapRef = firestore.collection('apps/24-stunden-lauf/laps').doc();
-      transaction.set(newLapRef, newLap);
+        // Add the new lap
+        const newLapRef = firestore
+          .collection('apps/24-stunden-lauf/laps')
+          .doc();
+        transaction.set(newLapRef, newLap);
 
-      // Update the runner
-      transaction.update(runnerRef, {
-        lastLapCreatedAt: now,
+        // Update the runner
+        transaction.update(runnerRef, {
+          lastLapCreatedAt: now,
+        });
+
+        // Return the new lap
+        return {
+          id: newLapRef.id,
+          ...newLap,
+        };
       });
 
-      // Return the new lap
-      return {
-        id: newLapRef.id,
-        ...newLap,
-      };
-    });
-
-    return newLap;
-  } catch (err) {
-    if (err instanceof LapTooEarlyError) {
-      throw new HttpsError(
-        'failed-precondition',
-        'Letzte Runde weniger als 2 Minuten her.'
-      );
-    } else {
-      logger.error(err);
-      throw new HttpsError('internal', 'Internal server error');
+      return newLap;
+    } catch (err) {
+      if (err instanceof LapTooEarlyError) {
+        throw new HttpsError(
+          'failed-precondition',
+          'Letzte Runde weniger als 2 Minuten her.'
+        );
+      } else {
+        logger.error(err);
+        throw new HttpsError('internal', 'Internal server error');
+      }
     }
   }
-});
+);
 
 export const resetLastLapCreatedAt = onDocumentDeleted(
   'apps/24-stunden-lauf/laps/{lapId}',

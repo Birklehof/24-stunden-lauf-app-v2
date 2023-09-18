@@ -79,7 +79,7 @@ function RunnerIndexPage({ runner }: { runner: Runner }) {
     window.location.reload();
   }
 
-  if (!runner.goal) {
+  if (!runner?.goal) {
     return (
       <>
         <Head title="Läufer" />

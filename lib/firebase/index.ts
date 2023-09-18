@@ -9,7 +9,7 @@ import { firebaseConfig } from '@/lib/firebase/firebaseConfig';
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const firebase = getFirestore(app);
-const functions = getFunctions(app);
+const functions = getFunctions(app, 'europe-west1');
 
 // connectFirestoreEmulator(firebase, '192.168.56.5', 8080);
 // connectFunctionsEmulator(functions, '192.168.56.5', 5001)

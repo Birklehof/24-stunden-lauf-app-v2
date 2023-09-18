@@ -3,7 +3,11 @@ import Head from '@/components/Head';
 import Loading from '@/components/Loading';
 import Icon from '@/components/Icon';
 import { Lap, Runner } from '@/lib/interfaces';
-import { assistantNavItems, themedPromiseToast } from '@/lib/utils/';
+import {
+  assistantNavItems,
+  themedErrorToast,
+  themedPromiseToast,
+} from '@/lib/utils/';
 import { deleteLap } from '@/lib/utils/firebase/frontend';
 import ListItem from '@/components/ListItem';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
@@ -36,11 +40,20 @@ function AssistantIndexPage({
   async function createNewLapHandler() {
     setNumber(0);
 
-    await createLap({ number }).then((result) => {
-      const newLap = result.data as Lap;
+    await createLap({ number })
+      .then((result) => {
+        const newLap = result.data as Lap;
 
-      setCreatedLaps([newLap as Lap, ...(createdLaps || [])]);
-    });
+        setCreatedLaps([newLap, ...createdLaps]);
+      })
+      .catch((error) => {
+        themedErrorToast(`[${number}] ${error.message}`, {
+          position: 'bottom-center',
+          autoClose: 3000,
+          draggable: true,
+          hideProgressBar: true,
+        });
+      });
   }
 
   async function deleteLapHandler(lapId: string) {
@@ -92,23 +105,7 @@ function AssistantIndexPage({
                   }}
                   onKeyDown={async (e) => {
                     if (e.key === 'Enter') {
-                      themedPromiseToast(createNewLapHandler, {
-                        pending: `[${number}] Runde wird hinzugefügt`,
-                        success: `[${number}] Runde erfolgreich hinzugefügt`,
-                        error: {
-                          render: ({ data }: any) => {
-                            if (data.message) {
-                              return `[${number}] ${data.message}`;
-                            } else if (typeof data === 'string') {
-                              return `[${number}] ${data}`;
-                            }
-                            return `[${number}] Fehler beim Hinzufügen der Runde]`
-                          },
-                        },
-                      }, {
-                        hideProgressBar: true,
-                        autoClose: 8000,
-                      });
+                      await createNewLapHandler();
                     }
                   }}
                   type="text"
@@ -136,11 +133,13 @@ function AssistantIndexPage({
                   })
                   .map((lap) => (
                     <ListItem
-                      key={lap.id}
+                      key={lap.id + lap.createdAt}
+                      glass={lap.id === 'temp'}
                       number={runners[lap.runnerId]?.number}
                       mainContent={runners[lap.runnerId]?.name || 'Unbekannt'}
                     >
                       <button
+                        disabled={!lap.id}
                         className="btn-error btn-outline btn-square btn-sm btn hidden text-error md:flex"
                         aria-label="Runde löschen"
                         onClick={async () => await deleteLapHandler(lap.id)}
