@@ -370,10 +370,10 @@ function RunnerGraphsPage({
       <Menu navItems={runnerNavItems} signOut={user.signOut} />
 
       <main className="main relative flex flex-col overflow-auto">
-        <div className="flex w-full max-w-2xl flex-col gap-4 bg-base-200 p-2 portrait:mb-16">
+        <div className="flex w-full max-w-2xl flex-col gap-3 bg-base-200 p-1 portrait:mb-16">
           <div className="card card-compact bg-base-100">
             <div className="card-body">
-              <span className="flex gap-2">
+              <span className="flex gap-1">
                 <Icon name="InformationCircleIcon" />
                 Stand{' '}
                 {new Date(lastUpdated).toLocaleDateString('de-DE', {
@@ -416,7 +416,7 @@ function RunnerGraphsPage({
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             <div className="card card-compact flex aspect-square items-center justify-center bg-base-100">
               <Stat value={runnerCount} label="Teilnehmer" />
             </div>
