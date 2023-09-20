@@ -17,9 +17,13 @@ import { functions } from '@/lib/firebase';
 import { httpsCallable } from 'firebase/functions';
 
 export async function getStaticProps() {
+  const runners = await getRunnersDict();
+
+  console.log(runners);
+
   return {
     props: {
-      runners: JSON.parse(JSON.stringify(await getRunnersDict())),
+      runners: JSON.parse(JSON.stringify(runners)),
     },
     revalidate: 60 * 10,
   };
