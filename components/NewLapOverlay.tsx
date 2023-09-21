@@ -33,10 +33,12 @@ export default function NewLapOverlay({
 
   return (
     <>
-      <div className="-left-[max(50vw,50vh)) -top-[max(50vw,50vh)) absolute z-50 flex hidden h-[max(200vw,200vh)] w-[max(200vw,200vh)] grow items-center justify-center rounded-full bg-success opacity-0">
-        <h1 className="animate-[showText_1s_ease-in-out] text-5xl font-bold text-white">
-          {lapCount}. Runde
-        </h1>
+      <div className="absolute left-1/2 top-1/2 z-50 flex h-screen w-screen aspect-square -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+        <div className="z-50 flex hidden h-[300%] w-[300%] aspect-square grow items-center justify-center rounded-full bg-success opacity-0">
+          <h1 className="z-50 animate-[showText_1s_ease-in-out] text-5xl font-bold text-white">
+            {lapCount}. Runde
+          </h1>
+        </div>
       </div>
     </>
   );

@@ -32,7 +32,7 @@ describe('<SearchBar />', () => {
             filterOptions: [
               { value: '', label: 'Alle Typen' },
               { value: 'student', label: 'Schüler' },
-              { value: 'staff', label: 'Lehrer' },
+              { value: 'staff', label: 'Mitarbeiter' },
               { value: 'other', label: 'Sonstige' },
             ],
           },
