@@ -9,7 +9,7 @@ export default function NewLapOverlay({
   const [lastLapCount, setLastLapCount] = useLocalStorage('lastLapCount', 0);
 
   useEffect(() => {
-    if (!lapCount) return;
+    if (lapCount === undefined) return;
 
     if (lapCount > lastLapCount) {
       setLastLapCount(lapCount);
@@ -22,19 +22,20 @@ export default function NewLapOverlay({
   function animateGrow() {
     // Animation currently not working because of there is no way to call the animation when the value of laps changes
     const grow = document.querySelector('.grow');
-    grow?.classList.remove('hidden');
+    const container = document.querySelector('.container');
+    container?.classList.remove('hidden');
     grow?.classList.add('animate-[grow_4s_linear]');
     // Wait for animation to finish
     setTimeout(() => {
       grow?.classList.remove('animate-[grow_4s_linear]');
-      grow?.classList.add('hidden');
+      container?.classList.add('hidden');
     }, 4000);
   }
 
   return (
     <>
-      <div className="absolute left-1/2 top-1/2 z-50 flex h-screen w-screen aspect-square -translate-x-1/2 -translate-y-1/2 items-center justify-center">
-        <div className="z-50 flex hidden h-[300%] w-[300%] aspect-square grow items-center justify-center rounded-full bg-success opacity-0">
+      <div className="container absolute left-1/2 top-1/2 z-50 flex hidden aspect-square h-screen w-screen -translate-x-1/2 -translate-y-1/2 items-center justify-center">
+        <div className="z-50 flex aspect-square h-[300%] w-[300%] grow items-center justify-center rounded-full bg-success opacity-0">
           <h1 className="z-50 animate-[showText_1s_ease-in-out] text-5xl font-bold text-white">
             {lapCount}. Runde
           </h1>

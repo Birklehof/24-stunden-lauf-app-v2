@@ -33,90 +33,6 @@ import { getRunner } from '@/lib/utils/firebase/frontend';
 export async function getStaticProps() {
   const runnersWithLapCount = await getRunnersWithLapCount();
 
-  // const runnersWithLapCount = [
-  //   {
-  //     id: '1',
-  //     name: 'Test',
-  //     email: 'paul.maier@s.birklehof.de',
-  //     type: 'student',
-  //     lapCount: 34,
-  //     class: '5a',
-  //     house: 'Haupthaus',
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Test',
-  //     type: 'student',
-  //     lapCount: 11,
-  //     class: '6',
-  //     house: 'Test',
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Test',
-  //     type: 'student',
-  //     lapCount: 10,
-  //     class: '6',
-  //     house: 'Why Not',
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Test',
-  //     type: 'student',
-  //     lapCount: 12,
-  //     class: '7',
-  //     house: 'Studio',
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Test',
-  //     type: 'student',
-  //     lapCount: 20,
-  //     class: '8',
-  //     house: 'Haupthaus',
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Test',
-  //     type: 'student',
-  //     lapCount: 20,
-  //     class: '8',
-  //     house: 'Haupthauser',
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Test',
-  //     type: 'student',
-  //     lapCount: 20,
-  //     class: '8',
-  //     house: 'asddasdsads',
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Test',
-  //     type: 'student',
-  //     lapCount: 20,
-  //     class: '8',
-  //     house: 'fsfsadfa',
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Test',
-  //     type: 'student',
-  //     lapCount: 20,
-  //     class: '8',
-  //     house: '423sd',
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Test',
-  //     type: 'student',
-  //     lapCount: 20,
-  //     class: '8',
-  //     house: 'sfsdf fdfwfwe',
-  //   }
-  // ];
-
   // Count how many laps each house has, the house is a property of the runner
   const lapCountByHouse: { [key: string]: number } = runnersWithLapCount.reduce(
     (acc: { [key: string]: number }, cur) => ({
@@ -128,7 +44,24 @@ export async function getStaticProps() {
     }),
     {}
   );
-  delete lapCountByHouse[''];
+
+  // Count how many laps each house has on average, the house is a property of the runner
+  const runnersPerHouse: { [key: string]: number } = runnersWithLapCount.reduce(
+    (acc: { [key: string]: number }, cur) => ({
+      ...acc,
+      // @ts-ignore
+      [cur.type == 'student' ? cur.house || '' : 'Extern (Kollegium)']:
+        (acc[cur.type == 'student' ? cur.house || '' : 'Extern (Kollegium)'] ||
+          0) + 1,
+    }),
+    {}
+  );
+  const averageLapCountByHouse: { [key: string]: number } = Object.fromEntries(
+    Object.entries(lapCountByHouse).map(([house, lapCount]) => [
+      house,
+      lapCount / runnersPerHouse[house],
+    ])
+  );
 
   // Count how many laps each class has, the class is a property of the runner
   const lapCountByClass: { [key: string]: number } = runnersWithLapCount.reduce(
@@ -139,7 +72,22 @@ export async function getStaticProps() {
     }),
     {}
   );
-  delete lapCountByClass[''];
+
+  // Count how many laps each class has on average, the class is a property of the runner
+  const runnersPerClass: { [key: string]: number } = runnersWithLapCount.reduce(
+    (acc, cur) => ({
+      ...acc,
+      // @ts-ignore
+      [cur.class || '']: (acc[cur.class || ''] || 0) + 1,
+    }),
+    {}
+  );
+  const averageLapCountByClass: { [key: string]: number } = Object.fromEntries(
+    Object.entries(lapCountByClass).map(([grade, lapCount]) => [
+      grade,
+      lapCount / runnersPerClass[grade],
+    ])
+  );
 
   const n = 23;
   const lapCountByHour = Object.fromEntries(
@@ -171,7 +119,13 @@ export async function getStaticProps() {
       lastUpdated: Date.now(),
       lapCountByHour: JSON.parse(JSON.stringify(lapCountByHour)),
       lapCountByHouse: JSON.parse(JSON.stringify(lapCountByHouse)),
+      averageLapCountByHouse: JSON.parse(
+        JSON.stringify(averageLapCountByHouse)
+      ),
       lapCountByClass: JSON.parse(JSON.stringify(lapCountByClass)),
+      averageLapCountByClass: JSON.parse(
+        JSON.stringify(averageLapCountByClass)
+      ),
     },
     revalidate: 60 * 3, // Revalidate at most every 3 minutes
   };
@@ -184,7 +138,9 @@ function RunnerGraphsPage({
   lastUpdated,
   lapCountByHour,
   lapCountByHouse,
+  averageLapCountByHouse,
   lapCountByClass,
+  averageLapCountByClass,
 }: {
   runnersWithLapCount: RunnerWithLapCount[];
   runnerCount: number;
@@ -192,7 +148,9 @@ function RunnerGraphsPage({
   lastUpdated: number;
   lapCountByHour: { [hour: string]: number };
   lapCountByHouse: { [key: string]: number };
+  averageLapCountByHouse: { [key: string]: number };
   lapCountByClass: { [key: string]: number };
+  averageLapCountByClass: { [key: string]: number };
 }) {
   const [houseAbbreviationTranslations] = useRemoteConfig<
     {
@@ -209,7 +167,7 @@ function RunnerGraphsPage({
 
   useEffect(() => {
     const style = getComputedStyle(document.body);
-    setTextColor(hslToHex(style.getPropertyValue('--tc')));
+    setTextColor(hslToHex(style.getPropertyValue('--bc')));
     setCardColor(hslToHex(style.getPropertyValue('--b1')));
   }, []);
 
@@ -268,6 +226,28 @@ function RunnerGraphsPage({
     return color;
   };
 
+  const averageLapCountByHouseData = {
+    labels: Object.keys(lapCountByHouse).map((house) => {
+      // @ts-ignore
+      return (
+        houseAbbreviationTranslations.find(
+          (translation) => translation.name === house
+        )?.abbreviation || house
+      );
+    }),
+    datasets: [
+      {
+        label: 'Laps',
+        data: Object.values(averageLapCountByHouse),
+        fill: 'start',
+        backgroundColor: Object.keys(lapCountByHouse).map((house) =>
+          stringToColour(house)
+        ),
+        borderColor: cardColor,
+      },
+    ],
+  };
+
   const lapCountByHouseData = {
     labels: Object.keys(lapCountByHouse).map((house) => {
       // @ts-ignore
@@ -296,6 +276,21 @@ function RunnerGraphsPage({
       {
         label: 'Laps',
         data: Object.values(lapCountByClass),
+        fill: 'start',
+        backgroundColor: Object.keys(lapCountByClass).map((grade) =>
+          stringToColour(grade)
+        ),
+        borderColor: cardColor,
+      },
+    ],
+  };
+
+  const averageLapCountByClassData = {
+    labels: Object.keys(lapCountByClass),
+    datasets: [
+      {
+        label: 'Laps',
+        data: Object.values(averageLapCountByClass),
         fill: 'start',
         backgroundColor: Object.keys(lapCountByClass).map((grade) =>
           stringToColour(grade)
@@ -371,7 +366,7 @@ function RunnerGraphsPage({
 
       <main className="main relative flex flex-col overflow-auto">
         <div className="flex w-full max-w-2xl flex-col gap-3 bg-base-200 p-1 portrait:mb-16">
-          <div className="card card-compact bg-base-100">
+          <div className="card-compact card bg-base-100">
             <div className="card-body">
               <span className="flex gap-1">
                 <Icon name="InformationCircleIcon" />
@@ -391,66 +386,89 @@ function RunnerGraphsPage({
               </span>
             </div>
           </div>
-          <div className="card card-compact bg-base-100">
+          <div className="card-compact card bg-base-100">
             <div className="card-body">
               <h2 className="card-title">Fortschritt</h2>
               <p className="pb-2 text-base">
                 Hier siehst du, wie nah du deinem Ziel schon gekommen bist.
               </p>
-              <progress
-                className="progress-primary progress h-5 w-full rounded-full bg-base-200 shadow-inner"
-                value={
-                  runnersWithLapCount.find(
-                    (runnerWithLapCount) =>
-                      runnerWithLapCount.email === user?.email
-                  )?.lapCount || 0
-                }
-                max={runner?.goal || 0}
-              ></progress>
-              <p className="font-semibold">
-                {runnersWithLapCount.find(
-                  (runnerWithLapCount) =>
-                    runnerWithLapCount.email === user?.email
-                )?.lapCount || 0}{' '}
-                / {runner?.goal || 0} Runden
-              </p>
+              {runner?.goal ? (
+                <>
+                  <progress
+                    className="progress-primary progress h-5 w-full rounded-full bg-base-200 shadow-inner"
+                    value={
+                      runnersWithLapCount.find(
+                        (runnerWithLapCount) =>
+                          runnerWithLapCount.email === user?.email
+                      )?.lapCount || 0
+                    }
+                    max={runner?.goal || 0}
+                  ></progress>
+                  <p className="font-semibold">
+                    {runnersWithLapCount.find(
+                      (runnerWithLapCount) =>
+                        runnerWithLapCount.email === user?.email
+                    )?.lapCount || 0}{' '}
+                    / {runner?.goal || 0} Runden
+                  </p>
+                </>
+              ) : (
+                <span
+                  aria-label="Ladeanimation"
+                  className="loading loading-dots loading-lg"
+                />
+              )}
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-            <div className="card card-compact flex aspect-square items-center justify-center bg-base-100">
+            <div className="card-compact card flex aspect-square items-center justify-center bg-base-100">
               <Stat value={runnerCount} label="Teilnehmer" />
             </div>
-            <div className="card card-compact flex aspect-square items-center justify-center bg-base-100">
+            <div className="card-compact card flex aspect-square items-center justify-center bg-base-100">
               <Stat value={lapsTotal} label="Runden gesamt" />
             </div>
-            <div className="card card-compact flex aspect-square items-center justify-center bg-base-100">
+            <div className="card-compact card flex aspect-square items-center justify-center bg-base-100">
               <Stat
                 value={Math.ceil(lapsTotal / runnerCount)}
                 label="Ø Runden pro Teilnehmer"
               />
             </div>
-            <div className="card card-compact flex aspect-square items-center justify-center bg-base-100">
+            <div className="card-compact card flex aspect-square items-center justify-center bg-base-100">
               <Stat
                 value={lapsTotal && formatKilometer(lapsTotal * distancePerLap)}
                 label="km Gesamtstrecke"
               />
             </div>
           </div>
-          <div className="card card-compact bg-base-100">
+          <div className="card-compact card bg-base-100">
             <div className="card-body">
               <h2 className="card-title">Rundenverlauf</h2>
               {/* @ts-ignore */}
               <Line data={lapCountByHourData} options={lineOptions} />
             </div>
           </div>
-          <div className="card card-compact bg-base-100">
+          <div className="card-compact card bg-base-100">
+            <div className="card-body pb-5">
+              <h2 className="card-title">Ø Runden pro Haus</h2>
+              {/* @ts-ignore */}
+              <Pie data={averageLapCountByHouseData} options={pieOptions} />
+            </div>
+          </div>
+          <div className="card-compact card bg-base-100">
+            <div className="card-body">
+              <h2 className="card-title">Ø Runden pro Klasse</h2>
+              {/* @ts-ignore */}
+              <Pie data={averageLapCountByClassData} options={pieOptions} />
+            </div>
+          </div>
+          <div className="card-compact card bg-base-100">
             <div className="card-body pb-5">
               <h2 className="card-title">Runden pro Haus</h2>
               {/* @ts-ignore */}
               <Pie data={lapCountByHouseData} options={pieOptions} />
             </div>
           </div>
-          <div className="card card-compact bg-base-100">
+          <div className="card-compact card bg-base-100">
             <div className="card-body">
               <h2 className="card-title">Runden pro Klasse</h2>
               {/* @ts-ignore */}
