@@ -37,7 +37,7 @@ export default function NewLapOverlay({
       <div className="container absolute left-1/2 top-1/2 z-50 flex hidden aspect-square h-screen w-screen -translate-x-1/2 -translate-y-1/2 items-center justify-center">
         <div className="z-50 flex aspect-square h-[300%] w-[300%] grow items-center justify-center rounded-full bg-success opacity-0">
           <h1 className="z-50 animate-[showText_1s_ease-in-out] text-5xl font-bold text-white">
-            {lapCount}. Runde
+            Runde {lapCount}
           </h1>
         </div>
       </div>

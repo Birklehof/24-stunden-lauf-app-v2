@@ -3,7 +3,9 @@ import { firebase } from '@/lib/firebase/admin';
 
 // Used in pages/ranking.tsx
 export async function getRunnersWithLapCount(): Promise<RunnerWithLapCount[]> {
-  const runners = await firebase.collection('apps/24-stunden-lauf/runners').get();
+  const runners = await firebase
+    .collection('apps/24-stunden-lauf/runners')
+    .get();
 
   // Get lap count for each runner
   const runnersWithLaps = await Promise.all(
@@ -48,7 +50,9 @@ export async function getRunner(email: string): Promise<Runner> {
 
 // Used in pages/assistant/index.tsx
 export async function getRunnersDict(): Promise<{ [id: string]: Runner }> {
-  const runners = await firebase.collection('apps/24-stunden-lauf/runners').get();
+  const runners = await firebase
+    .collection('apps/24-stunden-lauf/runners')
+    .get();
 
   const runnersDict: { [id: string]: Runner } = {};
 
@@ -63,24 +67,14 @@ export async function getRunnersDict(): Promise<{ [id: string]: Runner }> {
 }
 
 // Used in pages/runner/charts.tsx
-export async function getLapsInHour(hour: number): Promise<number> {
-  let fromHour = new Date(Date.now())
-  let toHour = new Date(Date.now())
-
-  fromHour.setHours(hour)
-  fromHour.setMinutes(0)
-  fromHour.setSeconds(0)
-  fromHour.setMilliseconds(0)
-
-  toHour.setHours(hour)
-  toHour.setMinutes(59)
-  toHour.setSeconds(59)
-  toHour.setMilliseconds(999)
+export async function getLapsInHour(fromHour: Date): Promise<number> {
+  let toHour = new Date(fromHour);
+  toHour.setHours(toHour.getHours() + 1);
 
   const lapCount = await firebase
     .collection('apps/24-stunden-lauf/laps')
     .where('createdAt', '>=', fromHour)
-    .where('createdAt', '<=', toHour)
+    .where('createdAt', '<', toHour)
     .count()
     .get();
 

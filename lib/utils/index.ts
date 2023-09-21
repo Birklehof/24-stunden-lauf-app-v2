@@ -116,12 +116,14 @@ export function filterRunner(
     }
   }
 
-  return !filterName || runner.name?.includes(filterName);
+  return (
+    !filterName || runner.name?.toLowerCase().includes(filterName.toLowerCase())
+  );
 }
 
 export function formatKilometer(number: number | null) {
   if (!number) {
-    return '0.00'
+    return '0.00';
   }
 
   return (number / 1000).toFixed(

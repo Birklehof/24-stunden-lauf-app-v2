@@ -62,7 +62,7 @@ export async function getRunner(email: string): Promise<Runner> {
 // Used in pages/assistant/create-runner.tsx
 export async function createRunner(name: string): Promise<number> {
   if (!name) {
-    throw new Error('Invalid name');
+    throw new Error('Ungültiger Name');
   }
 
   const newNumberQuery = query(

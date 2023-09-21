@@ -6,7 +6,6 @@ import { Lap, Runner } from '@/lib/interfaces';
 import {
   assistantNavItems,
   themedErrorToast,
-  themedPromiseToast,
 } from '@/lib/utils/';
 import { deleteLap } from '@/lib/utils/firebase/frontend';
 import ListItem from '@/components/ListItem';
@@ -46,6 +45,7 @@ function AssistantIndexPage({
       .then((result) => {
         const newLap = result.data as Lap;
 
+        // Add new lap to list
         setCreatedLaps([newLap, ...createdLaps]);
       })
       .catch((error) => {
@@ -59,23 +59,19 @@ function AssistantIndexPage({
   }
 
   async function deleteLapHandler(lapId: string) {
-    themedPromiseToast(deleteLap(lapId), {
-      pending: 'Runde wird gelöscht',
-      success: 'Runde erfolgreich gelöscht',
-      error: {
-        render: ({ data }: any) => {
-          if (data.message) {
-            return data.message;
-          } else if (typeof data === 'string') {
-            return data;
-          }
-          return 'Fehler beim Löschen der Runde';
-        },
-      },
-    }).then(() => {
-      // Filer out deleted lap
-      setCreatedLaps(createdLaps?.filter((lap) => lap.id !== lapId) || null);
-    });
+    await deleteLap(lapId)
+      .then(() => {
+        // Filer out deleted lap
+        setCreatedLaps(createdLaps?.filter((lap) => lap.id !== lapId) || null);
+      })
+      .catch((error) => {
+        themedErrorToast(error.message, {
+          position: 'bottom-center',
+          autoClose: 3000,
+          draggable: true,
+          hideProgressBar: true,
+        });
+      });
   }
 
   return (
@@ -142,7 +138,7 @@ function AssistantIndexPage({
                     >
                       <button
                         disabled={!lap.id}
-                        className="btn-error btn-outline btn-square btn-sm btn hidden text-error md:flex"
+                        className="btn-outline btn-error btn-square btn-sm btn hidden text-error md:flex"
                         aria-label="Runde löschen"
                         onClick={async () => await deleteLapHandler(lap.id)}
                       >

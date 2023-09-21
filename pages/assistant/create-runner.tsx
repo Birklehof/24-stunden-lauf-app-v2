@@ -28,9 +28,9 @@ function AssistantCreateRunnerPage() {
       pending: 'Läufer wird erstellt...',
       success: 'Läufer wurde erstellt!',
       error: {
-        render: (error) => {
-          if (error instanceof Error) {
-            return error.message;
+        render: ({ data }: any) => {
+          if (data instanceof Error) {
+            return data.message;
           }
           return 'Unbekannter Fehler';
         },
@@ -38,6 +38,9 @@ function AssistantCreateRunnerPage() {
     })
       .then((number) => {
         setNumber(number);
+      })
+      .catch(() => {
+        // Do nothing
       })
       .finally(() => {
         setSubmitting(false);

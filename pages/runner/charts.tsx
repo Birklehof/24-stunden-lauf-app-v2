@@ -20,7 +20,12 @@ import {
   getRunnersWithLapCount,
 } from '@/lib/utils/firebase/backend';
 import Menu from '@/components/Menu';
-import { formatKilometer, hslToHex, runnerNavItems } from '@/lib/utils';
+import {
+  formatKilometer,
+  hslToHex,
+  runnerNavItems,
+  themedErrorToast,
+} from '@/lib/utils';
 import Stat from '@/components/Stat';
 import Loading from '@/components/Loading';
 import { Md5 } from 'ts-md5';
@@ -89,21 +94,26 @@ export async function getStaticProps() {
     ])
   );
 
-  const n = 23;
+  // Get the 24 hours before the end of the event
+  const hoursBeforeEnd = Array.from({ length: 24 }, (_, i) => i + 1).map(
+    (i) => {
+      const date = new Date('2023-09-23T15:00:00.000+02:00'); // TODO: Change to not be hardcoded
+      date.setHours(date.getHours() - i);
+      return date;
+    }
+  );
+
+  // For each hour, get the number of laps
   const lapCountByHour = Object.fromEntries(
     await Promise.all(
-      Array.from({ length: n }, (_, i) => i + 1).map(async (i) => {
-        const currentHour = new Date().getHours();
-
-        const label = new Date(
-          (currentHour - i + 2) * 60 * 60 * 1000
-        ).toLocaleString('de-DE', {
+      hoursBeforeEnd.map(async (date) => {
+        const label = date.toLocaleString('de-DE', {
           hour: '2-digit',
           minute: '2-digit',
           timeZone: 'Europe/Berlin',
         });
 
-        return [label, await getLapsInHour(currentHour - i + 1)];
+        return [label, await getLapsInHour(date)];
       })
     )
   );
@@ -166,6 +176,7 @@ function RunnerGraphsPage({
   const [cardColor, setCardColor] = useState<string>('white');
 
   useEffect(() => {
+    // FIXME: This doesn't update when the theme changes
     const style = getComputedStyle(document.body);
     setTextColor(hslToHex(style.getPropertyValue('--bc')));
     setCardColor(hslToHex(style.getPropertyValue('--b1')));
@@ -173,9 +184,13 @@ function RunnerGraphsPage({
 
   useEffect(() => {
     if (user.email) {
-      getRunner(user.email).then(async (runner) => {
-        setRunner(runner);
-      });
+      getRunner(user.email)
+        .then(async (runner) => {
+          setRunner(runner);
+        })
+        .catch((error) => {
+          themedErrorToast(error.message);
+        });
     }
   }, [user]);
 
@@ -330,6 +345,8 @@ function RunnerGraphsPage({
         },
       },
       y: {
+        min: 0,
+        suggestedMax: 10,
         border: {
           display: false,
         },

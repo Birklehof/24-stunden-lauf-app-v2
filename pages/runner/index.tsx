@@ -10,31 +10,44 @@ import { AuthAction, useUser, withUser, withUserSSR } from 'next-firebase-auth';
 import { getPosition, syncLapCount } from '@/lib/utils/firebase/frontend';
 import { useEffect, useState } from 'react';
 import Menu from '@/components/Menu';
-import { formatKilometer, runnerNavItems } from '@/lib/utils/';
+import {
+  formatKilometer,
+  runnerNavItems,
+  themedErrorToast,
+} from '@/lib/utils/';
 import StatDivider from '@/components/StatDivider';
 
 export const getServerSideProps = withUserSSR({
   whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
   // @ts-ignore
 })(async ({ user }) => {
-  // Get the user with the email
-  if (user && user.email) {
-    const runner = await getRunner(user.email);
+  if (!user?.email) {
     return {
       props: {
-        runner,
+        runner: null,
       },
     };
   }
 
-  return {
-    props: {
-      runner: null,
-    },
-  };
+  return await getRunner(user?.email)
+    .then((runner) => {
+      console.log(runner);
+      return {
+        props: {
+          runner,
+        },
+      };
+    })
+    .catch(() => {
+      return {
+        props: {
+          runner: null,
+        },
+      };
+    });
 });
 
-function RunnerIndexPage({ runner }: { runner: Runner }) {
+function RunnerIndexPage({ runner }: { runner: Runner | null }) {
   const user = useUser();
 
   const [lapCount, setLapCount] = useState<number | undefined>(undefined);
@@ -47,24 +60,26 @@ function RunnerIndexPage({ runner }: { runner: Runner }) {
   );
 
   useEffect(() => {
-    if (!runner.id) {
+    if (!runner?.id) {
       return;
     }
+
     syncLapCount(runner.id, setLapCount);
   }, [runner]);
 
   useEffect(() => {
-    if (!lapCount) {
+    if (lapCount === undefined) {
       return;
     }
 
     getPosition(lapCount).then((position) => {
+      console.log(position);
       setPosition(position);
     });
   }, [lapCount]);
 
   async function setGoalHandler(newGoal: number) {
-    // make a post request to set the goal
+    // Make a post request to set the goal
     await fetch('/api/runner/set-goal', {
       method: 'POST',
       headers: {
@@ -73,10 +88,18 @@ function RunnerIndexPage({ runner }: { runner: Runner }) {
       body: JSON.stringify({
         goal: newGoal,
       }),
-    });
+    })
+      .then(() => {
+        // Reload the page
+        window.location.reload();
+      })
+      .catch((error) => {
+        themedErrorToast(error.message);
+      });
+  }
 
-    // Reload the page
-    window.location.reload();
+  if (!runner?.id) {
+    return <Loading />;
   }
 
   if (!runner?.goal) {
@@ -126,7 +149,10 @@ function RunnerIndexPage({ runner }: { runner: Runner }) {
           <StatDivider />
           <Stat value={position} label="Platz" />
           <StatDivider />
-          <Stat value={lapCount && formatKilometer(lapCount * distancePerLap)} label="km" />
+          <Stat
+            value={lapCount && formatKilometer(lapCount * distancePerLap)}
+            label="km"
+          />
         </div>
       </main>
     </>
