@@ -19,7 +19,7 @@ export default function Menu({ navItems, signOut: signOutAction }: MenuProps) {
             <Link
               key={item.name}
               href={item.href}
-              className="btn-ghost btn-square btn-sm btn justify-center sm:btn-md"
+              className="btn-ghost btn-square btn justify-center"
               aria-label={item.name}
             >
               <Icon name={item.icon} />
@@ -29,7 +29,7 @@ export default function Menu({ navItems, signOut: signOutAction }: MenuProps) {
         <div className="divider divider-horizontal !m-0 landscape:divider-vertical" />
         <button
           onClick={signOutAction}
-          className="btn-ghost btn-square btn-sm btn text-error sm:btn-md"
+          className="btn-ghost btn-square btn text-error"
           aria-label="Logout"
         >
           <Icon name="LogoutIcon" />
