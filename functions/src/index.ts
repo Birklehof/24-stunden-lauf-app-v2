@@ -23,7 +23,7 @@ class LapTooEarlyError extends Error {
 export const createLap = onCall(
   {
     region: 'europe-west1',
-    minInstances: 0, // TODO: Set to 4 before release
+    minInstances: 4, // TODO: Set to 4 before release
     maxInstances: 10,
   },
   async (request) => {
