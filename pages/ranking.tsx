@@ -62,7 +62,7 @@ function RankingPage({
   return (
     <>
       <Head title="Läufer" />
-      <main className="main !h-auto !py-0">
+      <main className="main min-h-screen !h-auto !py-0">
         <SearchBar
           backLink={
             user?.id === process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID

@@ -93,7 +93,7 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
     return (
       <>
         <Head title="Läufer" />
-        <main className="hero min-h-screen bg-base-200 portrait:pb-16">
+        <main className="hero h-full bg-base-200">
           <NewLapOverlay lapCount={lapCount} />
           <div className="flex max-w-md flex-col gap-4 p-8">
             <h1 className="text-2xl font-bold">
@@ -127,10 +127,10 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
   return (
     <>
       <Head title="Läufer" />
-      <main className="hero min-h-screen bg-base-200 portrait:pb-16">
+      <main className="hero h-screen bg-base-200 overflow-hidden">
         <Menu navItems={runnerNavItems} signOut={user.signOut} />
         <NewLapOverlay lapCount={lapCount} />
-        <div className="flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row">
+        <div className="flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row portrait:pb-16">
           <Stat value={runner?.number} label="Nr." />
           <StatDivider />
           <Stat value={lapCount} label="Runden" />
