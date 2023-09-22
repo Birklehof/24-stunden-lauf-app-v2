@@ -27,7 +27,9 @@
 
 /* General layout */
 .main {
-  @apply flex w-full h-screen flex-col items-center justify-start bg-base-200 p-2;
+  height: 100vh;
+  height: 100dvh;
+  @apply flex w-full flex-col items-center justify-start bg-base-200 p-2;
 }
 
 .search-bar {

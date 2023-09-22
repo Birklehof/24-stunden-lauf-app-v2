@@ -127,7 +127,7 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
   return (
     <>
       <Head title="Läufer" />
-      <main className="hero h-screen bg-base-200 overflow-hidden">
+      <main className="hero !h-[100dvh] h-[100vh] bg-base-200">
         <Menu navItems={runnerNavItems} signOut={user.signOut} />
         <NewLapOverlay lapCount={lapCount} />
         <div className="flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row portrait:pb-16">
