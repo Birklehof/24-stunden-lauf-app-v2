@@ -108,6 +108,7 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
               type="number"
               value={newGoal}
               inputMode="numeric"
+              min={0}
               onChange={(e) => setNewGoal(e.target.value)}
             />
             <button
