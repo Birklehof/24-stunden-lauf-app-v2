@@ -381,8 +381,8 @@ function RunnerGraphsPage({
       <Head title="Läufer Details" />
       <Menu navItems={runnerNavItems} signOut={user.signOut} />
 
-      <main className="main relative flex flex-col overflow-auto">
-        <div className="flex w-full max-w-2xl flex-col gap-3 bg-base-200 p-1 portrait:mb-16">
+      <main className="main !h-auto relative flex flex-col">
+        <div className="flex w-full max-w-2xl flex-col gap-3 bg-base-200 p-1 portrait:mb-[4.8rem]">
           <div className="card-compact card bg-base-100">
             <div className="card-body">
               <span className="flex gap-1">

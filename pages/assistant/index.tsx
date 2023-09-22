@@ -61,6 +61,8 @@ function AssistantIndexPage({
   async function deleteLapHandler(lapId: string) {
     await deleteLap(lapId)
       .then(() => {
+        // Focus input field
+        document.getElementById('number')?.focus();
         // Filer out deleted lap
         setCreatedLaps(createdLaps?.filter((lap) => lap.id !== lapId) || null);
       })

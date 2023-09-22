@@ -14,16 +14,16 @@ import {
 import { Runner, Lap } from '@/lib/interfaces';
 import { firebase } from '@/lib/firebase';
 
-// Used in pages/runner/index.tsx
-export async function getPosition(lapCount: number): Promise<number> {
-  const positionQuery = query(
-    collection(firebase, 'apps/24-stunden-lauf/runners'),
-    where('lapCount', '>', lapCount)
-  );
-  const positionSnapshot = await getCountFromServer(positionQuery);
-  const position = positionSnapshot.data().count || 0;
-  return position + 1;
-}
+// Used in pages/runner/index.tsx FIXME: this function is bullshit ⇾ probably ai generated
+// export async function getPosition(lapCount: number): Promise<number> {
+//   const positionQuery = query(
+//     collection(firebase, 'apps/24-stunden-lauf/runners'),
+//     where('lapCount', '>', lapCount)
+//   );
+//   const positionSnapshot = await getCountFromServer(positionQuery);
+//   const position = positionSnapshot.data().count || 0;
+//   return position + 1;
+// }
 
 // Used in pages/runner/index.tsx
 export async function syncLapCount(runnerId: string, updateFunction: Function) {

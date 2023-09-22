@@ -7,7 +7,7 @@ import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues'
 import { getRunner } from '@/lib/utils/firebase/backend';
 import { Runner } from '@/lib/interfaces';
 import { AuthAction, useUser, withUser, withUserSSR } from 'next-firebase-auth';
-import { getPosition, syncLapCount } from '@/lib/utils/firebase/frontend';
+import { syncLapCount } from '@/lib/utils/firebase/frontend';
 import { useEffect, useState } from 'react';
 import Menu from '@/components/Menu';
 import {
@@ -31,7 +31,6 @@ export const getServerSideProps = withUserSSR({
 
   return await getRunner(user?.email)
     .then((runner) => {
-      console.log(runner);
       return {
         props: {
           runner,
@@ -51,7 +50,6 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
   const user = useUser();
 
   const [lapCount, setLapCount] = useState<number | undefined>(undefined);
-  const [position, setPosition] = useState<number | undefined>(undefined);
   const [newGoal, setNewGoal] = useState<string>('20');
 
   const [distancePerLap] = useRemoteConfig(
@@ -66,17 +64,6 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
 
     syncLapCount(runner.id, setLapCount);
   }, [runner]);
-
-  useEffect(() => {
-    if (lapCount === undefined) {
-      return;
-    }
-
-    getPosition(lapCount).then((position) => {
-      console.log(position);
-      setPosition(position);
-    });
-  }, [lapCount]);
 
   async function setGoalHandler(newGoal: number) {
     // Make a post request to set the goal
@@ -146,8 +133,6 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
           <Stat value={runner?.number} label="Nr." />
           <StatDivider />
           <Stat value={lapCount} label="Runden" />
-          <StatDivider />
-          <Stat value={position} label="Platz" />
           <StatDivider />
           <Stat
             value={lapCount && formatKilometer(lapCount * distancePerLap)}

@@ -62,7 +62,7 @@ function RankingPage({
   return (
     <>
       <Head title="Läufer" />
-      <main className="main !py-0">
+      <main className="main !h-auto !py-0">
         <SearchBar
           backLink={
             user?.id === process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID
@@ -87,7 +87,10 @@ function RankingPage({
               setFilterValue: setFilterClasses,
               filterOptions: [
                 { value: '', label: 'Alle Klassen' },
-                ...classes.map((_class) => ({ value: _class, label: _class })),
+                ...classes.map((_class) => ({
+                  value: _class,
+                  label: _class,
+                })),
               ],
             },
             {
@@ -100,6 +103,7 @@ function RankingPage({
             },
           ]}
         />
+
         <div className="vertical-list">
           {/* Last updated */}
           <div className="flex w-full justify-center gap-1 text-center text-sm">
