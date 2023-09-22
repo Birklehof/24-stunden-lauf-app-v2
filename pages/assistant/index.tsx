@@ -81,7 +81,7 @@ function AssistantIndexPage({
       <Head title="Assistent" />
       <main className="main !py-0">
         <Menu navItems={assistantNavItems} signOut={user.signOut} />
-        <div className="grid !h-screen w-full grid-cols-2 justify-around landscape:pl-10">
+        <div className="grid !h-[100dvh] h-[100vh] w-full grid-cols-2 justify-around landscape:pl-10">
           <section className="flex flex-col items-center justify-center gap-2">
             <div className="card rounded-xl bg-base-100 shadow-xl">
               <div className="card-body p-2">

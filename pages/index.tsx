@@ -15,7 +15,7 @@ function LoginPage() {
   return (
     <>
       <Head title="Anmeldung" />
-      <main className="md:p-4 flex h-screen flex-col items-center justify-center gap-x-16 gap-y-6 bg-base-200 md:flex-row">
+      <main className="md:p-4 flex !h-[100dvh] h-[100vh] flex-col items-center justify-center gap-x-16 gap-y-6 bg-base-200 md:flex-row">
         <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold md:text-right">
           {appName}
         </h1>
