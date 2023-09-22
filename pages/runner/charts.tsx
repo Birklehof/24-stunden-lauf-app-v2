@@ -43,8 +43,8 @@ export async function getStaticProps() {
     (acc: { [key: string]: number }, cur) => ({
       ...acc,
       // @ts-ignore
-      [cur.type == 'student' ? cur.house || '' : 'Extern (Kollegium)']:
-        (acc[cur.type == 'student' ? cur.house || '' : 'Extern (Kollegium)'] ||
+      [cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter)']:
+        (acc[cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter)'] ||
           0) + cur.lapCount,
     }),
     {}
@@ -55,8 +55,8 @@ export async function getStaticProps() {
     (acc: { [key: string]: number }, cur) => ({
       ...acc,
       // @ts-ignore
-      [cur.type == 'student' ? cur.house || '' : 'Extern (Kollegium)']:
-        (acc[cur.type == 'student' ? cur.house || '' : 'Extern (Kollegium)'] ||
+      [cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter)']:
+        (acc[cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter)'] ||
           0) + 1,
     }),
     {}
