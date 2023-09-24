@@ -43,8 +43,8 @@ export async function getStaticProps() {
     (acc: { [key: string]: number }, cur) => ({
       ...acc,
       // @ts-ignore
-      [cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter)']:
-        (acc[cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter)'] ||
+      [cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter + Gäste)']:
+        (acc[cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter + Gäste)'] ||
           0) + cur.lapCount,
     }),
     {}
@@ -55,8 +55,8 @@ export async function getStaticProps() {
     (acc: { [key: string]: number }, cur) => ({
       ...acc,
       // @ts-ignore
-      [cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter)']:
-        (acc[cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter)'] ||
+      [cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter + Gäste)']:
+        (acc[cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter + Gäste)'] ||
           0) + 1,
     }),
     {}
@@ -77,6 +77,7 @@ export async function getStaticProps() {
     }),
     {}
   );
+  delete lapCountByClass[''];
 
   // Count how many laps each class has on average, the class is a property of the runner
   const runnersPerClass: { [key: string]: number } = runnersWithLapCount.reduce(
