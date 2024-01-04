@@ -44,7 +44,7 @@ export const createLap = onCall(
 
     // Check if there is a runner with the specified number
     const runnerQuery = await firestore
-      .collection('apps/24-stunden-lauf/runners')
+      .collection('runners')
       .where('number', '==', number)
       .limit(1)
       .get();
@@ -59,7 +59,7 @@ export const createLap = onCall(
     };
 
     const runnerRef = firestore.doc(
-      `apps/24-stunden-lauf/runners/${runner.id}`
+      `runners/${runner.id}`
     );
 
     try {
@@ -85,13 +85,14 @@ export const createLap = onCall(
 
         // Add the new lap
         const newLapRef = firestore
-          .collection('apps/24-stunden-lauf/laps')
+          .collection('laps')
           .doc();
         transaction.set(newLapRef, newLap);
 
         // Update the runner
         transaction.update(runnerRef, {
           lastLapCreatedAt: now,
+          laps: runnerDoc.data()?.laps + 1,
         });
 
         // Return the new lap
@@ -117,7 +118,7 @@ export const createLap = onCall(
 );
 
 export const resetLastLapCreatedAt = onDocumentDeleted(
-  'apps/24-stunden-lauf/laps/{lapId}',
+  'laps/{lapId}',
   async (event) => {
     const firestore = getFirestore();
     const snapshot = event.data;
@@ -133,8 +134,9 @@ export const resetLastLapCreatedAt = onDocumentDeleted(
       return;
     }
 
-    await firestore.doc(`apps/24-stunden-lauf/runners/${runnerId}`).update({
+    await firestore.doc(`runners/${runnerId}`).update({
       lastLapCreatedAt: null,
+      laps: data.laps - 1,
     });
   }
 );

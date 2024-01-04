@@ -6,5 +6,17 @@
     "Neubirkle",
     "Petersbau",
     "Unauthed"
-  ]
+  ],
+  "folder-path-color.folders": [
+    { "path": "firebase", "color":"green", "symbol": "🔥", "tooltip": "Firebase config (rules and indexes)" },
+    { "path": "functions", "color":"green", "symbol": "🔥", "tooltip": "Code of firebase functions" },
+    { "path": "cypress", "color": "cyan", "tooltip": "Testsuite" },
+    { "path": ".vscode", "color": "blue", "tooltip": "VSCode config" },
+    { "path": ".next", "color": "blue", "tooltip": "Next temp files" },
+    { "path": "lib", "color": "yellow" },
+    { "path": "components", "color": "yellow" },
+    { "path": "pages", "color": "yellow" },
+    { "path": "public", "color": "magenta" },
+    { "path": "styles", "color": "magenta" }
+]
 }

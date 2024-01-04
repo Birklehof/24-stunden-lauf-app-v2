@@ -1,3 +1,10 @@
+# 24-Stunden-Lauf-App v2
+
+## Useful extensions
+
+- [Folder Path Color](https://marketplace.visualstudio.com/items?itemName=VisbyDev.folder-path-color)
+- [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
