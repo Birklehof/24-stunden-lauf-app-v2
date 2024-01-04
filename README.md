@@ -9,6 +9,7 @@
 
 ### Wichtige Befehle
 
+- `yarn` - Installiert alle Abhängigkeiten (**Wichtig! Diesen Befehl im Haupt-Ordner ausführen!**)
 - `yarn dev` - Startet den Entwicklungsserver
 
 ## Firebase
