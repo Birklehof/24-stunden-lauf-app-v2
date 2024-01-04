@@ -54,7 +54,7 @@ schnell und unkompliziert, allerdings gibt es gewisse [**Einschränkungen durch 
 
 ## Sonstiges
 
-## Nützliche Erweiterungen
+### Nützliche Erweiterungen
 
 - [Folder Path Color](https://marketplace.visualstudio.com/items?itemName=VisbyDev.folder-path-color)
 - [Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
