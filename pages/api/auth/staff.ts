@@ -19,7 +19,7 @@ export default async function handler(
 
   // Check if code exists in database
   const querySnapshot = await firebase
-    .collection('apps/24-stunden-lauf/codes')
+    .collection('codes')
     .doc(req.body.code.toString())
     .get();
 

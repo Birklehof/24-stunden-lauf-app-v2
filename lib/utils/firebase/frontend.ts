@@ -17,7 +17,7 @@ import { firebase } from '@/lib/firebase';
 // Used in pages/runner/index.tsx FIXME: this function is bullshit ⇾ probably ai generated
 // export async function getPosition(lapCount: number): Promise<number> {
 //   const positionQuery = query(
-//     collection(firebase, 'apps/24-stunden-lauf/runners'),
+//     collection(firebase, 'runners'),
 //     where('lapCount', '>', lapCount)
 //   );
 //   const positionSnapshot = await getCountFromServer(positionQuery);
@@ -28,7 +28,7 @@ import { firebase } from '@/lib/firebase';
 // Used in pages/runner/index.tsx
 export async function syncLapCount(runnerId: string, updateFunction: Function) {
   const lapCountQuery = query(
-    collection(firebase, '/apps/24-stunden-lauf/laps'),
+    collection(firebase, 'laps'),
     where('runnerId', '==', runnerId)
   );
   const lapCountSnapshot = await getCountFromServer(lapCountQuery);
@@ -43,7 +43,7 @@ export async function syncLapCount(runnerId: string, updateFunction: Function) {
 // Used in pages/runner/charts.tsx
 export async function getRunner(email: string): Promise<Runner> {
   const runnerQuery = query(
-    collection(firebase, 'apps/24-stunden-lauf/runners'),
+    collection(firebase, 'runners'),
     where('email', '==', email)
   );
   const runnerSnapshot = await getDocs(runnerQuery);
@@ -66,7 +66,7 @@ export async function createRunner(name: string): Promise<number> {
   }
 
   const newNumberQuery = query(
-    collection(firebase, 'apps/24-stunden-lauf/runners'),
+    collection(firebase, 'runners'),
     orderBy('number', 'desc'),
     limit(1)
   );
@@ -76,20 +76,20 @@ export async function createRunner(name: string): Promise<number> {
     : newNumberSnapshot.docs[0].data().number + 1;
 
   const runner = { name, number: newNumber, type: 'guest' } as Runner;
-  await addDoc(collection(firebase, 'apps/24-stunden-lauf/runners'), runner);
+  await addDoc(collection(firebase, 'runners'), runner);
 
   return newNumber;
 }
 
 // Used in pages/assistant/index.tsx
 export async function deleteLap(lapId: string) {
-  await deleteDoc(doc(firebase, 'apps/24-stunden-lauf/laps', lapId));
+  await deleteDoc(doc(firebase, 'laps', lapId));
 }
 
 // Used in pages/assistant/index.tsx
 export async function getNewestLaps(numberOfLaps: number): Promise<Lap[]> {
   const lapsQuery = query(
-    collection(firebase, 'apps/24-stunden-lauf/laps'),
+    collection(firebase, 'laps'),
     orderBy('createdAt', 'desc'),
     limit(numberOfLaps)
   );

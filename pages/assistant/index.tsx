@@ -49,6 +49,7 @@ function AssistantIndexPage({
         setCreatedLaps([newLap, ...createdLaps]);
       })
       .catch((error) => {
+        console.log(error);
         themedErrorToast(`[${number}] ${error.message}`, {
           position: 'bottom-center',
           autoClose: 3000,

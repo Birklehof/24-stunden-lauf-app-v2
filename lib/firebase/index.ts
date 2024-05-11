@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { getFunctions } from 'firebase/functions';
+import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
+import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { getAuth, OAuthProvider } from 'firebase/auth';
 import { firebaseConfig } from '@/lib/firebase/firebaseConfig';
 
@@ -11,8 +11,8 @@ const auth = getAuth(app);
 const firebase = getFirestore(app);
 const functions = getFunctions(app, 'europe-west1');
 
-// connectFirestoreEmulator(firebase, '192.168.56.5', 8080);
-// connectFunctionsEmulator(functions, '192.168.56.5', 5001)
+// connectFirestoreEmulator(firebase, '192.168.56.3', 8080);
+// connectFunctionsEmulator(functions, '192.168.56.3', 5001)
 
 const microsoftOAuthProvider = new OAuthProvider('microsoft.com');
 microsoftOAuthProvider.setCustomParameters({

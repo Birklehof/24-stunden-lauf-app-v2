@@ -52,7 +52,7 @@ export default async function handler(
   }
 
   const runnerQuery = await firebase
-    .collection('apps/24-stunden-lauf/runners')
+    .collection('runners')
     .where('email', '==', user.email)
     .limit(1)
     .get();
@@ -67,7 +67,7 @@ export default async function handler(
   }
 
   const runnerRef = firebase.doc(
-    `apps/24-stunden-lauf/runners/${runnerQuery.docs[0].id}`
+    `runners/${runnerQuery.docs[0].id}`
   );
 
   await runnerRef.update({

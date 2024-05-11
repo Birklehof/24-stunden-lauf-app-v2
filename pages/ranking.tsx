@@ -44,6 +44,9 @@ function RankingPage({
   const [classes] = useRemoteConfig('classes', defaultClasses);
   const [houses] = useRemoteConfig('houses', defaultHouses);
 
+  console.log(defaultHouses);
+  console.log(houses);
+
   // Variables for filtering
   const [filterName, setFilterName] = useState('');
   const [filterType, setFilterType] = useState('');
@@ -98,7 +101,7 @@ function RankingPage({
               setFilterValue: setFilterHouse,
               filterOptions: [
                 { value: '', label: 'Alle Häuser' },
-                ...houses.map((house) => ({ value: house, label: house })),
+                ...houses.map((house) => ({ value: house.abbreviation, label: house.name })),
               ],
             },
           ]}
