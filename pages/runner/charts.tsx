@@ -237,7 +237,7 @@ function RunnerGraphsPage({
     ],
   };
 
-  const stringToColour = (str: string) => {
+  const stringToColor = (str: string) => {
     let hash = 0;
     // hash the string
     str = Md5.hashStr(str).toString();
@@ -267,7 +267,7 @@ function RunnerGraphsPage({
         data: Object.values(averageLapCountByHouse),
         fill: 'start',
         backgroundColor: Object.keys(lapCountByHouse).map((house) =>
-          stringToColour(house)
+          stringToColor(house)
         ),
         borderColor: cardColor,
       },
@@ -289,7 +289,7 @@ function RunnerGraphsPage({
         data: Object.values(lapCountByHouse),
         fill: 'start',
         backgroundColor: Object.keys(lapCountByHouse).map((house) =>
-          stringToColour(house)
+          stringToColor(house)
         ),
         borderColor: cardColor,
       },
@@ -304,7 +304,7 @@ function RunnerGraphsPage({
         data: Object.values(lapCountByClass),
         fill: 'start',
         backgroundColor: Object.keys(lapCountByClass).map((grade) =>
-          stringToColour(grade)
+          stringToColor(grade)
         ),
         borderColor: cardColor,
       },
@@ -319,7 +319,7 @@ function RunnerGraphsPage({
         data: Object.values(averageLapCountByClass),
         fill: 'start',
         backgroundColor: Object.keys(lapCountByClass).map((grade) =>
-          stringToColour(grade)
+          stringToColor(grade)
         ),
         borderColor: cardColor,
       },
