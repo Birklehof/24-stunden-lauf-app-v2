@@ -33,7 +33,7 @@
 }
 
 .search-bar {
-  @apply menu rounded-box menu-horizontal fixed left-1/2 -translate-x-1/2 z-10 w-[calc(100%-1rem)] lg:w-[calc(100%-1rem)] max-w-xl bg-base-100 p-2 shadow-md mt-2;
+  @apply menu rounded-box menu-horizontal fixed left-1/2 z-10 mt-2 w-[calc(100%-1rem)] max-w-xl -translate-x-1/2 bg-base-100 p-2 shadow-md lg:w-[calc(100%-1rem)];
 }
 
 .search-bar + * {
@@ -41,15 +41,15 @@
 }
 
 .vertical-list {
-  @apply grid w-full grid-cols-1 flex-col items-center gap-2 py-2 overflow-y-auto;
+  @apply grid w-full grid-cols-1 flex-col items-center gap-2 overflow-y-auto py-2;
 }
 
 .filling-card {
-  @apply card bg-base-100 shadow-md grow;
+  @apply card grow bg-base-100 shadow-md;
 }
 
 .centered-card {
-  @apply card bg-base-100 shadow-md max-w-xl mx-auto w-full;
+  @apply card mx-auto w-full max-w-xl bg-base-100 shadow-md;
 }
 
 .leading-zeros {

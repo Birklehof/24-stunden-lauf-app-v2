@@ -3,9 +3,7 @@ import { firebase } from '@/lib/firebase/admin';
 
 // Used in pages/ranking.tsx
 export async function getRunnersWithLapCount(): Promise<RunnerWithLapCount[]> {
-  const runners = await firebase
-    .collection('runners')
-    .get();
+  const runners = await firebase.collection('runners').get();
 
   // Get lap count for each runner
   const runnersWithLaps = await Promise.all(
@@ -50,9 +48,7 @@ export async function getRunner(email: string): Promise<Runner> {
 
 // Used in pages/assistant/index.tsx
 export async function getRunnersDict(): Promise<{ [id: string]: Runner }> {
-  const runners = await firebase
-    .collection('runners')
-    .get();
+  const runners = await firebase.collection('runners').get();
 
   const runnersDict: { [id: string]: Runner } = {};
 

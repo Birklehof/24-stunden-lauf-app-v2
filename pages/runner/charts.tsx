@@ -43,9 +43,14 @@ export async function getStaticProps() {
     (acc: { [key: string]: number }, cur) => ({
       ...acc,
       // @ts-ignore
-      [cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter + Gäste)']:
-        (acc[cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter + Gäste)'] ||
-          0) + cur.lapCount,
+      [cur.type == 'student'
+        ? cur.house || ''
+        : 'Extern (Mitarbeiter + Gäste)']:
+        (acc[
+          cur.type == 'student'
+            ? cur.house || ''
+            : 'Extern (Mitarbeiter + Gäste)'
+        ] || 0) + cur.lapCount,
     }),
     {}
   );
@@ -55,9 +60,14 @@ export async function getStaticProps() {
     (acc: { [key: string]: number }, cur) => ({
       ...acc,
       // @ts-ignore
-      [cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter + Gäste)']:
-        (acc[cur.type == 'student' ? cur.house || '' : 'Extern (Mitarbeiter + Gäste)'] ||
-          0) + 1,
+      [cur.type == 'student'
+        ? cur.house || ''
+        : 'Extern (Mitarbeiter + Gäste)']:
+        (acc[
+          cur.type == 'student'
+            ? cur.house || ''
+            : 'Extern (Mitarbeiter + Gäste)'
+        ] || 0) + 1,
     }),
     {}
   );
@@ -382,9 +392,9 @@ function RunnerGraphsPage({
       <Head title="Läufer Details" />
       <Menu navItems={runnerNavItems} signOut={user.signOut} />
 
-      <main className="main !h-auto relative flex flex-col">
+      <main className="main relative flex !h-auto flex-col">
         <div className="flex w-full max-w-2xl flex-col gap-3 bg-base-200 p-1 portrait:mb-[4.8rem]">
-          <div className="card-compact card bg-base-100">
+          <div className="card card-compact bg-base-100">
             <div className="card-body">
               <span className="flex gap-1">
                 <Icon name="InformationCircleIcon" />
@@ -404,7 +414,7 @@ function RunnerGraphsPage({
               </span>
             </div>
           </div>
-          <div className="card-compact card bg-base-100">
+          <div className="card card-compact bg-base-100">
             <div className="card-body">
               <h2 className="card-title">Fortschritt</h2>
               <p className="pb-2 text-base">

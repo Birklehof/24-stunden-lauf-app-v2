@@ -34,7 +34,7 @@ export default function useRemoteConfig<ValueType>(
           }
         })
         .catch((err) => {
-          console.error(err)
+          console.error(err);
         });
     }
   }, [name, defaultValue]);

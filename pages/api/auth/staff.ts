@@ -14,7 +14,7 @@ export default async function handler(
   if (!req.body.code) {
     return res.status(400).json({
       error: 'Missing auth code',
-    })
+    });
   }
 
   // Check if code exists in database

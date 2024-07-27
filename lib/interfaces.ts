@@ -1,6 +1,6 @@
 /**
  * Interfaces
- * 
+ *
  * @description Here you can find all interfaces that are relevant to the data model of the 24-Stunden-Lauf app. Less important interfaces are defined where they are used.
  */
 
@@ -8,7 +8,7 @@ import { Timestamp } from 'firebase/firestore';
 
 /**
  * @type Lap (Birklehofrunde)
- * 
+ *
  * @property {string} id - The firestore id of the lap
  * @property {string} runnerId - The firestore id of the associated runner
  * @property {Timestamp} createdAt - The time when the lap was created
@@ -21,7 +21,7 @@ export interface Lap {
 
 /**
  * @type Runner
- * 
+ *
  * @property {string} id - The firestore id of the runner
  * @property {number} number - The starting number of the runner
  * @property {string} name - The full name of the runner
@@ -29,7 +29,7 @@ export interface Lap {
  * @property {string} email - The email of the runner
  * @property {Timestamp} lastLapCreatedAt - The time when the last lap of the runner was created (might be null if longer than 2 minutes ago)
  * @property {number} goal - The goal of the runner
- * 
+ *
  * @property {string} studentId [optional] - The firestore id of the associated student (only for runners of type "student")
  * @property {string} house [optional] - The boarding house of the runner (only for runners of type "student")
  * @property {string} class [optional] - The school class of the runner (only for runners of type "student")
@@ -51,9 +51,9 @@ export interface Runner {
 
 /**
  * @type RunnerWithLapCount
- * 
+ *
  * @extends Runner
- * 
+ *
  * @property {number} lapCount - The number of laps the runner has completed
  */
 export interface RunnerWithLapCount extends Runner {
@@ -62,7 +62,7 @@ export interface RunnerWithLapCount extends Runner {
 
 /**
  * @type Staff (teachers, housekeepers, etc.)
- * 
+ *
  * @property {string} id - The firestore id of the staff member
  * @property {string} firstName - The first name of the staff member
  * @property {string} lastName - The last name of the staff member
@@ -77,7 +77,7 @@ export interface Staff {
 
 /**
  * @type Student
- * 
+ *
  * @property {string} id - The firestore id of the student
  * @property {number} number - The student number of the student (given by the students database)
  * @property {string} firstName - The first name of the student

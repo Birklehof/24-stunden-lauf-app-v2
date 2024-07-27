@@ -46,7 +46,7 @@ describe('<SearchBar />', () => {
     // When clicked the filter options should be visible
     cy.get('#filter-button').click();
     cy.get('select').should('be.visible');
-    
+
     // It should have the correct options
     cy.get('select').children().should('have.length', 4);
     cy.get('select').should('contain', 'Alle Typen');

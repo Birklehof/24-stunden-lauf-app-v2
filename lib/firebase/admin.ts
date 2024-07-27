@@ -8,7 +8,7 @@ const serviceAccount = JSON.parse(
 try {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: firebaseConfig.databaseURL
+    databaseURL: firebaseConfig.databaseURL,
   });
   console.log('Initialized.');
 } catch (error) {

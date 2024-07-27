@@ -130,7 +130,7 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
       <main className="hero !h-[100dvh] h-[100vh] bg-base-200">
         <Menu navItems={runnerNavItems} signOut={user.signOut} />
         <NewLapOverlay lapCount={lapCount} />
-        <div className="flex flex-col gap-x-3 gap-y-5 landscape:mb-0 landscape:flex-row portrait:pb-16">
+        <div className="flex flex-col gap-x-3 gap-y-5 portrait:pb-16 landscape:mb-0 landscape:flex-row">
           <Stat value={runner?.number} label="Nr." />
           <StatDivider />
           <Stat value={lapCount} label="Runden" />

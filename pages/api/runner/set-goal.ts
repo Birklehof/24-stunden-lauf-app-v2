@@ -66,9 +66,7 @@ export default async function handler(
     });
   }
 
-  const runnerRef = firebase.doc(
-    `runners/${runnerQuery.docs[0].id}`
-  );
+  const runnerRef = firebase.doc(`runners/${runnerQuery.docs[0].id}`);
 
   await runnerRef.update({
     goal,

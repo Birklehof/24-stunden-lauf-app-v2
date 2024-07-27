@@ -101,7 +101,10 @@ function RankingPage({
               setFilterValue: setFilterHouse,
               filterOptions: [
                 { value: '', label: 'Alle Häuser' },
-                ...houses.map((house) => ({ value: house.abbreviation, label: house.name })),
+                ...houses.map((house) => ({
+                  value: house.abbreviation,
+                  label: house.name,
+                })),
               ],
             },
           ]}

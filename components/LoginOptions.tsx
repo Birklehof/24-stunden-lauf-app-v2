@@ -22,7 +22,7 @@ export default function LoginOptions() {
         type: 'info',
       },
       error: 'Fehler beim Anmelden!',
-    })
+    });
   };
 
   const handleStaffAuth = async () => {

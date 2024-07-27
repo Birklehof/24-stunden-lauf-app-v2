@@ -12,7 +12,7 @@ export default function Layout({ children }: PropsWithChildren) {
   return (
     <>
       <button
-        className="btn-ghost btn-square btn absolute left-4 top-4 hidden landscape:flex z-50"
+        className="btn-ghost btn-square btn absolute left-4 top-4 z-50 hidden landscape:flex"
         onClick={toggle}
         aria-label="Dunkelmodus umschalten"
       >

@@ -17,7 +17,7 @@ export default function Stat({
       ) : (
         <span className="loading loading-dots loading-lg" />
       )}
-      <h2 className="text-base-400 text-center font-semibold opacity-80 max-w-[150px] sm:max-w-[200px]">
+      <h2 className="text-base-400 max-w-[150px] text-center font-semibold opacity-80 sm:max-w-[200px]">
         {label}
       </h2>
     </div>

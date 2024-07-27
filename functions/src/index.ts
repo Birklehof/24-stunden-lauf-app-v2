@@ -58,9 +58,7 @@ export const createLap = onCall(
       ...runnerQuery.docs[0].data(),
     };
 
-    const runnerRef = firestore.doc(
-      `runners/${runner.id}`
-    );
+    const runnerRef = firestore.doc(`runners/${runner.id}`);
 
     try {
       const newLap = await firestore.runTransaction(async (transaction) => {
@@ -84,9 +82,7 @@ export const createLap = onCall(
         };
 
         // Add the new lap
-        const newLapRef = firestore
-          .collection('laps')
-          .doc();
+        const newLapRef = firestore.collection('laps').doc();
         transaction.set(newLapRef, newLap);
 
         // Update the runner

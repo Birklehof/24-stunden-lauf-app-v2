@@ -1,14 +1,26 @@
 describe('Frontend redirect for unauthenticated users', function () {
-  it('/runner/index.tsx is redirected', check_frontend_path.bind(null, 'runner'));
-  it('/runner/charts.tsx is redirected', check_frontend_path.bind(null, 'runner/charts'));
+  it(
+    '/runner/index.tsx is redirected',
+    check_frontend_path.bind(null, 'runner')
+  );
+  it(
+    '/runner/charts.tsx is redirected',
+    check_frontend_path.bind(null, 'runner/charts')
+  );
 
-  it('/assistant/index.tsx is redirected', check_frontend_path.bind(null, 'assistant'));
+  it(
+    '/assistant/index.tsx is redirected',
+    check_frontend_path.bind(null, 'assistant')
+  );
   it(
     '/assistant/create-runner.tsx is redirected',
     check_frontend_path.bind(null, 'assistant/create-runner')
   );
 
-  it('/shared/ranking.tsx is redirected', check_frontend_path.bind(null, 'ranking'));
+  it(
+    '/shared/ranking.tsx is redirected',
+    check_frontend_path.bind(null, 'ranking')
+  );
 });
 
 // Not needed anymore, because Firebase functions replaced the backend

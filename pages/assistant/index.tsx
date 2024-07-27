@@ -3,10 +3,7 @@ import Head from '@/components/Head';
 import Loading from '@/components/Loading';
 import Icon from '@/components/Icon';
 import { Lap, Runner } from '@/lib/interfaces';
-import {
-  assistantNavItems,
-  themedErrorToast,
-} from '@/lib/utils/';
+import { assistantNavItems, themedErrorToast } from '@/lib/utils/';
 import { deleteLap } from '@/lib/utils/firebase/frontend';
 import ListItem from '@/components/ListItem';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
@@ -141,7 +138,7 @@ function AssistantIndexPage({
                     >
                       <button
                         disabled={!lap.id}
-                        className="btn-outline btn-error btn-square btn-sm btn hidden text-error md:flex"
+                        className="btn-error btn-outline btn-square btn-sm btn hidden text-error md:flex"
                         aria-label="Runde löschen"
                         onClick={async () => await deleteLapHandler(lap.id)}
                       >
