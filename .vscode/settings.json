@@ -25,7 +25,7 @@
     { "path": "cypress", "color": "cyan", "tooltip": "Testsuite" },
     { "path": ".vscode", "color": "blue", "tooltip": "VSCode config" },
     { "path": ".next", "color": "blue", "tooltip": "Next temp files" },
-    { "path": "lib", "color": "yellow" },
+    { "path": "lib", "color": "yellow", "symbol": "📚" },
     { "path": "components", "color": "yellow" },
     { "path": "pages", "color": "yellow" },
     { "path": "public", "color": "magenta" },
