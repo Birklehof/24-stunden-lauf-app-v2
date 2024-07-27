@@ -21,19 +21,24 @@ export default function ListItem({
 }: ListItemProps) {
   return (
     <div
-      className={`centered-card ${glass && '!bg-opacity-60'} ${
-        highlight && '!border border-primary'
-      }`}
+      className={`border-b-[2px] border-b-base-200 font-medium ${
+        glass && '!bg-opacity-60'
+      } ${highlight && '!border-b-4 !border-b-primary !font-bold'}`}
     >
-      <div className="card-body w-full flex-row p-1">
+      <div className="card-body w-full flex-row p-3">
         <div className="flex grow flex-col justify-center overflow-hidden text-ellipsis pl-1">
-          <div className="line-clamp-1 text-lg font-semibold">
-            {number != undefined && (
+          <div className="line-clamp-1 text-lg">
+            {number != undefined && number > 3 && (
               <>
                 <span className="opacity-20">
                   {'0'.repeat(3 - number.toString().length)}
                 </span>
                 <span className="pr-1">{number}</span>
+              </>
+            )}
+            {number != undefined && number < 3 && (
+              <>
+                <span className="px-2">{['🥇', '🥈', '🥉'][number - 1]}</span>
               </>
             )}
             {mainContent}

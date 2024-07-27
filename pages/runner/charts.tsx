@@ -33,6 +33,7 @@ import Icon from '@/components/Icon';
 import { useEffect, useState } from 'react';
 import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
 import { getRunner } from '@/lib/utils/firebase/frontend';
+import MenuPlaceholder from '@/components/MenuPlaceholder';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
@@ -390,10 +391,10 @@ function RunnerGraphsPage({
   return (
     <>
       <Head title="Läufer Details" />
-      <Menu navItems={runnerNavItems} signOut={user.signOut} />
+      <Menu navItems={runnerNavItems} />
 
-      <main className="main relative flex !h-auto flex-col">
-        <div className="flex w-full max-w-2xl flex-col gap-3 bg-base-200 p-1 portrait:mb-[4.8rem]">
+      <main className="main relative flex !h-auto flex-col !bg-base-200">
+        <div className="flex w-full max-w-2xl flex-col gap-3 p-1 portrait:mb-[4.8rem]">
           <div className="card card-compact bg-base-100">
             <div className="card-body">
               <span className="flex gap-1">
@@ -423,7 +424,7 @@ function RunnerGraphsPage({
               {runner?.goal ? (
                 <>
                   <progress
-                    className="progress-primary progress h-5 w-full rounded-full bg-base-200 shadow-inner"
+                    className="progress-primary progress h-5 w-full rounded-full bg-base-100 shadow-inner"
                     value={
                       runnersWithLapCount.find(
                         (runnerWithLapCount) =>
@@ -505,6 +506,8 @@ function RunnerGraphsPage({
           </div>
         </div>
       </main>
+
+      <MenuPlaceholder />
     </>
   );
 }

@@ -89,7 +89,7 @@ export default function LoginOptions() {
         Läufer
       </button>
       <div className="divider">
-        <p className="text-sm font-bold tracking-wider text-gray-300">ODER</p>
+        <p className="text-sm font-semibold tracking-wider opacity-60">ODER</p>
       </div>
       <button
         className="btn-primary btn-outline btn w-full"

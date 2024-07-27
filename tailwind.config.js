@@ -36,9 +36,10 @@ module.exports = {
         dark: {
           primary: '#A5C12A',
           secondary: '#ff0000',
-          accent: '#d9e5ec',
-          neutral: '#303236',
-          'base-100': '#303236',
+          accent: '#0c1012',
+          neutral: '#000000',
+          'base-100': '#000000',
+          'base-200': '#020303',
           success: '#07bc0c',
           warning: '#f1c40f',
           info: '#0275d8',

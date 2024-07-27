@@ -21,6 +21,11 @@ export const runnerNavItems: NavItem[] = [
     href: '/runner/charts',
     icon: 'ChartBarIcon',
   },
+  {
+    name: 'Einstellungen',
+    href: '/settings',
+    icon: 'CogIcon',
+  },
 ];
 export const assistantNavItems: NavItem[] = [
   {
@@ -37,6 +42,11 @@ export const assistantNavItems: NavItem[] = [
     name: 'Läufer hinzufügen',
     href: '/assistant/create-runner',
     icon: 'UserAddIcon',
+  },
+  {
+    name: 'Einstellungen',
+    href: '/settings',
+    icon: 'CogIcon',
   },
 ];
 

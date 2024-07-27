@@ -50,8 +50,9 @@ function AssistantCreateRunnerPage() {
   return (
     <>
       <Head title="Assistent" />
+      <Menu navItems={assistantNavItems} />
+
       <main className="main !justify-center">
-        <Menu navItems={assistantNavItems} signOut={user.signOut} />
         <div className="centered-card">
           <div className="card-body gap-3">
             {number != 0 ? (

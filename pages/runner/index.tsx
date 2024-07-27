@@ -6,7 +6,7 @@ import Stat from '@/components/Stat';
 import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues';
 import { getRunner } from '@/lib/utils/firebase/backend';
 import { Runner } from '@/lib/interfaces';
-import { AuthAction, useUser, withUser, withUserSSR } from 'next-firebase-auth';
+import { AuthAction, withUser, withUserSSR } from 'next-firebase-auth';
 import { syncLapCount } from '@/lib/utils/firebase/frontend';
 import { useEffect, useState } from 'react';
 import Menu from '@/components/Menu';
@@ -47,8 +47,6 @@ export const getServerSideProps = withUserSSR({
 });
 
 function RunnerIndexPage({ runner }: { runner: Runner | null }) {
-  const user = useUser();
-
   const [lapCount, setLapCount] = useState<number | undefined>(undefined);
   const [newGoal, setNewGoal] = useState<string>('20');
 
@@ -93,7 +91,7 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
     return (
       <>
         <Head title="Läufer" />
-        <main className="hero h-full bg-base-200">
+        <main className="hero h-full bg-base-100">
           <NewLapOverlay lapCount={lapCount} />
           <div className="flex max-w-md flex-col gap-4 p-8">
             <h1 className="text-2xl font-bold">
@@ -127,8 +125,10 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
   return (
     <>
       <Head title="Läufer" />
-      <main className="hero !h-[100dvh] h-[100vh] bg-base-200">
-        <Menu navItems={runnerNavItems} signOut={user.signOut} />
+      <Menu navItems={runnerNavItems}/>
+
+      {/* The dvh is for accounting for the search in mobile browsers that goes away when scrolling */}
+      <main className="hero !h-[100dvh] h-[100vh] bg-base-100">
         <NewLapOverlay lapCount={lapCount} />
         <div className="flex flex-col gap-x-3 gap-y-5 portrait:pb-16 landscape:mb-0 landscape:flex-row">
           <Stat value={runner?.number} label="Nr." />

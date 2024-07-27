@@ -13,7 +13,15 @@ import {
   defaultHouses,
 } from '@/lib/firebase/remoteConfigDefaultValues';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
-import { filterRunner, formatKilometer } from '@/lib/utils';
+import {
+  assistantNavItems,
+  filterRunner,
+  formatKilometer,
+  runnerNavItems,
+} from '@/lib/utils';
+import Menu from '@/components/Menu';
+import MenuPlaceholder from '@/components/MenuPlaceholder';
+import SearchBarPlaceholder from '@/components/SearchBarPlaceholder';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
@@ -44,9 +52,6 @@ function RankingPage({
   const [classes] = useRemoteConfig('classes', defaultClasses);
   const [houses] = useRemoteConfig('houses', defaultHouses);
 
-  console.log(defaultHouses);
-  console.log(houses);
-
   // Variables for filtering
   const [filterName, setFilterName] = useState('');
   const [filterType, setFilterType] = useState('');
@@ -65,7 +70,15 @@ function RankingPage({
   return (
     <>
       <Head title="Läufer" />
-      <main className="flex !h-auto !min-h-[100dvh] min-h-[100vh] w-full flex-col items-center justify-start bg-base-200">
+
+      {user.id === process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID ? (
+        <Menu navItems={assistantNavItems} />
+      ) : (
+        <Menu navItems={runnerNavItems} />
+      )}
+
+      <main className="flex !h-auto !min-h-[100dvh] min-h-[100vh] w-full flex-col items-center justify-start bg-base-100">
+        <SearchBarPlaceholder />
         <SearchBar
           backLink={
             user?.id === process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID
@@ -79,7 +92,7 @@ function RankingPage({
               filerValue: filterType,
               setFilterValue: setFilterType,
               filterOptions: [
-                { value: '', label: 'Alle Typen' },
+                { value: '', label: 'Alle Läufer' },
                 { value: 'student', label: 'Schüler' },
                 { value: 'staff', label: 'Mitarbeiter' },
                 { value: 'other', label: 'Gäste' },
@@ -111,23 +124,6 @@ function RankingPage({
         />
 
         <div className="vertical-list">
-          {/* Last updated */}
-          <div className="flex w-full justify-center gap-1 text-center text-sm">
-            <Icon name="InformationCircleIcon" />
-            Stand{' '}
-            {new Date(lastUpdated).toLocaleDateString('de-DE', {
-              weekday: 'long',
-              day: '2-digit',
-              month: '2-digit',
-              timeZone: 'Europe/Berlin',
-            })}{' '}
-            {new Date(lastUpdated).toLocaleString('de-DE', {
-              hour: '2-digit',
-              minute: '2-digit',
-              timeZone: 'Europe/Berlin',
-            })}
-            Uhr
-          </div>
           {runnersWithLapCount
             .filter((runnerWithLapCount) => {
               return filterRunner(runnerWithLapCount, {
@@ -144,48 +140,39 @@ function RankingPage({
                   highlight={runnerWithLapCount.email === user?.email}
                   key={runnerWithLapCount.number}
                   number={getPosition(runnerWithLapCount) + 1}
-                  mainContent={
-                    (['🥇', '🥈', '🥉'][getPosition(runnerWithLapCount)] ||
-                      '') + runnerWithLapCount.name
-                  }
+                  mainContent={runnerWithLapCount.name}
                 >
                   <div className="flex w-1/4 flex-row items-center justify-between pr-1">
                     <div className="pr-2">
-                      <div className="stat-value text-center text-lg font-semibold md:text-xl">
-                        {runnerWithLapCount.number}
-                      </div>
-                      <div className="stat-title -mt-2 text-center text-xs">
-                        Nr.
-                      </div>
-                    </div>
-                    <div className="pr-2">
-                      <div className="stat-value text-center text-lg font-semibold md:text-xl">
+                      <div className="text-center text-lg md:text-xl">
                         {runnerWithLapCount.lapCount.toString()}
-                      </div>
-                      <div className="stat-title -mt-2 text-center text-xs">
-                        Runden
-                      </div>
-                    </div>
-                    <div className="pr-2">
-                      <div className="stat-value text-center text-lg font-semibold md:text-xl">
-                        {runnerWithLapCount.lapCount &&
-                          formatKilometer(
-                            runnerWithLapCount.lapCount * distancePerLap
-                          )}
-                      </div>
-                      <div className="stat-title -mt-2 text-center text-xs">
-                        km
                       </div>
                     </div>
                   </div>
                 </ListItem>
               );
             })}
-          <div className="w-full text-center text-sm">
-            Keine weiteren Läufer
+          <div className="w-full p-3 text-center">Keine weiteren Läufer</div>
+          <div className="justify-left flex w-full gap-1 px-3 pt-10 text-center text-sm">
+            <Icon name="InformationCircleIcon" />
+            Stand{' '}
+            {new Date(lastUpdated).toLocaleDateString('de-DE', {
+              weekday: 'long',
+              day: '2-digit',
+              month: '2-digit',
+              timeZone: 'Europe/Berlin',
+            })}{' '}
+            {new Date(lastUpdated).toLocaleString('de-DE', {
+              hour: '2-digit',
+              minute: '2-digit',
+              timeZone: 'Europe/Berlin',
+            })}
+            Uhr
           </div>
         </div>
       </main>
+
+      <MenuPlaceholder />
     </>
   );
 }

@@ -27,13 +27,13 @@ export default function SearchBar({
           <Link
             href={backLink}
             aria-label="Zurück"
-            className="btn-ghost btn-square btn-sm btn"
+            className="btn-ghost btn-square btn"
           >
             <Icon name="ArrowLeftIcon" />
           </Link>
         )}
         <input
-          className="input-bordered input rounded-box input-sm w-10 grow"
+          className="input-bordered input rounded-box w-10 grow bg-accent"
           type="search"
           inputMode="search"
           placeholder="Suchen ..."
@@ -45,7 +45,7 @@ export default function SearchBar({
             <label
               id="filter-button"
               tabIndex={0}
-              className="btn-ghost btn-square btn-sm btn"
+              className="btn-ghost btn-square btn"
               aria-label="Filtern"
             >
               <Icon name="AdjustmentsIcon" />
@@ -53,12 +53,12 @@ export default function SearchBar({
 
             <div
               tabIndex={0}
-              className="dropdown-content menu rounded-box flex flex-col gap-3 bg-base-100 p-3 shadow"
+              className="dropdown-content menu rounded-box flex flex-col gap-3 p-3 shadow bg-accent overflow-x-hidden"
             >
               {filters?.map((filter) => (
                 <select
                   key={filter.filterOptions?.toString()}
-                  className="select-bordered select select-sm grow"
+                  className="select-bordered select select-sm grow bg-accent"
                   onChange={(e) => filter.setFilterValue(e.target.value)}
                   value={filter.filerValue}
                 >

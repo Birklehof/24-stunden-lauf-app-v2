@@ -11,7 +11,7 @@ export default function CustomErrorPage({
   return (
     <>
       <Head title="Seite nicht gefunden" />
-      <main className="main !justify-center bg-base-200 ">
+      <main className="main !justify-center bg-base-100 ">
         <div className="flex flex-col items-center gap-x-5 gap-y-4 landscape:flex-row">
           <h1 className="text-center text-6xl font-bold text-primary">
             {statusCode}

@@ -46,7 +46,7 @@ function AssistantIndexPage({
         setCreatedLaps([newLap, ...createdLaps]);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         themedErrorToast(`[${number}] ${error.message}`, {
           position: 'bottom-center',
           autoClose: 3000,
@@ -77,8 +77,9 @@ function AssistantIndexPage({
   return (
     <>
       <Head title="Assistent" />
+      <Menu navItems={assistantNavItems} />
+
       <main className="main !py-0">
-        <Menu navItems={assistantNavItems} signOut={user.signOut} />
         <div className="grid !h-[100dvh] h-[100vh] w-full grid-cols-2 justify-around landscape:pl-10">
           <section className="flex flex-col items-center justify-center gap-2">
             <div className="card rounded-xl bg-base-100 shadow-xl">
