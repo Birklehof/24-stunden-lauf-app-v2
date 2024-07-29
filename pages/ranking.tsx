@@ -177,7 +177,7 @@ function RankingPage({
           {user.email !== null && (
             <div className="tooltip tooltip-left" data-tip="Zu meinem Ergebnis">
               <button
-                className="btn-primary btn-circle btn fixed bottom-20 right-4 z-50 shadow-md"
+                className="btn-primary btn-circle aspect-square btn fixed bottom-20 right-4 z-50 shadow-md"
                 onClick={scrollToUser}
                 aria-label="Zu meinem Ergebnis"
               >

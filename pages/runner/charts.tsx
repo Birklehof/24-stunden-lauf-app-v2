@@ -458,7 +458,7 @@ function RunnerGraphsPage({
 
           <div className="flex flex-col gap-4 px-10 pb-6">
             <h2 className="text-xl font-semibold">Allgemein</h2>
-            <div className="grid grid-cols-2 gap-3 gap-y-7 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 gap-y-9 md:grid-cols-4">
               <div className="card-compact card flex items-center justify-center">
                 <Stat value={runnerCount} label="Teilnehmer" />
               </div>

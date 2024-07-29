@@ -15,12 +15,12 @@ function LoginPage() {
   return (
     <>
       <Head title="Anmeldung" />
-      <main className="main !justify-center gap-x-16 gap-y-6 bg-base-100 md:flex-row md:p-4">
-        <h1 className="text-2xl font-bold sm:text-4xl md:text-right md:text-5xl lg:text-6xl">
-          {appName}
-        </h1>
-        <div className="card card-compact w-full max-w-md md:card-normal md:bg-base-100 md:shadow-xl">
-          <div className="card-body">
+      <main className="max-w-none landscape:w-[66vw]">
+        <div className="my-auto flex w-full flex-col items-center justify-center gap-x-16 gap-y-6 md:p-4 landscape:flex-row">
+          <h1 className="text-3xl font-bold landscape:sm:text-4xl portrait:text-center landscape:text-right landscape:md:text-5xl landscape:lg:text-6xl">
+            {appName}
+          </h1>
+          <div className="w-full max-w-xs">
             <LoginOptions />
           </div>
         </div>
