@@ -6,9 +6,14 @@ export default function MenuPlaceholder() {
     <div
       aria-label="Menu"
       className="menu menu-horizontal z-0 w-full justify-center bg-accent p-2 shadow-xl"
+      aria-hidden
     >
       <div className="flex flex-row gap-2">
-        <Link href="" className="btn-ghost btn-square btn justify-center">
+        <Link
+          aria-hidden
+          href=""
+          className="btn-ghost btn-square btn justify-center"
+        >
           <Icon name="HomeIcon" />
         </Link>
       </div>

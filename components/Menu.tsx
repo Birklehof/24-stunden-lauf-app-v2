@@ -21,7 +21,7 @@ export default function Menu({ navItems, signOut: signOutAction }: MenuProps) {
           <Link
             key={item.name}
             href={item.href}
-            className={`btn-ghost btn-square btn justify-center ${
+            className={`btn-ghost btn-square btn justify-center text-accent-content ${
               pathname == item.href && '!text-primary'
             }`}
             aria-label={item.name}

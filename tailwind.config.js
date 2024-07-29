@@ -13,10 +13,10 @@ module.exports = {
       {
         light: {
           primary: '#A5C12A',
-          secondary: '#ff0000',
           accent: '#0c1012',
-          neutral: '#ffffff',
+          'accent-content': '#f2f2f2',
           'base-100': '#FFFFFF',
+          'base-content': '#202020',
           success: '#07bc0c',
           warning: '#f1c40f',
           info: '#0275d8',
@@ -35,16 +35,15 @@ module.exports = {
         },
         dark: {
           primary: '#A5C12A',
-          secondary: '#ff0000',
+          'primary-content': '#ffffff',
           accent: '#0c1012',
-          neutral: '#000000',
           'base-100': '#000000',
           'base-200': '#020303',
+          'base-content': '#f7f7f7',
           success: '#07bc0c',
           warning: '#f1c40f',
           info: '#0275d8',
           error: '#e74c3c',
-          text: '#ffffff',
 
           '--rounded-box': '0.3rem', // border radius rounded-box utility class, used in card and other large boxes
           '--rounded-btn': '0.3rem', // border radius rounded-btn utility class, used in buttons and similar element

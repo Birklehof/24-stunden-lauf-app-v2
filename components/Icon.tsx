@@ -6,5 +6,5 @@ interface IconProps {
 
 export default function Icon({ name = 'ArrowLeftIcon' }: IconProps) {
   const LookedUpIcon = lookupIcon(name, 'outline');
-  return <LookedUpIcon className="flex h-5 w-5" />;
+  return <LookedUpIcon className="flex h-6 w-6" />;
 }

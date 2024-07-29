@@ -16,6 +16,7 @@ import {
   themedErrorToast,
 } from '@/lib/utils/';
 import StatDivider from '@/components/StatDivider';
+import MenuPlaceholder from '@/components/MenuPlaceholder';
 
 export const getServerSideProps = withUserSSR({
   whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
@@ -125,21 +126,22 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
   return (
     <>
       <Head title="Läufer" />
-      <Menu navItems={runnerNavItems}/>
 
-      {/* The dvh is for accounting for the search in mobile browsers that goes away when scrolling */}
-      <main className="hero !h-[100dvh] h-[100vh] bg-base-100">
-        <NewLapOverlay lapCount={lapCount} />
-        <div className="flex flex-col gap-x-3 gap-y-5 portrait:pb-16 landscape:mb-0 landscape:flex-row">
+      <Menu navItems={runnerNavItems} />
+
+      <NewLapOverlay lapCount={lapCount} />
+
+      <main>
+        <div className="m-auto grid h-fit max-w-xl grid-cols-1 gap-10 landscape:grid-cols-3">
           <Stat value={runner?.number} label="Nr." />
-          <StatDivider />
           <Stat value={lapCount} label="Runden" />
-          <StatDivider />
           <Stat
             value={lapCount && formatKilometer(lapCount * distancePerLap)}
             label="km"
           />
         </div>
+
+        <MenuPlaceholder />
       </main>
     </>
   );

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
 interface ListItemProps {
+  id?: string;
   number?: number;
   mainContent: string;
   secondaryContent?: string;
@@ -11,6 +12,7 @@ interface ListItemProps {
 }
 
 export default function ListItem({
+  id,
   number,
   mainContent,
   secondaryContent,
@@ -21,6 +23,7 @@ export default function ListItem({
 }: ListItemProps) {
   return (
     <div
+      id={id}
       className={`border-b-[2px] border-b-base-200 font-medium ${
         glass && '!bg-opacity-60'
       } ${highlight && '!border-b-4 !border-b-primary !font-bold'}`}

@@ -2,42 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Inspiration: https://merakiui.gumroad.com/l/fdsmt */
 
 /* Scroll bar styles */
 /* width */
 ::-webkit-scrollbar {
   display: none;
-  width: 15px;
 }
-/* Track */
-/* ::-webkit-scrollbar-track {
-  background: rgb(230, 230, 230);
-} */
-/* Handle */
-/* ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-  border: 4px solid rgb(230, 230, 230);
-} */
-/* Handle on hover */
-/* ::-webkit-scrollbar-thumb:hover {
-  background: #555;
-} */
 
 /* General layout */
-.main {
-  height: 100vh;
-  height: 100dvh;
-  @apply flex w-full flex-col items-center justify-start bg-base-100 p-2;
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  @apply bg-base-100;
+}
+
+main {
+  min-height: 100vh;
+  min-height: 100dvh;
+  @apply mx-auto flex w-full max-w-xl flex-col justify-between;
 }
 
 .search-bar {
-  @apply menu menu-horizontal top-0 fixed left-0 z-10 w-full max-w-xl bg-accent p-3 landscape:w-[calc(100%-1rem)] landscape:left-1/2 landscape:-translate-x-1/2;
+  @apply menu menu-horizontal fixed left-0 top-0 z-10 w-full bg-accent p-3 text-accent-content;
 }
 
 .vertical-list {
-  @apply grid w-full grid-cols-1 flex-col items-center overflow-y-auto max-w-xl;
+  @apply grid w-full grid-cols-1 flex-col items-center overflow-y-auto;
 }
 
 .filling-card {

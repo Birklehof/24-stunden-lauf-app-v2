@@ -22,7 +22,7 @@ export default function SearchBar({
 }: SearchBarProps) {
   return (
     <div className="search-bar">
-      <div className="form-control flex grow flex-row justify-between gap-3">
+      <div className="form-control max-w-xl flex grow flex-row justify-between gap-3 m-auto">
         {backLink && (
           <Link
             href={backLink}

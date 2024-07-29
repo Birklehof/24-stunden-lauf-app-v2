@@ -238,20 +238,23 @@ function RunnerGraphsPage({
     ],
   };
 
-  const stringToColor = (str: string) => {
-    let hash = 0;
-    // hash the string
-    str = Md5.hashStr(str).toString();
-    str.split('').forEach((char) => {
-      hash = char.charCodeAt(0) + ((hash << 5) - hash);
-    });
-    let color = '#';
-    for (let i = 0; i < 3; i++) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += value.toString(16).padStart(2, '0');
-    }
-    return color;
-  };
+  const colors = [
+    '#68023f',
+    '#008169',
+    '#ef0096',
+    '#00dcb5',
+    '#ffcfe2',
+    '#003c86',
+    '#9400e6',
+    '#009ffa',
+    '#ff71fd',
+    '#7cfffa',
+    '#6a0213',
+    '#008607',
+    '#f60239',
+    '#00e307',
+    '#ffdc3d',
+  ];
 
   const averageLapCountByHouseData = {
     labels: Object.keys(lapCountByHouse).map((house) => {
@@ -259,7 +262,9 @@ function RunnerGraphsPage({
       return (
         houseAbbreviationTranslations.find(
           (translation) => translation.name === house
-        )?.abbreviation || house
+        )?.abbreviation ||
+        house ||
+        'Sonstige'
       );
     }),
     datasets: [
@@ -267,9 +272,7 @@ function RunnerGraphsPage({
         label: 'Laps',
         data: Object.values(averageLapCountByHouse),
         fill: 'start',
-        backgroundColor: Object.keys(lapCountByHouse).map((house) =>
-          stringToColor(house)
-        ),
+        backgroundColor: colors,
         borderColor: cardColor,
       },
     ],
@@ -281,7 +284,9 @@ function RunnerGraphsPage({
       return (
         houseAbbreviationTranslations.find(
           (translation) => translation.name === house
-        )?.abbreviation || house
+        )?.abbreviation ||
+        house ||
+        'Sonstige'
       );
     }),
     datasets: [
@@ -289,9 +294,7 @@ function RunnerGraphsPage({
         label: 'Laps',
         data: Object.values(lapCountByHouse),
         fill: 'start',
-        backgroundColor: Object.keys(lapCountByHouse).map((house) =>
-          stringToColor(house)
-        ),
+        backgroundColor: colors,
         borderColor: cardColor,
       },
     ],
@@ -304,9 +307,7 @@ function RunnerGraphsPage({
         label: 'Laps',
         data: Object.values(lapCountByClass),
         fill: 'start',
-        backgroundColor: Object.keys(lapCountByClass).map((grade) =>
-          stringToColor(grade)
-        ),
+        backgroundColor: colors,
         borderColor: cardColor,
       },
     ],
@@ -319,9 +320,7 @@ function RunnerGraphsPage({
         label: 'Laps',
         data: Object.values(averageLapCountByClass),
         fill: 'start',
-        backgroundColor: Object.keys(lapCountByClass).map((grade) =>
-          stringToColor(grade)
-        ),
+        backgroundColor: colors,
         borderColor: cardColor,
       },
     ],
@@ -336,7 +335,7 @@ function RunnerGraphsPage({
     elements: {
       line: {
         tension: 0,
-        borderWidth: 2,
+        borderWidth: 3,
         fill: 'start',
       },
       point: {
@@ -354,6 +353,9 @@ function RunnerGraphsPage({
         },
         ticks: {
           color: textColor,
+          font: {
+            size: 14,
+          },
         },
       },
       y: {
@@ -362,8 +364,14 @@ function RunnerGraphsPage({
         border: {
           display: false,
         },
+        grid: {
+          display: false,
+        },
         ticks: {
           color: textColor,
+          font: {
+            size: 14,
+          },
         },
       },
       xAxis: {
@@ -382,6 +390,9 @@ function RunnerGraphsPage({
         position: 'bottom',
         labels: {
           color: textColor,
+          font: {
+            size: 14,
+          },
         },
       },
     },
@@ -393,121 +404,119 @@ function RunnerGraphsPage({
       <Head title="Läufer Details" />
       <Menu navItems={runnerNavItems} />
 
-      <main className="main relative flex !h-auto flex-col">
-        <div className="flex w-full max-w-2xl flex-col gap-3 p-1 portrait:mb-[4.8rem]">
-          <div className="card card-compact bg-accent">
-            <div className="card-body text-accent-content">
-              <span className="flex gap-1">
-                <Icon name="InformationCircleIcon" />
-                Stand{' '}
-                {new Date(lastUpdated).toLocaleDateString('de-DE', {
-                  weekday: 'long',
-                  day: '2-digit',
-                  month: '2-digit',
-                  timeZone: 'Europe/Berlin',
-                })}{' '}
-                {new Date(lastUpdated).toLocaleString('de-DE', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  timeZone: 'Europe/Berlin',
-                })}
-                Uhr
-              </span>
-            </div>
-          </div>
-          <div className="card card-compact bg-accent">
-            <div className="card-body">
-              <h2 className="card-title">Fortschritt</h2>
-              <p className="pb-2 text-base">
-                Hier siehst du, wie nah du deinem Ziel schon gekommen bist.
-              </p>
-              {runner?.goal ? (
-                <>
-                  <progress
-                    className="progress-primary progress h-5 w-full rounded-full bg-base-100 shadow-inner"
-                    value={
-                      runnersWithLapCount.find(
-                        (runnerWithLapCount) =>
-                          runnerWithLapCount.email === user?.email
-                      )?.lapCount || 0
-                    }
-                    max={runner?.goal || 0}
-                  ></progress>
-                  <p className="font-semibold">
-                    {runnersWithLapCount.find(
+      <main>
+        <div className="flex flex-col gap-7 bg-base-100">
+          <h1 className="px-10 pt-10 text-2xl font-semibold">Statistiken</h1>
+
+          {/* <span className="flex gap-1 py-2 px-10">
+            <Icon name="InformationCircleIcon" />
+            Stand{' '}
+            {new Date(lastUpdated).toLocaleDateString('de-DE', {
+              weekday: 'long',
+              day: '2-digit',
+              month: '2-digit',
+              timeZone: 'Europe/Berlin',
+            })}{' '}
+            {new Date(lastUpdated).toLocaleString('de-DE', {
+              hour: '2-digit',
+              minute: '2-digit',
+              timeZone: 'Europe/Berlin',
+            })}
+            Uhr
+          </span> */}
+
+          <div className="px-10 pb-6">
+            <h2 className="text-xl font-semibold">Persönlicher Fortschritt</h2>
+            <p className="pb-2 text-base">
+              Hier siehst du, wie nah du deinem Ziel schon gekommen bist.
+            </p>
+            {runner?.goal ? (
+              <>
+                <progress
+                  className="progress-primary progress h-5 w-full rounded-full bg-base-200 shadow-inner"
+                  value={
+                    runnersWithLapCount.find(
                       (runnerWithLapCount) =>
                         runnerWithLapCount.email === user?.email
-                    )?.lapCount || 0}{' '}
-                    / {runner?.goal || 0} Runden
-                  </p>
-                </>
-              ) : (
-                <span
-                  aria-label="Ladeanimation"
-                  className="loading loading-dots loading-lg"
+                    )?.lapCount || 0
+                  }
+                  max={runner?.goal || 0}
+                ></progress>
+                <p className="font-semibold">
+                  {runnersWithLapCount.find(
+                    (runnerWithLapCount) =>
+                      runnerWithLapCount.email === user?.email
+                  )?.lapCount || 0}{' '}
+                  / {runner?.goal || 0} Runden
+                </p>
+              </>
+            ) : (
+              <span
+                aria-label="Ladeanimation"
+                className="loading loading-dots loading-lg"
+              />
+            )}
+          </div>
+
+          <div className="flex flex-col gap-4 px-10 pb-6">
+            <h2 className="text-xl font-semibold">Allgemein</h2>
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="card-compact card flex items-center justify-center">
+                <Stat value={runnerCount} label="Teilnehmer" />
+              </div>
+              <div className="card-compact card flex items-center justify-center">
+                <Stat value={lapsTotal} label="Runden gesamt" />
+              </div>
+              <div className="card-compact card flex items-center justify-center">
+                <Stat
+                  value={Math.ceil(lapsTotal / runnerCount)}
+                  label="Ø Runden pro Teilnehmer"
                 />
-              )}
+              </div>
+              <div className="card-compact card flex items-center justify-center">
+                <Stat
+                  value={
+                    lapsTotal && formatKilometer(lapsTotal * distancePerLap)
+                  }
+                  label="km Gesamtstrecke"
+                />
+              </div>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-            <div className="card-compact card flex aspect-square items-center justify-center bg-base-100">
-              <Stat value={runnerCount} label="Teilnehmer" />
-            </div>
-            <div className="card-compact card flex aspect-square items-center justify-center bg-base-100">
-              <Stat value={lapsTotal} label="Runden gesamt" />
-            </div>
-            <div className="card-compact card flex aspect-square items-center justify-center bg-base-100">
-              <Stat
-                value={Math.ceil(lapsTotal / runnerCount)}
-                label="Ø Runden pro Teilnehmer"
-              />
-            </div>
-            <div className="card-compact card flex aspect-square items-center justify-center bg-base-100">
-              <Stat
-                value={lapsTotal && formatKilometer(lapsTotal * distancePerLap)}
-                label="km Gesamtstrecke"
-              />
-            </div>
+
+          <div className="flex flex-col gap-2 px-2 pb-6">
+            <h2 className="px-8 text-xl font-semibold">Rundenverlauf</h2>
+            {/* @ts-ignore */}
+            <Line data={lapCountByHourData} options={lineOptions} />
           </div>
-          <div className="card-compact card bg-base-100">
-            <div className="card-body">
-              <h2 className="card-title">Rundenverlauf</h2>
-              {/* @ts-ignore */}
-              <Line data={lapCountByHourData} options={lineOptions} />
-            </div>
+
+          <div className="flex flex-col gap-2 px-2 pb-6">
+            <h2 className="px-8 text-xl font-semibold">Ø Runden pro Haus</h2>
+            {/* @ts-ignore */}
+            <Pie data={averageLapCountByHouseData} options={pieOptions} />
           </div>
-          <div className="card-compact card bg-base-100">
-            <div className="card-body pb-5">
-              <h2 className="card-title">Ø Runden pro Haus</h2>
-              {/* @ts-ignore */}
-              <Pie data={averageLapCountByHouseData} options={pieOptions} />
-            </div>
+
+          <div className="flex flex-col gap-2 px-2 pb-6">
+            <h2 className="px-8 text-xl font-semibold">Ø Runden pro Klasse</h2>
+            {/* @ts-ignore */}
+            <Pie data={averageLapCountByClassData} options={pieOptions} />
           </div>
-          <div className="card-compact card bg-base-100">
-            <div className="card-body">
-              <h2 className="card-title">Ø Runden pro Klasse</h2>
-              {/* @ts-ignore */}
-              <Pie data={averageLapCountByClassData} options={pieOptions} />
-            </div>
+
+          <div className="flex flex-col gap-2 px-2 pb-6">
+            <h2 className="px-8 text-xl font-semibold">Runden pro Haus</h2>
+            {/* @ts-ignore */}
+            <Pie data={lapCountByHouseData} options={pieOptions} />
           </div>
-          <div className="card-compact card bg-base-100">
-            <div className="card-body pb-5">
-              <h2 className="card-title">Runden pro Haus</h2>
-              {/* @ts-ignore */}
-              <Pie data={lapCountByHouseData} options={pieOptions} />
-            </div>
-          </div>
-          <div className="card-compact card bg-base-100">
-            <div className="card-body">
-              <h2 className="card-title">Runden pro Klasse</h2>
-              {/* @ts-ignore */}
-              <Pie data={lapCountByClassData} options={pieOptions} />
-            </div>
+
+          <div className="flex flex-col gap-2 px-2 pb-6">
+            <h2 className="px-8 text-xl font-semibold">Runden pro Klasse</h2>
+            {/* @ts-ignore */}
+            <Pie data={lapCountByClassData} options={pieOptions} />
           </div>
         </div>
-      </main>
 
-      <MenuPlaceholder />
+        <MenuPlaceholder />
+      </main>
     </>
   );
 }
