@@ -28,8 +28,6 @@ import {
 } from '@/lib/utils';
 import Stat from '@/components/Stat';
 import Loading from '@/components/Loading';
-import { Md5 } from 'ts-md5';
-import Icon from '@/components/Icon';
 import { useEffect, useState } from 'react';
 import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
 import { getRunner } from '@/lib/utils/firebase/frontend';
@@ -406,24 +404,24 @@ function RunnerGraphsPage({
 
       <main>
         <div className="flex flex-col gap-7 bg-base-100">
-          <h1 className="px-10 pt-10 text-2xl font-semibold">Statistiken</h1>
-
-          {/* <span className="flex gap-1 py-2 px-10">
-            <Icon name="InformationCircleIcon" />
-            Stand{' '}
-            {new Date(lastUpdated).toLocaleDateString('de-DE', {
-              weekday: 'long',
-              day: '2-digit',
-              month: '2-digit',
-              timeZone: 'Europe/Berlin',
-            })}{' '}
-            {new Date(lastUpdated).toLocaleString('de-DE', {
-              hour: '2-digit',
-              minute: '2-digit',
-              timeZone: 'Europe/Berlin',
-            })}
-            Uhr
-          </span> */}
+          <div className="px-10 pt-10">
+            <h1 className="text-2xl font-semibold">Statistiken</h1>
+            <p>
+              Stand{' '}
+              {new Date(lastUpdated).toLocaleDateString('de-DE', {
+                weekday: 'long',
+                day: '2-digit',
+                month: '2-digit',
+                timeZone: 'Europe/Berlin',
+              })}{' '}
+              {new Date(lastUpdated).toLocaleString('de-DE', {
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'Europe/Berlin',
+              })}
+              Uhr
+            </p>
+          </div>
 
           <div className="px-10 pb-6">
             <h2 className="text-xl font-semibold">Persönlicher Fortschritt</h2>
@@ -460,7 +458,7 @@ function RunnerGraphsPage({
 
           <div className="flex flex-col gap-4 px-10 pb-6">
             <h2 className="text-xl font-semibold">Allgemein</h2>
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 gap-y-7 md:grid-cols-4">
               <div className="card-compact card flex items-center justify-center">
                 <Stat value={runnerCount} label="Teilnehmer" />
               </div>
@@ -485,31 +483,41 @@ function RunnerGraphsPage({
           </div>
 
           <div className="flex flex-col gap-2 px-2 pb-6">
-            <h2 className="px-8 text-xl font-semibold">Rundenverlauf</h2>
+            <h2 className="px-8 text-center text-xl font-semibold">
+              Rundenverlauf
+            </h2>
             {/* @ts-ignore */}
             <Line data={lapCountByHourData} options={lineOptions} />
           </div>
 
           <div className="flex flex-col gap-2 px-2 pb-6">
-            <h2 className="px-8 text-xl font-semibold">Ø Runden pro Haus</h2>
+            <h2 className="px-8 text-center text-xl font-semibold">
+              Ø Runden pro Haus
+            </h2>
             {/* @ts-ignore */}
             <Pie data={averageLapCountByHouseData} options={pieOptions} />
           </div>
 
           <div className="flex flex-col gap-2 px-2 pb-6">
-            <h2 className="px-8 text-xl font-semibold">Ø Runden pro Klasse</h2>
+            <h2 className="px-8 text-center text-xl font-semibold">
+              Ø Runden pro Klasse
+            </h2>
             {/* @ts-ignore */}
             <Pie data={averageLapCountByClassData} options={pieOptions} />
           </div>
 
           <div className="flex flex-col gap-2 px-2 pb-6">
-            <h2 className="px-8 text-xl font-semibold">Runden pro Haus</h2>
+            <h2 className="px-8 text-center text-xl font-semibold">
+              Runden pro Haus
+            </h2>
             {/* @ts-ignore */}
             <Pie data={lapCountByHouseData} options={pieOptions} />
           </div>
 
           <div className="flex flex-col gap-2 px-2 pb-6">
-            <h2 className="px-8 text-xl font-semibold">Runden pro Klasse</h2>
+            <h2 className="px-8 text-center text-xl font-semibold">
+              Runden pro Klasse
+            </h2>
             {/* @ts-ignore */}
             <Pie data={lapCountByClassData} options={pieOptions} />
           </div>

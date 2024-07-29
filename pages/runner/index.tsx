@@ -15,7 +15,6 @@ import {
   runnerNavItems,
   themedErrorToast,
 } from '@/lib/utils/';
-import StatDivider from '@/components/StatDivider';
 import MenuPlaceholder from '@/components/MenuPlaceholder';
 
 export const getServerSideProps = withUserSSR({
