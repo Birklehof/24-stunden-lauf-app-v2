@@ -393,10 +393,10 @@ function RunnerGraphsPage({
       <Head title="Läufer Details" />
       <Menu navItems={runnerNavItems} />
 
-      <main className="main relative flex !h-auto flex-col !bg-base-200">
+      <main className="main relative flex !h-auto flex-col">
         <div className="flex w-full max-w-2xl flex-col gap-3 p-1 portrait:mb-[4.8rem]">
-          <div className="card card-compact bg-base-100">
-            <div className="card-body">
+          <div className="card card-compact bg-accent">
+            <div className="card-body text-accent-content">
               <span className="flex gap-1">
                 <Icon name="InformationCircleIcon" />
                 Stand{' '}
@@ -415,7 +415,7 @@ function RunnerGraphsPage({
               </span>
             </div>
           </div>
-          <div className="card card-compact bg-base-100">
+          <div className="card card-compact bg-accent">
             <div className="card-body">
               <h2 className="card-title">Fortschritt</h2>
               <p className="pb-2 text-base">

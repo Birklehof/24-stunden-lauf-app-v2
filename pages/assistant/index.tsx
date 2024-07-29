@@ -6,7 +6,7 @@ import { Lap, Runner } from '@/lib/interfaces';
 import { assistantNavItems, themedErrorToast } from '@/lib/utils/';
 import { deleteLap } from '@/lib/utils/firebase/frontend';
 import ListItem from '@/components/ListItem';
-import { AuthAction, useUser, withUser } from 'next-firebase-auth';
+import { AuthAction, withUser } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
 import { getRunnersDict } from '@/lib/utils/firebase/backend';
 import { functions } from '@/lib/firebase';
@@ -28,7 +28,6 @@ function AssistantIndexPage({
 }: {
   runners: { [id: string]: Runner };
 }) {
-  const user = useUser();
   const [createdLaps, setCreatedLaps] = useState<Lap[]>([]);
 
   const [number, setNumber] = useState(0);

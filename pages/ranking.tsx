@@ -9,14 +9,12 @@ import { getRunnersWithLapCount } from '@/lib/utils/firebase/backend';
 import Icon from '@/components/Icon';
 import {
   defaultClasses,
-  defaultDistancePerLap,
   defaultHouses,
 } from '@/lib/firebase/remoteConfigDefaultValues';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
 import {
   assistantNavItems,
   filterRunner,
-  formatKilometer,
   runnerNavItems,
 } from '@/lib/utils';
 import Menu from '@/components/Menu';
@@ -45,10 +43,6 @@ function RankingPage({
 }) {
   const user = useUser();
 
-  const [distancePerLap] = useRemoteConfig(
-    'distancePerLap',
-    defaultDistancePerLap
-  );
   const [classes] = useRemoteConfig('classes', defaultClasses);
   const [houses] = useRemoteConfig('houses', defaultHouses);
 
@@ -153,7 +147,7 @@ function RankingPage({
               );
             })}
           <div className="w-full p-3 text-center">Keine weiteren Läufer</div>
-          <div className="justify-left flex w-full gap-1 px-3 pt-10 text-center text-sm">
+          <div className="justify-left flex w-full gap-1 px-2 pb-2 pt-10 text-center text-sm">
             <Icon name="InformationCircleIcon" />
             Stand{' '}
             {new Date(lastUpdated).toLocaleDateString('de-DE', {
