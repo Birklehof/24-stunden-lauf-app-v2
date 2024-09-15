@@ -5,15 +5,16 @@ export default function CustomErrorPage() {
   return (
     <>
       <Head title="Seite nicht gefunden" />
-      <main className="main !justify-center bg-base-100 ">
-        <div className="flex flex-col items-center gap-y-10">
-          <h1 className="text-center text-3xl font-bold">
-            Seite nicht gefunden
-          </h1>
-          <Link href="/" className="btn-primary btn">
-            Zurück
-          </Link>
-        </div>
+      <main className="items-center justify-evenly px-12">
+        <div className='grow' />
+        <div className='grow' />
+        <h1 className="text-center text-5xl font-bold">Seite nicht gefunden</h1>
+        <div className='grow' />
+        <div className='grow' />
+        <Link href="/" className="btn-primary btn-wide btn-lg btn">
+          Zurück
+        </Link>
+        <div className='grow' />
       </main>
     </>
   );

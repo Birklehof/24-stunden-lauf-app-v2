@@ -62,7 +62,7 @@ function RunnerSettingsPage() {
               </p>
             )}
             <button
-              className="btn-error btn-outline btn my-1 w-full"
+              className="btn-error btn-outline btn my-1 w-full border-2"
               onClick={user.signOut}
             >
               Abmelden

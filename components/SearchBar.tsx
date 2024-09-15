@@ -6,6 +6,7 @@ interface SearchBarProps {
   setSearchValue: Function;
   filters?: FilterInputs[];
   backLink?: string;
+  info?: string;
 }
 
 interface FilterInputs {
@@ -19,10 +20,11 @@ export default function SearchBar({
   setSearchValue,
   filters,
   backLink,
+  info,
 }: SearchBarProps) {
   return (
     <div className="search-bar">
-      <div className="form-control max-w-xl flex grow flex-row justify-between gap-3 m-auto">
+      <div className="form-control m-auto flex max-w-xl grow flex-row justify-between gap-3">
         {backLink && (
           <Link
             href={backLink}
@@ -31,6 +33,13 @@ export default function SearchBar({
           >
             <Icon name="ArrowLeftIcon" />
           </Link>
+        )}
+        {info && (
+          <div className="tooltip tooltip-right" data-tip={info}>
+            <div className="btn-ghost btn-square btn">
+              <Icon name="InformationCircleIcon" />
+            </div>
+          </div>
         )}
         <input
           className="input-bordered input rounded-box w-10 grow bg-accent"
@@ -53,7 +62,7 @@ export default function SearchBar({
 
             <div
               tabIndex={0}
-              className="dropdown-content menu rounded-box flex flex-col gap-3 p-3 shadow bg-accent overflow-x-hidden"
+              className="dropdown-content menu rounded-box flex flex-col gap-3 overflow-x-hidden bg-accent p-3 shadow"
             >
               {filters?.map((filter) => (
                 <select

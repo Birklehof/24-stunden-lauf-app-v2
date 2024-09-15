@@ -8,6 +8,8 @@ import { firebaseConfig } from '@/lib/firebase/firebaseConfig';
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+auth.languageCode = 'de';
+
 const firebase = getFirestore(app);
 const functions = getFunctions(app, 'europe-west1');
 

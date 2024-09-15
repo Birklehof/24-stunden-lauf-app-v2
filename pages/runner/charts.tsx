@@ -431,7 +431,7 @@ function RunnerGraphsPage({
             {runner?.goal ? (
               <>
                 <progress
-                  className="progress-primary progress h-5 w-full rounded-full bg-base-200 shadow-inner"
+                  className="progress-primary progress h-5 w-full rounded-full bg-accent shadow-inner"
                   value={
                     runnersWithLapCount.find(
                       (runnerWithLapCount) =>

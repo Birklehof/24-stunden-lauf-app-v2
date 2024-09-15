@@ -53,3 +53,10 @@ main {
 :root {
   --toastify-color-dark: #0c1012 !important;
 }
+
+/* Workaround for tooltip */
+
+.tooltip {
+  --tooltip-color: rgb(165, 192, 42);
+  --tooltip-text-color: #000000;
+}

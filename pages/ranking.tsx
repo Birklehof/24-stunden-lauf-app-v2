@@ -72,11 +72,28 @@ function RankingPage({
       <Head title="Läufer" />
 
       <SearchBar
-        backLink={
-          user?.id === process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID
-            ? '/assistant'
-            : '/runner'
-        }
+        info={'Stand '
+          .concat(
+            new Date(lastUpdated)
+              .toLocaleDateString('de-DE', {
+                weekday: 'long',
+                day: '2-digit',
+                month: '2-digit',
+                timeZone: 'Europe/Berlin',
+              })
+              .toString()
+          )
+          .concat(' ')
+          .concat(
+            new Date(lastUpdated)
+              .toLocaleString('de-DE', {
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'Europe/Berlin',
+              })
+              .toString()
+          )
+          .concat(' Uhr')}
         searchValue={filterName}
         setSearchValue={setFilterName}
         filters={[
@@ -123,7 +140,7 @@ function RankingPage({
 
       <main>
         <SearchBarPlaceholder />
-        
+
         <div className="flex w-full flex-col items-center justify-start bg-base-100">
           <div className="vertical-list max-w-xl ">
             {runnersWithLapCount
@@ -155,29 +172,15 @@ function RankingPage({
                   </ListItem>
                 );
               })}
-            <div className="w-full p-3 text-center">Keine weiteren Läufer</div>
-            <div className="justify-left flex w-full gap-1 px-2 pb-2 pt-10 text-center text-sm">
-              <Icon name="InformationCircleIcon" />
-              Stand{' '}
-              {new Date(lastUpdated).toLocaleDateString('de-DE', {
-                weekday: 'long',
-                day: '2-digit',
-                month: '2-digit',
-                timeZone: 'Europe/Berlin',
-              })}{' '}
-              {new Date(lastUpdated).toLocaleString('de-DE', {
-                hour: '2-digit',
-                minute: '2-digit',
-                timeZone: 'Europe/Berlin',
-              })}
-              Uhr
+            <div className="w-full border-t-2 border-t-base-content p-3 text-center">
+              Keine weiteren Läufer
             </div>
           </div>
 
           {user.email !== null && (
             <div className="tooltip tooltip-left" data-tip="Zu meinem Ergebnis">
               <button
-                className="btn-primary btn-circle aspect-square btn fixed bottom-20 right-4 z-50 shadow-md"
+                className="btn-primary btn-circle btn-outline btn fixed bottom-20 right-4 z-50 aspect-square shadow-md border-2"
                 onClick={scrollToUser}
                 aria-label="Zu meinem Ergebnis"
               >
@@ -186,6 +189,8 @@ function RankingPage({
             </div>
           )}
         </div>
+
+        <div className="grow" />
 
         <MenuPlaceholder />
       </main>

@@ -48,7 +48,7 @@ export const getServerSideProps = withUserSSR({
 
 function RunnerIndexPage({ runner }: { runner: Runner | null }) {
   const [lapCount, setLapCount] = useState<number | undefined>(undefined);
-  const [newGoal, setNewGoal] = useState<string>('20');
+  const [newGoal, setNewGoal] = useState<string>('40');
 
   const [distancePerLap] = useRemoteConfig(
     'distancePerLap',
@@ -62,6 +62,10 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
 
     syncLapCount(runner.id, setLapCount);
   }, [runner]);
+
+  if (!runner?.id) {
+    return <Loading />;
+  }
 
   async function setGoalHandler(newGoal: number) {
     // Make a post request to set the goal
@@ -83,40 +87,37 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
       });
   }
 
-  if (!runner?.id) {
-    return <Loading />;
-  }
-
   if (!runner?.goal) {
     return (
       <>
         <Head title="Läufer" />
-        <main className="hero h-full bg-base-100">
-          <NewLapOverlay lapCount={lapCount} />
-          <div className="flex max-w-md flex-col gap-4 p-8">
-            <h1 className="text-2xl font-bold">
-              Willkommen zum 24 Stunden Lauf!
-            </h1>
-            <p>
-              Wir freuen uns, dass du dieses Jahr dabei bist. Bevor es losgeht,
-              kannst du hier angeben, wie viele Runden du laufen möchtest.
-            </p>
-            <input
-              className="input-bordered input"
-              type="number"
-              value={newGoal}
-              inputMode="numeric"
-              min={0}
-              onChange={(e) => setNewGoal(e.target.value)}
-            />
-            <button
-              className="btn-primary btn"
-              disabled={Number.isNaN(parseInt(newGoal))}
-              onClick={() => setGoalHandler(parseInt(newGoal))}
-            >
-              Los geht&apos;s!
-            </button>
-          </div>
+        <main className="justify-between p-10">
+          <div className="grow" />
+          <h1 className="mb-6 text-4xl font-bold">
+            Willkommen zum 24-Stunden-Lauf!
+          </h1>
+          <p className="text-lg">
+            Wir freuen uns, dass du dabei bist! Bevor es losgeht, gib hier{' '}
+            <b>dein Rundenziel</b> ein:
+          </p>
+          <div className="grow" />
+          <input
+            className="input-bordered input input-lg py-14 text-center !text-7xl"
+            type="number"
+            value={newGoal}
+            inputMode="numeric"
+            min={0}
+            onChange={(e) => setNewGoal(e.target.value)}
+          />
+          <div className="grow" />
+          <button
+            className="btn-primary btn-lg btn mt-3"
+            disabled={Number.isNaN(parseInt(newGoal))}
+            onClick={() => setGoalHandler(parseInt(newGoal))}
+          >
+            Los geht&apos;s!
+          </button>
+          <div className="grow" />
         </main>
       </>
     );
@@ -131,12 +132,12 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
       <NewLapOverlay lapCount={lapCount} />
 
       <main>
-        <div className="m-auto grid h-fit max-w-xl grid-cols-1 gap-10 landscape:grid-cols-3">
-          <Stat value={runner?.number} label="Nr." />
-          <Stat value={lapCount} label="Runden" />
+        <div className="m-auto grid h-fit max-w-xl grid-cols-1 gap-14 landscape:grid-cols-3">
+          <Stat value={runner?.number} label="Startnummer" />
+          <Stat value={lapCount} label="B'Hof-Runden" />
           <Stat
             value={lapCount && formatKilometer(lapCount * distancePerLap)}
-            label="km"
+            label="Strecke in km"
           />
         </div>
 

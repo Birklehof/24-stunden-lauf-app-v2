@@ -155,3 +155,9 @@ export function hslToHex(hsl: string) {
   };
   return `#${f(0)}${f(8)}${f(4)}`;
 }
+
+export function getRandomEntry<T>(list: Array<T>): T | null {
+  if (list.length === 0) return null; // Return null if array is empty
+  const randomIndex = Math.floor(Math.random() * list.length);
+  return list[randomIndex];
+}
