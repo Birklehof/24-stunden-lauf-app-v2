@@ -37,7 +37,7 @@ export default function ListItem({
                 <span className="pr-1">{number}</span>
               </>
             )}
-            {number != undefined && (number < 3 && medals) && (
+            {number != undefined && (number <= 3 && medals) && (
               <>
                 <span className="px-2">{['🥇', '🥈', '🥉'][number - 1]}</span>
               </>
