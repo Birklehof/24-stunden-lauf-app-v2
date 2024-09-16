@@ -1,13 +1,13 @@
 import Head from '@/components/Head';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
-import { runnerNavItems } from '@/lib/utils';
+import { assistantNavItems, runnerNavItems } from '@/lib/utils';
 import Loading from '@/components/Loading';
 import { useEffect, useState } from 'react';
 import { useDarkMode } from 'usehooks-ts';
 import MenuPlaceholder from '@/components/MenuPlaceholder';
 
-function RunnerSettingsPage() {
+function SettingsPage() {
   const user = useUser();
   const { isDarkMode, toggle } = useDarkMode();
   const [showDebug, setShowDebug] = useState(false);
@@ -20,7 +20,12 @@ function RunnerSettingsPage() {
   return (
     <>
       <Head title="Einstellungen" />
-      <Menu navItems={runnerNavItems} />
+    
+      {user.id === process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID ? (
+        <Menu navItems={assistantNavItems} />
+      ) : (
+        <Menu navItems={runnerNavItems} />
+      )}
 
       <main>
         <div className="flex w-full flex-col gap-7 bg-base-100 p-10">
@@ -62,7 +67,7 @@ function RunnerSettingsPage() {
               </p>
             )}
             <button
-              className="btn-error btn-outline btn my-1 w-full border-2"
+              className="btn-error btn-outline btn my-1 w-full border-2 text-lg"
               onClick={user.signOut}
             >
               Abmelden
@@ -90,4 +95,4 @@ export default withUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
   LoaderComponent: Loading,
   // @ts-ignore
-})(RunnerSettingsPage);
+})(SettingsPage);

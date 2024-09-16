@@ -14,7 +14,7 @@ export const runnerNavItems: NavItem[] = [
   {
     name: 'Ranking',
     href: '/ranking',
-    icon: 'TrendingUpIcon',
+    icon: 'TrophyIcon',
   },
   {
     name: 'Statistik',
@@ -24,7 +24,7 @@ export const runnerNavItems: NavItem[] = [
   {
     name: 'Einstellungen',
     href: '/settings',
-    icon: 'CogIcon',
+    icon: 'Cog6ToothIcon',
   },
 ];
 export const assistantNavItems: NavItem[] = [
@@ -36,17 +36,17 @@ export const assistantNavItems: NavItem[] = [
   {
     name: 'Ranking',
     href: '/ranking',
-    icon: 'TrendingUpIcon',
+    icon: 'TrophyIcon',
   },
   {
     name: 'Läufer hinzufügen',
     href: '/assistant/create-runner',
-    icon: 'UserAddIcon',
+    icon: 'UserPlusIcon',
   },
   {
     name: 'Einstellungen',
     href: '/settings',
-    icon: 'CogIcon',
+    icon: 'Cog6ToothIcon',
   },
 ];
 
@@ -139,21 +139,6 @@ export function formatKilometer(number: number | null) {
   return (number / 1000).toFixed(
     number / 1000 < 10 ? 2 : number / 1000 < 100 ? 1 : 0
   );
-}
-
-export function hslToHex(hsl: string) {
-  // string in format h s% l%
-  let [h, s, l] = hsl.split(' ').map((x) => parseInt(x));
-  l /= 100;
-  const a = (s * Math.min(l, 1 - l)) / 100;
-  const f = (n: number) => {
-    const k = (n + h / 30) % 12;
-    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-    return Math.round(255 * color)
-      .toString(16)
-      .padStart(2, '0'); // convert to Hex and prefix "0" if needed
-  };
-  return `#${f(0)}${f(8)}${f(4)}`;
 }
 
 export function getRandomEntry<T>(list: Array<T>): T | null {

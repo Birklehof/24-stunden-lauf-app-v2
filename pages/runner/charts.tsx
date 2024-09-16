@@ -20,18 +20,14 @@ import {
   getRunnersWithLapCount,
 } from '@/lib/utils/firebase/backend';
 import Menu from '@/components/Menu';
-import {
-  formatKilometer,
-  hslToHex,
-  runnerNavItems,
-  themedErrorToast,
-} from '@/lib/utils';
+import { formatKilometer, runnerNavItems, themedErrorToast } from '@/lib/utils';
 import Stat from '@/components/Stat';
 import Loading from '@/components/Loading';
 import { useEffect, useState } from 'react';
 import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
 import { getRunner } from '@/lib/utils/firebase/frontend';
 import MenuPlaceholder from '@/components/MenuPlaceholder';
+import { useOklchConverter } from '@builtwithjavascript/oklch-converter';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
@@ -107,7 +103,7 @@ export async function getStaticProps() {
   // Get the 24 hours before the end of the event
   const hoursBeforeEnd = Array.from({ length: 24 }, (_, i) => i + 1).map(
     (i) => {
-      const date = new Date('2023-09-23T15:00:00.000+02:00'); // TODO: Change to not be hardcoded
+      const date = new Date('2024-09-20T15:00:00.000+02:00'); // TODO: Change to not be hardcoded
       date.setHours(date.getHours() - i);
       return date;
     }
@@ -185,11 +181,26 @@ function RunnerGraphsPage({
   const [textColor, setTextColor] = useState<string>('black');
   const [cardColor, setCardColor] = useState<string>('white');
 
+  const oklchConverter = useOklchConverter();
+
+  function oklchToHex(oklch: string) {
+    // Parse OKLCH string
+    const [lStr, cStr, hStr] = oklch
+      .match(/([\d.]+%?)\s+([\d.]+)\s+([\d.]+)/)!
+      .slice(1);
+
+    // Convert percentage to decimal if needed
+    const l = parseFloat(lStr);
+    const c = parseFloat(cStr);
+    const h = parseFloat(hStr);
+
+    return oklchConverter.oklchToHSLString({ l, c, h });
+  }
+
   useEffect(() => {
-    // FIXME: This doesn't update when the theme changes
     const style = getComputedStyle(document.body);
-    setTextColor(hslToHex(style.getPropertyValue('--bc')));
-    setCardColor(hslToHex(style.getPropertyValue('--b1')));
+    setTextColor(oklchToHex(style.getPropertyValue('--bc')));
+    setCardColor(oklchToHex(style.getPropertyValue('--b1')));
   }, []);
 
   useEffect(() => {
@@ -430,16 +441,18 @@ function RunnerGraphsPage({
             </p>
             {runner?.goal ? (
               <>
-                <progress
-                  className="progress-primary progress h-5 w-full rounded-full bg-accent shadow-inner"
-                  value={
-                    runnersWithLapCount.find(
-                      (runnerWithLapCount) =>
-                        runnerWithLapCount.email === user?.email
-                    )?.lapCount || 0
-                  }
-                  max={runner?.goal || 0}
-                ></progress>
+                <div className="px-1">
+                  <progress
+                    className="progress progress-primary h-5 rounded-full bg-accent shadow-inner"
+                    value={
+                      runnersWithLapCount.find(
+                        (runnerWithLapCount) =>
+                          runnerWithLapCount.email === user?.email
+                      )?.lapCount || 0
+                    }
+                    max={runner?.goal || 0}
+                  ></progress>
+                </div>
                 <p className="font-semibold">
                   {runnersWithLapCount.find(
                     (runnerWithLapCount) =>
@@ -459,19 +472,19 @@ function RunnerGraphsPage({
           <div className="flex flex-col gap-4 px-10 pb-6">
             <h2 className="text-xl font-semibold">Allgemein</h2>
             <div className="grid grid-cols-2 gap-3 gap-y-9 md:grid-cols-4">
-              <div className="card-compact card flex items-center justify-center">
+              <div className="card card-compact flex items-center justify-center">
                 <Stat value={runnerCount} label="Teilnehmer" />
               </div>
-              <div className="card-compact card flex items-center justify-center">
+              <div className="card card-compact flex items-center justify-center">
                 <Stat value={lapsTotal} label="Runden gesamt" />
               </div>
-              <div className="card-compact card flex items-center justify-center">
+              <div className="card card-compact flex items-center justify-center">
                 <Stat
                   value={Math.ceil(lapsTotal / runnerCount)}
                   label="Ø Runden pro Teilnehmer"
                 />
               </div>
-              <div className="card-compact card flex items-center justify-center">
+              <div className="card card-compact flex items-center justify-center">
                 <Stat
                   value={
                     lapsTotal && formatKilometer(lapsTotal * distancePerLap)

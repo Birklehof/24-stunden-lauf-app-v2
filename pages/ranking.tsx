@@ -72,8 +72,8 @@ function RankingPage({
       <Head title="Läufer" />
 
       <SearchBar
-        info={'Stand '
-          .concat(
+        info={
+          ('Stand '.concat(
             new Date(lastUpdated)
               .toLocaleDateString('de-DE', {
                 weekday: 'long',
@@ -82,18 +82,17 @@ function RankingPage({
                 timeZone: 'Europe/Berlin',
               })
               .toString()
-          )
-          .concat(' ')
-          .concat(
-            new Date(lastUpdated)
-              .toLocaleString('de-DE', {
-                hour: '2-digit',
-                minute: '2-digit',
-                timeZone: 'Europe/Berlin',
-              })
-              .toString()
-          )
-          .concat(' Uhr')}
+          ),
+          ' ',
+          new Date(lastUpdated)
+            .toLocaleString('de-DE', {
+              hour: '2-digit',
+              minute: '2-digit',
+              timeZone: 'Europe/Berlin',
+            })
+            .toString(),
+          ' Uhr')
+        }
         searchValue={filterName}
         setSearchValue={setFilterName}
         filters={[
@@ -141,8 +140,8 @@ function RankingPage({
       <main>
         <SearchBarPlaceholder />
 
-        <div className="flex w-full flex-col items-center justify-start bg-base-100">
-          <div className="vertical-list max-w-xl ">
+        <div className="flex w-full flex-col items-center justify-start">
+          <div className="vertical-list max-w-xl">
             {runnersWithLapCount
               .filter((runnerWithLapCount) => {
                 return filterRunner(runnerWithLapCount, {
@@ -180,7 +179,7 @@ function RankingPage({
           {user.email !== null && (
             <div className="tooltip tooltip-left" data-tip="Zu meinem Ergebnis">
               <button
-                className="btn-primary btn-circle btn-outline btn fixed bottom-20 right-4 z-50 aspect-square shadow-md border-2"
+                className="btn btn-circle btn-outline btn-primary fixed bottom-20 right-4 z-50 aspect-square border-2 shadow-md"
                 onClick={scrollToUser}
                 aria-label="Zu meinem Ergebnis"
               >

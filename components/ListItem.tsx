@@ -7,8 +7,8 @@ interface ListItemProps {
   secondaryContent?: string;
   badges?: string[];
   children?: ReactNode | undefined;
-  glass?: boolean;
   highlight?: boolean;
+  medals?: boolean;
 }
 
 export default function ListItem({
@@ -18,20 +18,18 @@ export default function ListItem({
   secondaryContent,
   badges,
   children,
-  glass,
   highlight,
+  medals = true,
 }: ListItemProps) {
   return (
     <div
       id={id}
-      className={`border-b-[2px] border-b-base-200 font-medium ${
-        glass && '!bg-opacity-60'
-      } ${highlight && '!border-b-4 !border-b-primary !font-bold'}`}
+      className={`font-medium ${highlight && '!border-b-4 !border-b-primary !font-bold'}`}
     >
-      <div className="card-body w-full flex-row p-3">
+      <div className="card-body w-full flex-row p-3 text-xl">
         <div className="flex grow flex-col justify-center overflow-hidden text-ellipsis pl-1">
-          <div className="line-clamp-1 text-lg">
-            {number != undefined && number > 3 && (
+          <div className="line-clamp-">
+            {number != undefined && (number > 3 || !medals) && (
               <>
                 <span className="opacity-20">
                   {'0'.repeat(3 - number.toString().length)}
@@ -39,7 +37,7 @@ export default function ListItem({
                 <span className="pr-1">{number}</span>
               </>
             )}
-            {number != undefined && number < 3 && (
+            {number != undefined && (number < 3 && medals) && (
               <>
                 <span className="px-2">{['🥇', '🥈', '🥉'][number - 1]}</span>
               </>

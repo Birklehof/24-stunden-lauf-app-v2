@@ -11,6 +11,7 @@ import Menu from '@/components/Menu';
 import { getRunnersDict } from '@/lib/utils/firebase/backend';
 import { functions } from '@/lib/firebase';
 import { httpsCallable } from 'firebase/functions';
+import MenuPlaceholder from '@/components/MenuPlaceholder';
 
 export async function getStaticProps() {
   const runners = await getRunnersDict();
@@ -78,48 +79,51 @@ function AssistantIndexPage({
       <Head title="Assistent" />
       <Menu navItems={assistantNavItems} />
 
-      <main className="main !py-0">
-        <div className="grid !h-[100dvh] h-[100vh] w-full grid-cols-2 justify-around landscape:pl-10">
-          <section className="flex flex-col items-center justify-center gap-2">
-            <div className="card rounded-xl bg-base-100 shadow-xl">
-              <div className="card-body p-2">
-                <input
-                  aria-label="Startnummer"
-                  id="number"
-                  name="number"
-                  className={`font-serif input-bordered input rounded-box box-border h-full w-full max-w-[18rem] text-center text-5xl font-medium tracking-widest sm:text-9xl ${
-                    Object.values(runners).find(
-                      (runner) => runner.number == number
-                    ) != undefined
-                      ? 'input-success'
-                      : 'input-error'
-                  }`}
-                  autoFocus
-                  onChange={(e) => {
-                    e.preventDefault();
-                    if (!isNaN(+e.target.value)) {
-                      setNumber(+e.target.value);
+      <main className="max-h-screen !max-w-3xl flex-row justify-center gap-10">
+        <section className="flex flex-col items-center justify-center gap-2">
+          <div className="card rounded-xl bg-base-100 shadow-xl">
+            <div className="card-body p-2">
+              <input
+                aria-label="Startnummer"
+                id="number"
+                name="number"
+                className={`font-serif input input-bordered box-border h-44 w-72 rounded-box text-center text-9xl font-medium ${
+                  Object.values(runners).find(
+                    (runner) => runner.number == number
+                  ) != undefined
+                    ? 'input-success'
+                    : 'input-error'
+                }`}
+                autoFocus
+                onChange={(e) => {
+                  e.preventDefault();
+                  if (!isNaN(+e.target.value)) {
+                    const number = +e.target.value;
+                    if (number < 1000) {
+                      setNumber(number);
                     }
-                  }}
-                  onKeyDown={async (e) => {
-                    if (e.key === 'Enter') {
-                      await createNewLapHandler();
-                    }
-                  }}
-                  type="text"
-                  value={Number(number).toString()}
-                  min={0}
-                  required
-                  inputMode="numeric"
-                />
-              </div>
+                  }
+                }}
+                onKeyDown={async (e) => {
+                  if (e.key === 'Enter') {
+                    await createNewLapHandler();
+                  }
+                }}
+                type="text"
+                value={Number(number).toString()}
+                min={0}
+                required
+                inputMode="numeric"
+              />
             </div>
-            <div className="w-full text-center text-sm">
-              Drücke <kbd className="kbd kbd-sm bg-neutral">Enter</kbd>, um eine
-              Runde zu zählen
-            </div>
-          </section>
-          <section className="vertical-list !flex">
+          </div>
+          <div className="w-full text-center text-sm">
+            Drücke <kbd className="kbd kbd-sm bg-neutral">Enter</kbd>, um eine
+            Runde zu zählen
+          </div>
+        </section>
+        <div className="hidden w-full flex-col items-center justify-start sm:flex">
+          <section className="vertical-list max-w-xl !overflow-y-scroll">
             {createdLaps.length > 0 ? (
               <>
                 {createdLaps
@@ -132,30 +136,40 @@ function AssistantIndexPage({
                   .map((lap) => (
                     <ListItem
                       key={lap.id + lap.createdAt}
-                      glass={lap.id === 'temp'}
+                      medals={false}
                       number={runners[lap.runnerId]?.number}
-                      mainContent={runners[lap.runnerId]?.name || 'Unbekannt'}
+                      mainContent={(
+                        runners[lap.runnerId]?.name || 'Unbekannt'
+                      ).concat(
+                        runners[lap.runnerId].class
+                          ? ', '.concat(runners[lap.runnerId].class || '')
+                          : ''
+                      )}
                     >
                       <button
                         disabled={!lap.id}
-                        className="btn-error btn-outline btn-square btn-sm btn hidden text-error md:flex"
+                        className="btn btn-square btn-outline btn-error btn-sm hidden text-error md:flex"
                         aria-label="Runde löschen"
                         onClick={async () => await deleteLapHandler(lap.id)}
                       >
-                        <Icon name="TrashIcon" />
+                        <Icon name="TrashIcon" className="!h-5 w-5" />
                       </button>
                     </ListItem>
                   ))}
-                <div className="w-full text-center text-sm">
+                <div className="w-full border-t-2 border-t-base-content p-3 text-center">
                   Zuletzt erstellte Runden
                 </div>
               </>
             ) : (
-              <div className="w-full text-center text-sm">
+              <div className="w-full border-t-2 border-t-base-100 p-3 text-center">
                 Du hast noch keine Runden gezählt
               </div>
             )}
           </section>
+
+          <div className="grow" />
+
+          <MenuPlaceholder />
         </div>
       </main>
     </>

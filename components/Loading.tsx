@@ -40,8 +40,8 @@ export default function Loading() {
     '*Lustigen Witz einfügen*',
     'Du, hier?',
     'Kaffee wird gekocht',
-    "Schritt 1 von ...",
-    'Meer wird geteilt'
+    'Schritt 1 von ...',
+    'Meer wird geteilt',
   ];
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function Loading() {
           aria-label="Ladeanimation"
           className="loading loading-infinity loading-lg scale-[300%]"
         />
-        <p className="px-10 text-center line-clamp-2 h-12">{message}</p>
+        <p className="line-clamp-2 h-12 px-10 text-center">{message}</p>
       </main>
     </>
   );

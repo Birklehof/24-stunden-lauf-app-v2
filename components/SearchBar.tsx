@@ -57,7 +57,7 @@ export default function SearchBar({
               className="btn-ghost btn-square btn"
               aria-label="Filtern"
             >
-              <Icon name="AdjustmentsIcon" />
+              <Icon name="AdjustmentsVerticalIcon" />
             </label>
 
             <div
