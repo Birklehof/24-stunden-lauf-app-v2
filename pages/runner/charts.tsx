@@ -413,122 +413,118 @@ function RunnerGraphsPage({
       <Head title="Läufer Details" />
       <Menu navItems={runnerNavItems} />
 
-      <main>
-        <div className="flex flex-col gap-7 bg-base-100">
-          <div className="px-10 pt-10">
-            <h1 className="text-2xl font-semibold">Statistiken</h1>
-            <p>
-              Stand{' '}
-              {new Date(lastUpdated).toLocaleDateString('de-DE', {
-                weekday: 'long',
-                day: '2-digit',
-                month: '2-digit',
-                timeZone: 'Europe/Berlin',
-              })}{' '}
-              {new Date(lastUpdated).toLocaleString('de-DE', {
-                hour: '2-digit',
-                minute: '2-digit',
-                timeZone: 'Europe/Berlin',
-              })}
-              Uhr
-            </p>
+      <main className="gap-7 justify-start">
+        <div className="px-10 pt-10">
+          <h1 className="text-2xl font-semibold">Statistiken</h1>
+          <p>
+            Stand{' '}
+            {new Date(lastUpdated).toLocaleDateString('de-DE', {
+              weekday: 'long',
+              day: '2-digit',
+              month: '2-digit',
+              timeZone: 'Europe/Berlin',
+            })}{' '}
+            {new Date(lastUpdated).toLocaleString('de-DE', {
+              hour: '2-digit',
+              minute: '2-digit',
+              timeZone: 'Europe/Berlin',
+            })}
+            Uhr
+          </p>
+        </div>
+
+        <div className="px-10 pb-6">
+          <h2 className="text-xl font-semibold">Persönlicher Fortschritt</h2>
+          <p className="pb-2 text-base">
+            Hier siehst du, wie nah du deinem Ziel schon gekommen bist.
+          </p>
+
+          <div className="px-1">
+            {runner?.goal ? (
+              <progress
+                className="progress progress-primary h-5 rounded-full bg-accent shadow-inner"
+                value={
+                  runnersWithLapCount.find(
+                    (runnerWithLapCount) =>
+                      runnerWithLapCount.email === user?.email
+                  )?.lapCount || 0
+                }
+                max={runner?.goal || 0}
+              ></progress>
+            ) : (
+              <div className="skeleton h-6 w-full"></div>
+            )}
           </div>
+          <p className="font-semibold">
+            {runnersWithLapCount.find(
+              (runnerWithLapCount) => runnerWithLapCount.email === user?.email
+            )?.lapCount || 0}{' '}
+            / {runner?.goal || 'NaN'} Runden
+          </p>
+        </div>
 
-          <div className="px-10 pb-6">
-            <h2 className="text-xl font-semibold">Persönlicher Fortschritt</h2>
-            <p className="pb-2 text-base">
-              Hier siehst du, wie nah du deinem Ziel schon gekommen bist.
-            </p>
-
-            <div className="px-1">
-              {runner?.goal ? (
-                <progress
-                  className="progress progress-primary h-5 rounded-full bg-accent shadow-inner"
-                  value={
-                    runnersWithLapCount.find(
-                      (runnerWithLapCount) =>
-                        runnerWithLapCount.email === user?.email
-                    )?.lapCount || 0
-                  }
-                  max={runner?.goal || 0}
-                ></progress>
-              ) : (
-                <div className="skeleton h-6 w-full"></div>
-              )}
+        <div className="flex flex-col gap-4 px-10 pb-6">
+          <h2 className="text-xl font-semibold">Allgemein</h2>
+          <div className="grid grid-cols-2 gap-3 gap-y-9 md:grid-cols-4">
+            <div className="card card-compact flex items-center justify-center">
+              <Stat value={runnerCount} label="Teilnehmer" />
             </div>
-            <p className="font-semibold">
-              {runnersWithLapCount.find(
-                (runnerWithLapCount) => runnerWithLapCount.email === user?.email
-              )?.lapCount || 0}{' '}
-              / {runner?.goal || 'NaN'} Runden
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-4 px-10 pb-6">
-            <h2 className="text-xl font-semibold">Allgemein</h2>
-            <div className="grid grid-cols-2 gap-3 gap-y-9 md:grid-cols-4">
-              <div className="card card-compact flex items-center justify-center">
-                <Stat value={runnerCount} label="Teilnehmer" />
-              </div>
-              <div className="card card-compact flex items-center justify-center">
-                <Stat value={lapsTotal} label="Runden gesamt" />
-              </div>
-              <div className="card card-compact flex items-center justify-center">
-                <Stat
-                  value={Math.ceil(lapsTotal / runnerCount)}
-                  label="Ø Runden pro Teilnehmer"
-                />
-              </div>
-              <div className="card card-compact flex items-center justify-center">
-                <Stat
-                  value={
-                    lapsTotal && formatKilometer(lapsTotal * distancePerLap)
-                  }
-                  label="km Gesamtstrecke"
-                />
-              </div>
+            <div className="card card-compact flex items-center justify-center">
+              <Stat value={lapsTotal} label="Runden gesamt" />
+            </div>
+            <div className="card card-compact flex items-center justify-center">
+              <Stat
+                value={Math.ceil(lapsTotal / runnerCount)}
+                label="Ø Runden pro Teilnehmer"
+              />
+            </div>
+            <div className="card card-compact flex items-center justify-center">
+              <Stat
+                value={lapsTotal && formatKilometer(lapsTotal * distancePerLap)}
+                label="km Gesamtstrecke"
+              />
             </div>
           </div>
+        </div>
 
-          <div className="flex flex-col gap-2 px-2 pb-6">
-            <h2 className="px-8 text-center text-xl font-semibold">
-              Rundenverlauf
-            </h2>
-            {/* @ts-ignore */}
-            <Line data={lapCountByHourData} options={lineOptions} />
-          </div>
+        <div className="flex flex-col gap-2 px-2 pb-6">
+          <h2 className="px-8 text-center text-xl font-semibold">
+            Rundenverlauf
+          </h2>
+          {/* @ts-ignore */}
+          <Line data={lapCountByHourData} options={lineOptions} />
+        </div>
 
-          <div className="flex flex-col gap-2 px-2 pb-6">
-            <h2 className="px-8 text-center text-xl font-semibold">
-              Ø Runden pro Haus
-            </h2>
-            {/* @ts-ignore */}
-            <Pie data={averageLapCountByHouseData} options={pieOptions} />
-          </div>
+        <div className="flex flex-col gap-2 px-2 pb-6">
+          <h2 className="px-8 text-center text-xl font-semibold">
+            Ø Runden pro Haus
+          </h2>
+          {/* @ts-ignore */}
+          <Pie data={averageLapCountByHouseData} options={pieOptions} />
+        </div>
 
-          <div className="flex flex-col gap-2 px-2 pb-6">
-            <h2 className="px-8 text-center text-xl font-semibold">
-              Ø Runden pro Klasse
-            </h2>
-            {/* @ts-ignore */}
-            <Pie data={averageLapCountByClassData} options={pieOptions} />
-          </div>
+        <div className="flex flex-col gap-2 px-2 pb-6">
+          <h2 className="px-8 text-center text-xl font-semibold">
+            Ø Runden pro Klasse
+          </h2>
+          {/* @ts-ignore */}
+          <Pie data={averageLapCountByClassData} options={pieOptions} />
+        </div>
 
-          <div className="flex flex-col gap-2 px-2 pb-6">
-            <h2 className="px-8 text-center text-xl font-semibold">
-              Runden pro Haus
-            </h2>
-            {/* @ts-ignore */}
-            <Pie data={lapCountByHouseData} options={pieOptions} />
-          </div>
+        <div className="flex flex-col gap-2 px-2 pb-6">
+          <h2 className="px-8 text-center text-xl font-semibold">
+            Runden pro Haus
+          </h2>
+          {/* @ts-ignore */}
+          <Pie data={lapCountByHouseData} options={pieOptions} />
+        </div>
 
-          <div className="flex flex-col gap-2 px-2 pb-6">
-            <h2 className="px-8 text-center text-xl font-semibold">
-              Runden pro Klasse
-            </h2>
-            {/* @ts-ignore */}
-            <Pie data={lapCountByClassData} options={pieOptions} />
-          </div>
+        <div className="flex flex-col gap-2 px-2 pb-6">
+          <h2 className="px-8 text-center text-xl font-semibold">
+            Runden pro Klasse
+          </h2>
+          {/* @ts-ignore */}
+          <Pie data={lapCountByClassData} options={pieOptions} />
         </div>
 
         <MenuPlaceholder />

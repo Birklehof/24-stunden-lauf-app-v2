@@ -19,6 +19,4 @@ const defaultHouses = [
 
 const defaultDistancePerLap = 660;
 
-const defaultAppName = '24 Stunden Lauf App';
-
-export { defaultClasses, defaultHouses, defaultDistancePerLap, defaultAppName };
+export { defaultClasses, defaultHouses, defaultDistancePerLap };

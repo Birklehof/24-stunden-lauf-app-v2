@@ -50,62 +50,52 @@ function AssistantCreateRunnerPage() {
       <Head title="Assistent" />
       <Menu navItems={assistantNavItems} />
 
-      <main className="main !justify-center">
-        <div className="centered-card">
-          <div className="card-body gap-3">
-            {number != 0 ? (
-              <>
-                <h1 className="text-center text-xl font-bold">
-                  Läufer erstellt
-                </h1>
-                <input
-                  name={'text'}
-                  className="input-bordered input input-disabled"
-                  readOnly={true}
-                  type={'text'}
-                  value={'Startnummer: ' + number}
-                  required
-                />
-                <button
-                  className="btn-primary btn"
-                  onClick={() => {
-                    setNumber(0);
-                  }}
-                >
-                  Okay!
-                </button>
-              </>
-            ) : (
-              <form
-                onSubmit={createRunnerHandler}
-                className="flex flex-col gap-3"
-              >
-                <h1 className="text-center text-xl font-bold">
-                  Läufer hinzufügen
-                </h1>
-                <input
-                  id="name"
-                  name="name"
-                  className="input-bordered input"
-                  placeholder="Name"
-                  autoFocus
-                  type="text"
-                  required
-                  minLength={3}
-                />
-                <button
-                  className={`btn-primary btn-outline btn ${
-                    submitting ? 'btn-disabled loading' : ''
-                  }`}
-                  type="submit"
-                  disabled={submitting}
-                >
-                  Hinzufügen
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
+      <main className="p-10 gap-7 justify-start">
+        <h1 className="text-2xl font-semibold">Läufer hinzufügen</h1>
+
+        {number != 0 ? (
+          <>
+            <input
+              name={'text'}
+              className="input-bordered input input-disabled"
+              readOnly={true}
+              type={'text'}
+              value={'Startnummer: ' + number}
+              required
+            />
+            <button
+              className="btn-primary btn"
+              onClick={() => {
+                setNumber(0);
+              }}
+            >
+              Okay!
+            </button>
+          </>
+        ) : (
+          <form onSubmit={createRunnerHandler} className="flex flex-col gap-3">
+            <input
+              id="name"
+              name="name"
+              className="input-bordered input"
+              placeholder="Name"
+              autoFocus
+              type="text"
+              required
+              minLength={3}
+            />
+            <button
+              className={`btn-primary btn-outline btn ${
+                submitting ? 'btn-disabled' : ''
+              }`}
+              type="submit"
+              disabled={submitting}
+            >
+              {submitting && <span className="loading loading-spinner"></span>}
+              Hinzufügen
+            </button>
+          </form>
+        )}
       </main>
     </>
   );
