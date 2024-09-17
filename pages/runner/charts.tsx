@@ -474,13 +474,13 @@ function RunnerGraphsPage({
             </div>
             <div className="card card-compact flex items-center justify-center">
               <Stat
-                value={Math.ceil(lapsTotal / runnerCount)}
+                value={(lapsTotal / runnerCount).toFixed(1).toString().replace(".", ",")}
                 label="Ø Runden pro Teilnehmer"
               />
             </div>
             <div className="card card-compact flex items-center justify-center">
               <Stat
-                value={lapsTotal && formatKilometer(lapsTotal * distancePerLap)}
+                value={lapsTotal && formatKilometer(lapsTotal * distancePerLap).toString().replace(".", ",")}
                 label="km Gesamtstrecke"
               />
             </div>

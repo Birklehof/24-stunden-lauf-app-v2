@@ -136,7 +136,7 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
           <Stat value={runner?.number} label="Startnummer" />
           <Stat value={lapCount} label="B'Hof-Runden" />
           <Stat
-            value={lapCount && formatKilometer(lapCount * distancePerLap)}
+            value={lapCount && formatKilometer(lapCount * distancePerLap).toString().replace(".", ",")}
             label="Strecke in km"
           />
         </div>
