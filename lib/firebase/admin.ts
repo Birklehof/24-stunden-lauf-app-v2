@@ -10,13 +10,13 @@ try {
     credential: admin.credential.cert(serviceAccount),
     databaseURL: firebaseConfig.databaseURL,
   });
-  console.log('Initialized.');
+  console.log('Firebase admin initialized successfully.');
 } catch (error) {
   /*
    * We skip the "already exists" message which is
    * not an actual error when we're hot-reloading.
    */
-  if (error instanceof Error && !/already exists/u.test(error.message)) {
+  if (error instanceof Error && !error.message.includes('already exists')) {
     console.error('Firebase admin initialization error', error.stack);
   }
 }

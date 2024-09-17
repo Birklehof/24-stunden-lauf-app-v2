@@ -12,17 +12,22 @@ export default function LoginOptions() {
 
   const handleRunnerAuth = async () => {
     setPending(true);
-    await themedPromiseToast(signInWithPopup(auth, microsoftOAuthProvider), {
-      pending: 'Anmeldung läuft...',
-      success: {
-        render: () => {
-          return 'Willkommen zurück!';
+    await themedPromiseToast(
+      signInWithPopup(auth, microsoftOAuthProvider),
+      {
+        pending: 'Anmeldung läuft...',
+        success: {
+          render: () => {
+            return 'Willkommen zurück!';
+          },
+          icon: () => {
+            return '👋';
+          },
+          type: 'info',
         },
-        icon: '👋',
-        type: 'info',
+        error: 'Fehler beim Anmelden!',
       },
-      error: 'Fehler beim Anmelden!',
-    });
+    );
   };
 
   const handleStaffAuth = async () => {
@@ -58,7 +63,9 @@ export default function LoginOptions() {
           render: () => {
             return 'Willkommen zurück!';
           },
-          icon: '👋',
+          icon: () => {
+            return '👋';
+          },
           type: 'info',
         },
         error: 'Fehler beim Anmelden!',

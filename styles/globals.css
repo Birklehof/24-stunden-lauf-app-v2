@@ -54,6 +54,10 @@ main {
   --toastify-color-dark: #0c1012 !important;
 }
 
+.Toastify__toast {
+  @apply text-lg;
+}
+
 /* Workaround for tooltip */
 
 .tooltip {

@@ -3,24 +3,21 @@ import { AuthAction, useUser, withUser } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
 import { assistantNavItems, runnerNavItems } from '@/lib/utils';
 import Loading from '@/components/Loading';
-import { useEffect, useState } from 'react';
-import { useDarkMode } from 'usehooks-ts';
 import MenuPlaceholder from '@/components/MenuPlaceholder';
+import { useTernaryDarkMode } from 'usehooks-ts';
+import { useState } from 'react';
+
+type TernaryDarkMode = ReturnType<typeof useTernaryDarkMode>['ternaryDarkMode'];
 
 function SettingsPage() {
   const user = useUser();
-  const { isDarkMode, toggle } = useDarkMode();
+  const { ternaryDarkMode, setTernaryDarkMode } = useTernaryDarkMode();
   const [showDebug, setShowDebug] = useState(false);
-
-  useEffect(() => {
-    const body = document.body;
-    body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
-  }, [isDarkMode]);
 
   return (
     <>
       <Head title="Einstellungen" />
-    
+
       {user.id === process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID ? (
         <Menu navItems={assistantNavItems} />
       ) : (
@@ -36,12 +33,19 @@ function SettingsPage() {
             <div className="form-control">
               <label className="label cursor-pointer text-xl font-medium">
                 <span className="label-text">Dunkelmodus</span>
-                <input
-                  type="checkbox"
-                  className="toggle"
-                  checked={isDarkMode}
-                  onChange={toggle}
-                />
+                <select
+                  name="select-ternaryDarkMode"
+                  className="select"
+                  onChange={(ev) => {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                    setTernaryDarkMode(ev.target.value as TernaryDarkMode);
+                  }}
+                  value={ternaryDarkMode}
+                >
+                  <option value="system">System</option>
+                  <option value="light">Hell</option>
+                  <option value="dark">Dunkel</option>
+                </select>
               </label>
             </div>
             <div className="form-control">

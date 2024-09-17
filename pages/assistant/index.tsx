@@ -87,7 +87,7 @@ function AssistantIndexPage({
                 aria-label="Startnummer"
                 id="number"
                 name="number"
-                className={`font-serif input input-bordered box-border h-44 w-72 rounded-box text-center text-9xl font-medium ${
+                className={`font-mono input input-bordered box-border h-44 w-72 rounded-box text-center text-9xl font-medium ${
                   Object.values(runners).find(
                     (runner) => runner.number == number
                   ) != undefined

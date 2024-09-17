@@ -439,34 +439,29 @@ function RunnerGraphsPage({
             <p className="pb-2 text-base">
               Hier siehst du, wie nah du deinem Ziel schon gekommen bist.
             </p>
-            {runner?.goal ? (
-              <>
-                <div className="px-1">
-                  <progress
-                    className="progress progress-primary h-5 rounded-full bg-accent shadow-inner"
-                    value={
-                      runnersWithLapCount.find(
-                        (runnerWithLapCount) =>
-                          runnerWithLapCount.email === user?.email
-                      )?.lapCount || 0
-                    }
-                    max={runner?.goal || 0}
-                  ></progress>
-                </div>
-                <p className="font-semibold">
-                  {runnersWithLapCount.find(
-                    (runnerWithLapCount) =>
-                      runnerWithLapCount.email === user?.email
-                  )?.lapCount || 0}{' '}
-                  / {runner?.goal || 0} Runden
-                </p>
-              </>
-            ) : (
-              <span
-                aria-label="Ladeanimation"
-                className="loading loading-dots loading-lg"
-              />
-            )}
+
+            <div className="px-1">
+              {runner?.goal ? (
+                <progress
+                  className="progress progress-primary h-5 rounded-full bg-accent shadow-inner"
+                  value={
+                    runnersWithLapCount.find(
+                      (runnerWithLapCount) =>
+                        runnerWithLapCount.email === user?.email
+                    )?.lapCount || 0
+                  }
+                  max={runner?.goal || 0}
+                ></progress>
+              ) : (
+                <div className="skeleton h-6 w-full"></div>
+              )}
+            </div>
+            <p className="font-semibold">
+              {runnersWithLapCount.find(
+                (runnerWithLapCount) => runnerWithLapCount.email === user?.email
+              )?.lapCount || 0}{' '}
+              / {runner?.goal || 'NaN'} Runden
+            </p>
           </div>
 
           <div className="flex flex-col gap-4 px-10 pb-6">
