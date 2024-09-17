@@ -72,17 +72,15 @@ function RankingPage({
       <Head title="Läufer" />
 
       <SearchBar
-        info={
-          ('Stand '.concat(
-            new Date(lastUpdated)
-              .toLocaleDateString('de-DE', {
-                weekday: 'long',
-                day: '2-digit',
-                month: '2-digit',
-                timeZone: 'Europe/Berlin',
-              })
-              .toString()
-          ),
+        info={'Stand '.concat(
+          new Date(lastUpdated)
+            .toLocaleDateString('de-DE', {
+              weekday: 'short',
+              day: '2-digit',
+              month: '2-digit',
+              timeZone: 'Europe/Berlin',
+            })
+            .toString(),
           ' ',
           new Date(lastUpdated)
             .toLocaleString('de-DE', {
@@ -91,8 +89,8 @@ function RankingPage({
               timeZone: 'Europe/Berlin',
             })
             .toString(),
-          ' Uhr')
-        }
+          ' Uhr'
+        )}
         searchValue={filterName}
         setSearchValue={setFilterName}
         filters={[
