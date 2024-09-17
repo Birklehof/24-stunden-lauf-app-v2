@@ -91,9 +91,9 @@ module.exports = {
           '100%': { opacity: 1 },
         },
       },
-    },
-    fontFamily: {
-      sans: ['var(--montserrat-font)', ...fontFamily.sans],
+      fontFamily: {
+        sans: ['var(--montserrat-font)', ...fontFamily.sans],
+      },
     },
   },
   plugins: [require('daisyui')],

@@ -28,18 +28,18 @@ export default function ListItem({
     >
       <div className="card-body w-full flex-row p-3 text-xl">
         <div className="flex grow flex-col justify-center overflow-hidden text-ellipsis pl-1">
-          <div className="line-clamp-">
+          <div className="line-clamp-1">
             {number != undefined && (number > 3 || !medals) && (
               <>
-                <span className="opacity-20">
+                <span className="opacity-20 font-mono">
                   {'0'.repeat(3 - number.toString().length)}
                 </span>
-                <span className="pr-1">{number}</span>
+                <span className="pr-1 font-mono">{number}</span>
               </>
             )}
             {number != undefined && (number <= 3 && medals) && (
               <>
-                <span className="px-2">{['🥇', '🥈', '🥉'][number - 1]}</span>
+                <span className="font-mono">{['🥇', '🥈', '🥉'][number - 1]}{' '}</span>
               </>
             )}
             {mainContent}
