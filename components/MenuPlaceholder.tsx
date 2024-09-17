@@ -5,7 +5,7 @@ export default function MenuPlaceholder() {
   return (
     <div
       aria-label="Menu"
-      className="menu menu-horizontal z-0 w-full justify-center bg-accent p-2 shadow-xl"
+      className="menu menu-horizontal z-0 w-full justify-center bg-accent p-2 shadow-xl opacity-0"
       aria-hidden
     >
       <div className="flex flex-row gap-2">
