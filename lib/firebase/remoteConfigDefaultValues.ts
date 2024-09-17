@@ -14,6 +14,7 @@ const defaultHouses = [
   { name: 'Unterhaus', abbreviation: 'Uh' },
   { name: 'Wolfsburg Süd', abbreviation: 'WobS' },
   { name: 'Wolfsburg Nord', abbreviation: 'WobN' },
+  { name: 'Hahnenhaus', abbreviation: 'Hah' },
 ];
 
 const defaultDistancePerLap = 660;

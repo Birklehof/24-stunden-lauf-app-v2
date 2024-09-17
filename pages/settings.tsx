@@ -37,7 +37,7 @@ function SettingsPage() {
                   name="select-ternaryDarkMode"
                   className="select"
                   onChange={(ev) => {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                    // eslint-disable-next-line
                     setTernaryDarkMode(ev.target.value as TernaryDarkMode);
                   }}
                   value={ternaryDarkMode}

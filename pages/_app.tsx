@@ -4,7 +4,7 @@ import { Montserrat } from 'next/font/google';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import initAuth from '@/lib/next-firebase-auth';
-import { useDarkMode, useTernaryDarkMode } from 'usehooks-ts';
+import { useTernaryDarkMode } from 'usehooks-ts';
 import { useEffect } from 'react';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
