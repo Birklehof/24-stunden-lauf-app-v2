@@ -43,8 +43,7 @@ Cypress ist das Framework, welches für das testen verwendet wird.
 
 Firebase ist die Plattform, welche für die Datenbank und die Authentifizierung verwendet wird. Firebase ist von Google und bietet eine Vielzahl an Funktionen, davon werden Firestore, Functions, Auth und Remote Config verwendet.
 
-- `npm i` - Installiert alle Abhängigkeiten (**Wichtig! Diesen Befehl im `functions`-Ordner ausführen!**)
-- `firebase deploy` - Deployt die Firebase-Funktionen (Die Firebase CLI muss installiert sein)
+Der Code und die Konfiguration für Firebase findet sich [hier](https://github.com/Birklehof/24-stunden-lauf-app-firebase).
 
 ## Deployment
 
