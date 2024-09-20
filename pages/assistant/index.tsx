@@ -141,7 +141,7 @@ function AssistantIndexPage({
                       mainContent={(
                         runners[lap.runnerId]?.name || 'Unbekannt'
                       ).concat(
-                        runners[lap.runnerId].class
+                        runners[lap.runnerId]?.class
                           ? ', '.concat(runners[lap.runnerId]?.class || '')
                           : ''
                       )}
