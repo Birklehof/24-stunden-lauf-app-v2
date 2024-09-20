@@ -175,15 +175,13 @@ function RankingPage({
           </div>
 
           {user.email !== null && (
-            <div className="tooltip tooltip-left" data-tip="Zu meinem Ergebnis">
-              <button
-                className="btn btn-circle btn-outline btn-primary fixed bottom-20 right-4 z-50 aspect-square border-2 shadow-md"
-                onClick={scrollToUser}
-                aria-label="Zu meinem Ergebnis"
-              >
-                <Icon name="UserIcon" />
-              </button>
-            </div>
+            <button
+              className="btn btn-circle btn-outline btn-primary fixed bottom-20 right-4 z-50 aspect-square border-2 shadow-md"
+              onClick={scrollToUser}
+              aria-label="Zu meinem Ergebnis"
+            >
+              <Icon name="UserIcon" />
+            </button>
           )}
         </div>
 

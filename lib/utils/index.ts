@@ -122,7 +122,7 @@ export function filterRunner(
         return false;
       }
     } else {
-      return false || (filterHouse == 'Extern (Kollegium)' && !filterClasses);
+      return false || (filterHouse == 'ExtKol' && !filterClasses && runner.type == "staff");
     }
   }
 
