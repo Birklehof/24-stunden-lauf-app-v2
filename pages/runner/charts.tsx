@@ -20,7 +20,7 @@ import {
   getRunnersWithLapCount,
 } from '@/lib/utils/firebase/backend';
 import Menu from '@/components/Menu';
-import { formatKilometer, runnerNavItems, themedErrorToast } from '@/lib/utils';
+import { formatKilometer, runnerNavItems } from '@/lib/utils';
 import Stat from '@/components/Stat';
 import Loading from '@/components/Loading';
 import { useEffect, useState } from 'react';
@@ -28,6 +28,7 @@ import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
 import { getRunner } from '@/lib/utils/firebase/frontend';
 import MenuPlaceholder from '@/components/MenuPlaceholder';
 import { useOklchConverter } from '@builtwithjavascript/oklch-converter';
+import { useRouter } from 'next/router';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
@@ -176,6 +177,8 @@ function RunnerGraphsPage({
   >('houseAbbreviationTranslations', []);
 
   const user = useUser();
+  const router = useRouter();
+
   const [runner, setRunner] = useState<Runner | null>(null);
 
   const [textColor, setTextColor] = useState<string>('black');
@@ -209,8 +212,8 @@ function RunnerGraphsPage({
         .then(async (runner) => {
           setRunner(runner);
         })
-        .catch((error) => {
-          themedErrorToast(error.message);
+        .catch(() => {
+          router.push('/runner-not-found');
         });
     }
   }, [user]);
@@ -407,6 +410,10 @@ function RunnerGraphsPage({
     },
     animation: false,
   };
+
+  if (!runner || !user) {
+    return <Loading />;
+  }
 
   return (
     <>
