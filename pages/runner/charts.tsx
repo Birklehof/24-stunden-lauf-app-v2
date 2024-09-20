@@ -104,7 +104,7 @@ export async function getStaticProps() {
   // Get the 24 hours before the end of the event
   const hoursBeforeEnd = Array.from({ length: 24 }, (_, i) => i + 1).map(
     (i) => {
-      const date = new Date('2024-09-20T15:00:00.000+02:00'); // TODO: Change to not be hardcoded
+      const date = new Date('2024-09-21T15:00:00.000+02:00'); // TODO: Change to not be hardcoded
       date.setHours(date.getHours() - i);
       return date;
     }
