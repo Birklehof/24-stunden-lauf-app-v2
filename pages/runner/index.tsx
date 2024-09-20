@@ -39,8 +39,9 @@ export const getServerSideProps = withUserSSR({
     })
     .catch(() => {
       return {
-        props: {
-          runner: null,
+        redirect: {
+          destination: '/runner-not-found',
+          permanent: false,
         },
       };
     });

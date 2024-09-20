@@ -6,26 +6,14 @@ import { Lap, Runner } from '@/lib/interfaces';
 import { assistantNavItems, themedErrorToast } from '@/lib/utils/';
 import { deleteLap } from '@/lib/utils/firebase/frontend';
 import ListItem from '@/components/ListItem';
-import { AuthAction, withUser, withUserSSR } from 'next-firebase-auth';
+import { AuthAction, withUser } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
 import { getRunnersDict } from '@/lib/utils/firebase/backend';
 import { functions } from '@/lib/firebase';
 import { httpsCallable } from 'firebase/functions';
 import MenuPlaceholder from '@/components/MenuPlaceholder';
 
-export const getStaticProps = withUserSSR({
-  whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
-  // @ts-ignore
-})(async ({ user }) => {
-  if (user && user.id !== process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID) {
-    return {
-      redirect: {
-        destination: '/runner',
-        permanent: false,
-      },
-    };
-  }
-
+export async function getStaticProps() {
   const runners = await getRunnersDict();
 
   return {
@@ -34,7 +22,7 @@ export const getStaticProps = withUserSSR({
     },
     revalidate: 60 * 10,
   };
-});
+}
 
 function AssistantIndexPage({
   runners,
