@@ -18,7 +18,7 @@ import MenuPlaceholder from '@/components/MenuPlaceholder';
 import SearchBarPlaceholder from '@/components/SearchBarPlaceholder';
 
 // Incremental static regeneration to reduce load on backend
-export async function getStaticProps() {
+export async function getServerSideProps() {
   return {
     props: {
       runnersWithLapCount: JSON.parse(
@@ -26,7 +26,6 @@ export async function getStaticProps() {
       ),
       lastUpdated: Date.now(),
     },
-    revalidate: 10, // Revalidate at most every 10 seconds
   };
 }
 
