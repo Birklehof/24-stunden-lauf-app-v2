@@ -26,7 +26,6 @@ export async function getStaticProps() {
       ),
       lastUpdated: Date.now(),
     },
-    revalidate: 60 * 3, // Revalidate at most every 3 minutes
   };
 }
 
