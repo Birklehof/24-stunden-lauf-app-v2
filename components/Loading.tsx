@@ -14,7 +14,7 @@ const funnyMessages = [
   'Du bist ja immer noch hier',
   'Gleich fertig, versprochen!',
   '99 bottles of beer on the wall ...',
-  'I think I am, therefore, I am.',
+  'Ich summe, also bien ich.',
   'Optimismus ist nur ein Mangel an Information',
   'Proving P=NP ...',
   'Winter is coming ...',
@@ -37,7 +37,7 @@ const funnyMessages = [
   '*Lustigen Witz einfügen*',
   'Du, hier?',
   'Kaffee wird gekocht',
-  'Schritt 1 von ...',
+  'Schritt 1 von 999',
   'Meer wird geteilt',
 ] as const;
 
