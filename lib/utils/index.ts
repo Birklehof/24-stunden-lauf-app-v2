@@ -1,6 +1,6 @@
 import { ToastOptions, ToastPromiseParams, toast } from 'react-toastify';
 import { Runner } from '@/lib/interfaces';
-import { PossibleIcons } from 'heroicons-lookup';
+import { PossibleIcons } from '@/components/Icon';
 
 export interface NavItem {
   name: string;
@@ -11,43 +11,19 @@ export interface NavItem {
 // Used in pages/runner/index.tsx, pages/runner/charts.tsx, pages/assistant/index.tsx, pages/assistant/create-runner.tsx
 export const runnerNavItems: NavItem[] = [
   { name: 'Startseite', href: '/runner', icon: 'HomeIcon' },
-  {
-    name: 'Ranking',
-    href: '/ranking',
-    icon: 'TrophyIcon',
-  },
-  {
-    name: 'Statistik',
-    href: '/runner/charts',
-    icon: 'ChartBarIcon',
-  },
-  {
-    name: 'Einstellungen',
-    href: '/settings',
-    icon: 'Cog6ToothIcon',
-  },
+  { name: 'Ranking', href: '/ranking', icon: 'TrophyIcon' },
+  { name: 'Statistik', href: '/runner/charts', icon: 'ChartBarIcon' },
+  { name: 'Einstellungen', href: '/settings', icon: 'Cog6ToothIcon' },
 ];
 export const assistantNavItems: NavItem[] = [
-  {
-    name: 'Runde zählen',
-    href: '/assistant',
-    icon: 'HomeIcon',
-  },
-  {
-    name: 'Ranking',
-    href: '/ranking',
-    icon: 'TrophyIcon',
-  },
+  { name: 'Runde zählen', href: '/assistant', icon: 'HomeIcon' },
+  { name: 'Ranking', href: '/ranking', icon: 'TrophyIcon' },
   {
     name: 'Läufer hinzufügen',
     href: '/assistant/create-runner',
     icon: 'UserPlusIcon',
   },
-  {
-    name: 'Einstellungen',
-    href: '/settings',
-    icon: 'Cog6ToothIcon',
-  },
+  { name: 'Einstellungen', href: '/settings', icon: 'Cog6ToothIcon' },
 ];
 
 // Used in components/LoginOptions.tsx, pages/assistant/create-runner.tsx, pages/assistant/index.tsx
@@ -58,11 +34,7 @@ export function themedPromiseToast(
 ) {
   return toast.promise(
     promise,
-    {
-      pending,
-      success,
-      error,
-    },
+    { pending, success, error },
     {
       ...options,
       theme:
@@ -122,7 +94,10 @@ export function filterRunner(
         return false;
       }
     } else {
-      return false || (filterHouse == 'ExtKol' && !filterClasses && runner.type == "staff");
+      return (
+        false ||
+        (filterHouse == 'ExtKol' && !filterClasses && runner.type == 'staff')
+      );
     }
   }
 

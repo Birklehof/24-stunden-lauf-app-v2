@@ -1,54 +1,55 @@
 import Head from '@/components/Head';
-import { getRandomEntry } from '@/lib/utils';
 import { useEffect, useState } from 'react';
+
+const funnyMessages = [
+  'Kurz durchatmen ...',
+  'Trinken nicht vergessen!',
+  'Kurze Trinkpause',
+  'Geduld bitte.',
+  'Sind wir bald da?',
+  'Es liegt nicht an dir ...',
+  // eslint-disable-next-line quotes
+  "Don't panic!",
+  'Berechne Erfolgschancen',
+  'Du bist ja immer noch hier',
+  'Gleich fertig, versprochen!',
+  '99 bottles of beer on the wall ...',
+  'I think I am, therefore, I am.',
+  'Optimismus ist nur ein Mangel an Information',
+  'Proving P=NP ...',
+  'Winter is coming ...',
+  'Lade lustigen Spruch ...',
+  'Klopf, klopf!',
+  'Züchte Einhörner',
+  'TODO: Fahrstuhlmusik',
+  'Schönen Tag noch.',
+  'Mit Senf oder Ketchup?',
+  'Systeme werden hochgefahren ...',
+  'Mein Einhorn sagt: Die Realität lügt',
+  'Mit dem Hund spazieren ...',
+  'Mist, dass hätte nicht ... *BOOM*',
+  'Downloading more RAM ...',
+  'Pixel werden gemalt',
+  'Backe Eiscreme',
+  'Geduld wird getestet ...',
+  '3, 2, 1, ...',
+  'Folge dem weißen Hasen',
+  '*Lustigen Witz einfügen*',
+  'Du, hier?',
+  'Kaffee wird gekocht',
+  'Schritt 1 von ...',
+  'Meer wird geteilt',
+] as const;
 
 export default function Loading() {
   const [message, setMessage] = useState('');
 
-  const funnyMessages = [
-    'Kurz durchatmen ...',
-    'Trinken nicht vergessen!',
-    'Kurze Trinkpause',
-    'Geduld bitte.',
-    'Sind wir bald da?',
-    'Es liegt nicht an dir ...',
-    // eslint-disable-next-line quotes
-    "Don't panic!",
-    'Berechne Erfolgschancen',
-    'Du bist ja immer noch hier',
-    'Gleich fertig, versprochen!',
-    '99 bottles of beer on the wall ...',
-    'I think I am, therefore, I am.',
-    'Optimismus ist nur ein Mangel an Information',
-    'Proving P=NP ...',
-    'Winter is coming ...',
-    'Lade lustigen Spruch ...',
-    'Klopf, klopf!',
-    'Züchte Einhörner',
-    'TODO: Fahrstuhlmusik',
-    'Schönen Tag noch.',
-    'Mit Senf oder Ketchup?',
-    'Systeme werden hochgefahren ...',
-    'Mein Einhorn sagt: Die Realität lügt',
-    'Mit dem Hund spazieren ...',
-    'Mist, dass hätte nicht ... *BOOM*',
-    'Downloading more RAM ...',
-    'Pixel werden gemalt',
-    'Backe Eiscreme',
-    'Geduld wird getestet ...',
-    '3, 2, 1, ...',
-    'Folge dem weißen Hasen',
-    '*Lustigen Witz einfügen*',
-    'Du, hier?',
-    'Kaffee wird gekocht',
-    'Schritt 1 von ...',
-    'Meer wird geteilt',
-  ];
-
   useEffect(() => {
+
     // Function to change the message
     const updateMessage = () => {
-      setMessage(getRandomEntry(funnyMessages) || '');
+      const ind = Math.floor(Math.random() * funnyMessages.length);
+      setMessage(funnyMessages[ind]);
     };
 
     // Call the function initially to set the first message
