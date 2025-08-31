@@ -103,7 +103,7 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
           </p>
           <div className="grow" />
           <input
-            className="input-bordered input input-lg py-14 text-center !text-7xl"
+            className="input-bordered input input-lg py-14 text-center text-7xl!"
             type="number"
             value={newGoal}
             inputMode="numeric"

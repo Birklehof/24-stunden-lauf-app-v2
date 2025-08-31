@@ -24,7 +24,7 @@ export default function ListItem({
   return (
     <div
       id={id}
-      className={`font-medium ${highlight && '!border-b-4 !border-b-primary !font-bold'}`}
+      className={`font-medium ${highlight && 'border-b-4! border-b-primary! font-bold!'}`}
     >
       <div className="card-body w-full flex-row p-3 text-xl">
         <div className="flex grow flex-col justify-center overflow-hidden text-ellipsis pl-1">

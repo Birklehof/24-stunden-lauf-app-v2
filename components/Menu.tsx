@@ -21,7 +21,7 @@ export default function Menu({ navItems }: MenuProps) {
             key={item.name}
             href={item.href}
             className={`btn btn-square btn-ghost justify-center text-accent-content ${
-              pathname == item.href && '!text-primary'
+              pathname == item.href && 'text-primary!'
             }`}
             aria-label={item.name}
           >

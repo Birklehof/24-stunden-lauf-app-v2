@@ -17,7 +17,7 @@ export default function MenuPlaceholder() {
           <Icon name="HomeIcon" />
         </Link>
       </div>
-      <div className="divider divider-horizontal !m-0" />
+      <div className="divider divider-horizontal m-0!" />
     </div>
   );
 }

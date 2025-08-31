@@ -1,6 +1,62 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "daisyui";
+@plugin "daisyui/theme" {
+  name: 'light';
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-primary: '#A5C12A';
+  --color-accent: '#0c1012';
+  --color-accent-content: '#f2f2f2';
+  --color-base-100: '#FFFFFF';
+  --color-base-content: '#202020';
+  --color-success: '#07bc0c';
+  --color-warning: '#f1c40f';
+  --color-info: '#0275d8';
+  --color-error: '#e74c3c';
+
+  --rounded-box: 0.3rem;
+  --rounded-btn: 0.3rem;
+  --rounded-badge: 1.9rem;
+  --animation-btn: 0.25s;
+  --animation-input: 0.2s;
+  --btn-text-case: 'uppercase';
+  --btn-focus-scale: 0.95;
+  --border-btn: 1px;
+  --tab-border: 1px;
+  --tab-radius: 0.5rem;
+};
+@plugin "daisyui/theme" {
+  name: 'dark';
+  default: true;
+  prefersdark: true;
+  color-scheme: dark;
+
+  --color-primary: '#A5C12A';
+  --color-accent: '#0c1012';
+  --color-accent-content: '#f2f2f2';
+  --color-base-100: '#000000';
+  --color-base-200: '#020303';
+  --color-base-content: '#f7f7f7';
+  --color-success: '#07bc0c';
+  --color-warning: '#f1c40f';
+  --color-info: '#0275d8';
+  --color-error: '#e74c3c';
+
+  --rounded-box: 0.3rem;
+  --rounded-btn: 0.3rem;
+  --rounded-badge: 1.9rem;
+  --animation-btn: 0.25s;
+  --animation-input: 0.2s;
+  --btn-text-case: 'uppercase';
+  --btn-focus-scale: 0.95;
+  --border-btn: 1px;
+  --tab-border: 1px;
+  --tab-radius: 0.5rem;
+};
+
+@config '../tailwind.config.js';
 
 html {
   scroll-behavior: smooth;

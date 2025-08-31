@@ -27,7 +27,6 @@ import { useEffect, useState } from 'react';
 import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
 import { getRunner } from '@/lib/utils/firebase/frontend';
 import MenuPlaceholder from '@/components/MenuPlaceholder';
-import { useOklchConverter } from '@builtwithjavascript/oklch-converter';
 import { useRouter } from 'next/router';
 
 // Incremental static regeneration to reduce load on backend
@@ -184,26 +183,10 @@ function RunnerGraphsPage({
   const [textColor, setTextColor] = useState<string>('black');
   const [cardColor, setCardColor] = useState<string>('white');
 
-  const oklchConverter = useOklchConverter();
-
-  function oklchToHex(oklch: string) {
-    // Parse OKLCH string
-    const [lStr, cStr, hStr] = oklch
-      .match(/([\d.]+%?)\s+([\d.]+)\s+([\d.]+)/)!
-      .slice(1);
-
-    // Convert percentage to decimal if needed
-    const l = parseFloat(lStr);
-    const c = parseFloat(cStr);
-    const h = parseFloat(hStr);
-
-    return oklchConverter.oklchToHSLString({ l, c, h });
-  }
-
   useEffect(() => {
     const style = getComputedStyle(document.body);
-    setTextColor(oklchToHex(style.getPropertyValue('--bc')));
-    setCardColor(oklchToHex(style.getPropertyValue('--b1')));
+    setTextColor(style.getPropertyValue('--color-base-content'));
+    setCardColor(style.getPropertyValue('--color-base-100'));
   }, []);
 
   useEffect(() => {

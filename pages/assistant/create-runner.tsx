@@ -50,7 +50,7 @@ function AssistantCreateRunnerPage() {
       <Head title="Helfer" />
       <Menu navItems={assistantNavItems} />
 
-      <main className="p-10 gap-7 justify-start">
+      <main className="p-10 gap-7 justify-start!">
         <h1 className="text-2xl font-semibold">Läufer hinzufügen</h1>
 
         {number != 0 ? (

@@ -79,7 +79,7 @@ function AssistantIndexPage({
       <Head title="Helfer" />
       <Menu navItems={assistantNavItems} />
 
-      <main className="max-h-screen !max-w-3xl flex-row justify-center gap-10">
+      <main className="max-h-screen max-w-3xl! flex-row justify-center gap-10">
         <section className="flex flex-col items-center justify-center gap-2">
           <div className="card rounded-xl bg-base-100 shadow-xl">
             <div className="card-body p-2">
@@ -123,7 +123,7 @@ function AssistantIndexPage({
           </div>
         </section>
         <div className="hidden w-full flex-col items-center justify-start sm:flex">
-          <section className="vertical-list max-w-xl !overflow-y-scroll">
+          <section className="vertical-list max-w-xl overflow-y-scroll!">
             {createdLaps.length > 0 ? (
               <>
                 {createdLaps
@@ -152,7 +152,7 @@ function AssistantIndexPage({
                         aria-label="Runde löschen"
                         onClick={async () => await deleteLapHandler(lap.id)}
                       >
-                        <Icon name="TrashIcon" className="!h-5 w-5" />
+                        <Icon name="TrashIcon" className="h-5! w-5" />
                       </button>
                     </ListItem>
                   ))}

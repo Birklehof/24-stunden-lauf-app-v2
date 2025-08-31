@@ -24,7 +24,7 @@ function SettingsPage() {
         <Menu navItems={runnerNavItems} />
       )}
 
-      <main className="p-10 gap-7 justify-start">
+      <main className="p-10 gap-7 justify-start!">
         <h1 className="text-2xl font-semibold">Einstellungen</h1>
 
         <div className="flex flex-col">
