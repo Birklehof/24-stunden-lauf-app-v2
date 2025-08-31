@@ -108,7 +108,7 @@ export default function LoginOptions() {
         disabled={pending}
       >
         {pending && <span className="loading loading-spinner" />}
-        Assistent
+        Helfer
       </button>
     </>
   );

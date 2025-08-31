@@ -4,6 +4,6 @@ describe('Login', () => {
 
     // UI should have two login buttons
     cy.contains('Läufer').should('be.visible');
-    cy.contains('Assistent').should('be.visible');
+    cy.contains('Helfer').should('be.visible');
   });
 });

@@ -47,7 +47,7 @@ function AssistantCreateRunnerPage() {
 
   return (
     <>
-      <Head title="Assistent" />
+      <Head title="Helfer" />
       <Menu navItems={assistantNavItems} />
 
       <main className="p-10 gap-7 justify-start">

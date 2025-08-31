@@ -76,7 +76,7 @@ function AssistantIndexPage({
 
   return (
     <>
-      <Head title="Assistent" />
+      <Head title="Helfer" />
       <Menu navItems={assistantNavItems} />
 
       <main className="max-h-screen !max-w-3xl flex-row justify-center gap-10">
