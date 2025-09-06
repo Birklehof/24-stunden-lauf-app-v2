@@ -1,5 +1,4 @@
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -13,17 +12,6 @@ import {
 } from 'firebase/firestore';
 import { Runner, Lap } from '@/lib/interfaces';
 import { firebase } from '@/lib/firebase';
-
-// Used in pages/runner/index.tsx FIXME: this function is bullshit ⇾ probably ai generated
-// export async function getPosition(lapCount: number): Promise<number> {
-//   const positionQuery = query(
-//     collection(firebase, 'runners'),
-//     where('lapCount', '>', lapCount)
-//   );
-//   const positionSnapshot = await getCountFromServer(positionQuery);
-//   const position = positionSnapshot.data().count || 0;
-//   return position + 1;
-// }
 
 // Used in pages/runner/index.tsx
 export async function syncLapCount(runnerId: string, updateFunction: Function) {
@@ -57,28 +45,6 @@ export async function getRunner(email: string): Promise<Runner> {
     id: runnerSnapshot.docs[0].id,
     ...runnerData,
   } as Runner;
-}
-
-// Used in pages/assistant/create-runner.tsx
-export async function createRunner(name: string): Promise<number> {
-  if (!name) {
-    throw new Error('Ungültiger Name');
-  }
-
-  const newNumberQuery = query(
-    collection(firebase, 'runners'),
-    orderBy('number', 'desc'),
-    limit(1)
-  );
-  const newNumberSnapshot = await getDocs(newNumberQuery);
-  const newNumber = newNumberSnapshot.empty
-    ? 1
-    : newNumberSnapshot.docs[0].data().number + 1;
-
-  const runner = { name, number: newNumber, type: 'guest' } as Runner;
-  await addDoc(collection(firebase, 'runners'), runner);
-
-  return newNumber;
 }
 
 // Used in pages/assistant/index.tsx

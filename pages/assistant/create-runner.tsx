@@ -1,13 +1,16 @@
 import { useState, FormEvent } from 'react';
 import Head from '@/components/Head';
-import { createRunner } from '@/lib/utils/firebase/frontend';
 import { assistantNavItems, themedPromiseToast } from '@/lib/utils/';
 import { AuthAction, withUser } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
+import { httpsCallable } from 'firebase/functions';
+import { functions } from '@/lib/firebase';
 
 function AssistantCreateRunnerPage() {
   const [submitting, setSubmitting] = useState(false);
   const [number, setNumber] = useState(0);
+
+  const createRunner = httpsCallable(functions, 'createRunner');
 
   async function createRunnerHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -22,7 +25,7 @@ function AssistantCreateRunnerPage() {
     const formData = new FormData(e.target as HTMLFormElement);
     const name = formData.get('name') as string;
 
-    themedPromiseToast(createRunner(name), {
+    themedPromiseToast(createRunner({ name }), {
       pending: 'Läufer wird erstellt...',
       success: 'Läufer wurde erstellt!',
       error: {
@@ -34,8 +37,8 @@ function AssistantCreateRunnerPage() {
         },
       },
     })
-      .then((number) => {
-        setNumber(number);
+      .then((response) => {
+        setNumber(response.data.number);
       })
       .catch(() => {
         // Do nothing

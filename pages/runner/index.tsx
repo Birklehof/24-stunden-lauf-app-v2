@@ -60,6 +60,15 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
       return;
     }
 
+    if (!runner?.goal) {
+      // Show set goal dialog
+      console.log('No goal set, showing dialog');
+      const goalDialog = document.getElementById('set_goal') as HTMLDialogElement;
+      if (goalDialog) {
+        goalDialog.showModal();
+      }
+    }
+
     syncLapCount(runner.id, setLapCount);
   }, [runner]);
 
@@ -87,42 +96,6 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
       });
   }
 
-  if (!runner?.goal) {
-    return (
-      <>
-        <Head title="Läufer" />
-        <main className="justify-between p-10">
-          <div className="grow" />
-          <h1 className="mb-6 text-4xl font-bold">
-            Willkommen zum 24-Stunden-Lauf!
-          </h1>
-          <p className="text-lg">
-            Wir freuen uns, dass du dabei bist! Bevor es losgeht, gib hier{' '}
-            <b>dein Rundenziel</b> ein:
-          </p>
-          <div className="grow" />
-          <input
-            className="input-bordered input input-lg py-14 text-center text-7xl!"
-            type="number"
-            value={newGoal}
-            inputMode="numeric"
-            min={0}
-            onChange={(e) => setNewGoal(e.target.value)}
-          />
-          <div className="grow" />
-          <button
-            className="btn-primary btn-lg btn mt-3"
-            disabled={Number.isNaN(parseInt(newGoal))}
-            onClick={() => setGoalHandler(parseInt(newGoal))}
-          >
-            Los geht&apos;s!
-          </button>
-          <div className="grow" />
-        </main>
-      </>
-    );
-  }
-
   return (
     <>
       <Head title="Läufer" />
@@ -131,7 +104,35 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
 
       <NewLapOverlay lapCount={lapCount} />
 
-      <main className='flex items-center'>
+      <dialog id="set_goal" className="modal">
+        <div className="modal-box flex flex-col border-base-300 rounded-box border p-6 gap-4">
+          <h1 className="text-4xl font-bold">
+            Willkommen zum 24-Stunden-Lauf!
+          </h1>
+          <p className="text-lg">
+            Wir freuen uns, dass du dabei bist! Bevor es losgeht, gib hier{' '}
+            <b>dein Rundenziel</b> ein:
+          </p>
+          <input
+            className="input-bordered w-full input input-lg py-14 text-center text-7xl! font-mono"
+            type="number"
+            value={newGoal}
+            inputMode="numeric"
+            min={0}
+            onChange={(e) => setNewGoal(e.target.value)}
+          />
+          <button
+            className="btn-primary btn-lg btn w-full"
+            disabled={Number.isNaN(parseInt(newGoal))}
+            onClick={() => setGoalHandler(parseInt(newGoal))}
+          >
+            Los geht&apos;s!
+          </button>
+        </div>
+        <div className="modal-backdrop" />
+      </dialog>
+
+      <main className="flex items-center">
         <div className="m-auto grid h-fit max-w-xl grid-cols-1 gap-14 landscape:grid-cols-3">
           <Stat value={runner?.number} label="Startnummer" />
           <Stat value={lapCount} label="B'Hof-Runden" />
