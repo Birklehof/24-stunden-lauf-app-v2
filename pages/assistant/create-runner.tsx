@@ -50,52 +50,60 @@ function AssistantCreateRunnerPage() {
       <Head title="Helfer" />
       <Menu navItems={assistantNavItems} />
 
-      <main className="p-10 gap-7 justify-start!">
-        <h1 className="text-2xl font-semibold">Läufer hinzufügen</h1>
-
-        {number != 0 ? (
-          <>
-            <input
-              name={'text'}
-              className="input-bordered input input-disabled"
-              readOnly={true}
-              type={'text'}
-              value={'Startnummer: ' + number}
-              required
-            />
-            <button
-              className="btn-primary btn"
-              onClick={() => {
-                setNumber(0);
-              }}
+      <main className="max-w-sm mx-auto">
+        <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit">
+          <legend className="fieldset-legend text-lg font-semibold">
+            Läufer hinzufügen
+          </legend>
+          {number != 0 ? (
+            <>
+              <input
+                name={'text'}
+                className="input-bordered input input-disabled w-full"
+                readOnly={true}
+                type={'text'}
+                value={'Startnummer: ' + number}
+                required
+              />
+              <button
+                className="btn-primary btn"
+                onClick={() => {
+                  setNumber(0);
+                }}
+              >
+                Okay!
+              </button>
+            </>
+          ) : (
+            <form
+              onSubmit={createRunnerHandler}
+              className="flex flex-col gap-3"
             >
-              Okay!
-            </button>
-          </>
-        ) : (
-          <form onSubmit={createRunnerHandler} className="flex flex-col gap-3">
-            <input
-              id="name"
-              name="name"
-              className="input-bordered input"
-              placeholder="Name"
-              autoFocus
-              type="text"
-              required
-              minLength={3}
-            />
-            <button
-              className={`btn-primary btn-outline btn ${
-                submitting ? 'btn-disabled' : ''
-              }`}
-              type="submit"
-              disabled={submitting}
-            >
-              {submitting && <span className="loading loading-spinner"></span>}
-              Hinzufügen
-            </button>
-          </form>
-        )}
+              <input
+                id="name"
+                name="name"
+                className="input-bordered input w-full"
+                placeholder="Name"
+                autoFocus
+                type="text"
+                required
+                minLength={3}
+              />
+              <button
+                className={`btn-primary btn-outline btn ${
+                  submitting ? 'btn-disabled' : ''
+                }`}
+                type="submit"
+                disabled={submitting}
+              >
+                {submitting && (
+                  <span className="loading loading-spinner"></span>
+                )}
+                Hinzufügen
+              </button>
+            </form>
+          )}
+        </fieldset>
       </main>
     </>
   );

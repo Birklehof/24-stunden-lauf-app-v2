@@ -1,5 +1,7 @@
 import Head from '@/components/Head';
+import Icon from '@/components/Icon';
 import { NextPageContext } from 'next';
+import Link from 'next/link';
 
 export default function CustomErrorPage({
   statusCode,
@@ -11,18 +13,16 @@ export default function CustomErrorPage({
   return (
     <>
       <Head title="Seite nicht gefunden" />
-      <main className="main justify-center! bg-base-100 ">
-        <div className="flex flex-col items-center gap-x-5 gap-y-4 landscape:flex-row">
-          <h1 className="text-center text-6xl font-bold text-primary">
-            {statusCode}
-          </h1>
-          {message && (
-            <>
-              <div className="divider divider-vertical my-0 h-full landscape:divider-horizontal" />
-              <h1 className="text-center text-4xl font-semibold">{message}</h1>
-            </>
-          )}
-        </div>
+      <main className="flex flex-col items-center justify-center gap-7">
+        <h1 className="text-6xl font-bold">
+          {statusCode} {message}
+        </h1>
+        <Link href="/">
+          <span className='flex flex-row gap-2 font-semibold link link-hover'>
+            <Icon name="ArrowLeftIcon" />
+            Zurück
+          </span>
+        </Link>
       </main>
     </>
   );

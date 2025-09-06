@@ -15,7 +15,6 @@ import {
   runnerNavItems,
   themedErrorToast,
 } from '@/lib/utils/';
-import MenuPlaceholder from '@/components/MenuPlaceholder';
 
 export const getServerSideProps = withUserSSR({
   whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
@@ -132,7 +131,7 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
 
       <NewLapOverlay lapCount={lapCount} />
 
-      <main>
+      <main className='flex items-center'>
         <div className="m-auto grid h-fit max-w-xl grid-cols-1 gap-14 landscape:grid-cols-3">
           <Stat value={runner?.number} label="Startnummer" />
           <Stat value={lapCount} label="B'Hof-Runden" />
@@ -146,8 +145,6 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
             label="Strecke in km"
           />
         </div>
-
-        <MenuPlaceholder />
       </main>
     </>
   );

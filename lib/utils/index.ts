@@ -26,6 +26,17 @@ export const assistantNavItems: NavItem[] = [
   { name: 'Einstellungen', href: '/settings', icon: 'Cog6ToothIcon' },
 ];
 
+export interface RunnerType {
+  name: string;
+  value: string;
+}
+
+export const runnerTypes: RunnerType[] = [
+  { name: 'Schüler', value: 'student' },
+  { name: 'Mitarbeiter', value: 'staff' },
+  { name: 'Gäste', value: 'guest' },
+];
+
 // Used in components/LoginOptions.tsx, pages/assistant/create-runner.tsx, pages/assistant/index.tsx
 export function themedPromiseToast(
   promise: Promise<any> | (() => Promise<any>),
@@ -64,39 +75,30 @@ export function filterRunner(
     filterClasses,
     filterHouse,
   }: {
-    filterType?: string;
-    filterName?: string;
-    filterClasses?: string;
-    filterHouse?: string;
+    filterType: string[];
+    filterName: string;
+    filterClasses: string[];
+    filterHouse: string[];
   }
 ) {
-  if (filterType) {
-    if (filterType === 'student' && runner.type !== 'student') {
-      return false;
-    }
-    if (filterType === 'staff' && runner.type !== 'staff') {
-      return false;
-    }
-    if (
-      filterType === 'other' &&
-      (runner.type === 'student' || runner.type === 'staff')
-    ) {
-      return false;
-    }
+  if (filterType.length > 0 && !filterType.includes(runner.type)) {
+    return false;
   }
 
-  if (filterClasses || filterHouse) {
+  if (filterClasses.length > 0 || filterHouse.length > 0) {
     if (runner.type === 'student') {
-      if (filterClasses && runner.class !== filterClasses) {
+      if (filterClasses.length > 0 && !filterClasses.includes(runner.class!)) {
         return false;
       }
-      if (filterHouse && runner.house !== filterHouse) {
+      if (filterHouse.length > 0 && !filterHouse.includes(runner.house!)) {
         return false;
       }
     } else {
       return (
         false ||
-        (filterHouse == 'ExtKol' && !filterClasses && runner.type == 'staff')
+        (filterHouse?.includes('ExtKol') &&
+          filterClasses.length == 0 &&
+          runner.type == 'staff')
       );
     }
   }

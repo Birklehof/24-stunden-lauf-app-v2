@@ -83,27 +83,7 @@ body {
 main {
   min-height: 100vh;
   min-height: 100dvh;
-  @apply mx-auto flex w-full max-w-xl flex-col justify-between;
-}
-
-.search-bar {
-  @apply menu menu-horizontal fixed left-0 top-0 z-10 w-full bg-accent p-3 text-accent-content;
-}
-
-.vertical-list {
-  @apply grid w-full grid-cols-1 flex-col items-center overflow-y-auto;
-}
-
-.filling-card {
-  @apply card grow bg-base-200 shadow-md;
-}
-
-.centered-card {
-  @apply card mx-auto w-full max-w-xl bg-base-200 shadow-md;
-}
-
-.leading-zeros {
-  @apply text-base-content opacity-20;
+  /* @apply mx-auto flex w-full max-w-xl flex-col justify-between; */
 }
 
 :root {
@@ -112,11 +92,4 @@ main {
 
 .Toastify__toast {
   @apply text-lg;
-}
-
-/* Workaround for tooltip */
-
-.tooltip {
-  --tooltip-color: rgb(165, 192, 42);
-  --tooltip-text-color: #000000;
 }

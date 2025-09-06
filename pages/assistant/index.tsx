@@ -11,7 +11,6 @@ import Menu from '@/components/Menu';
 import { getRunnersDict } from '@/lib/utils/firebase/backend';
 import { functions } from '@/lib/firebase';
 import { httpsCallable } from 'firebase/functions';
-import MenuPlaceholder from '@/components/MenuPlaceholder';
 
 export async function getStaticProps() {
   const runners = await getRunnersDict();
@@ -79,98 +78,94 @@ function AssistantIndexPage({
       <Head title="Helfer" />
       <Menu navItems={assistantNavItems} />
 
-      <main className="max-h-screen max-w-3xl! flex-row justify-center gap-10">
-        <section className="flex flex-col items-center justify-center gap-2">
-          <div className="card rounded-xl bg-base-100 shadow-xl">
-            <div className="card-body p-2">
-              <input
-                aria-label="Startnummer"
-                id="number"
-                name="number"
-                className={`font-mono input input-bordered box-border h-44 w-72 rounded-box text-center text-9xl font-medium ${
-                  Object.values(runners).find(
-                    (runner) => runner.number == number
-                  ) != undefined
-                    ? 'input-success'
-                    : 'input-error'
-                }`}
-                autoFocus
-                onChange={(e) => {
-                  e.preventDefault();
-                  if (!isNaN(+e.target.value)) {
-                    const number = +e.target.value;
-                    if (number < 1000) {
-                      setNumber(number);
-                    }
+      <main className="grid grid-cols-3">
+        <div className="flex justify-center items-center">
+          <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit">
+            <legend className="fieldset-legend text-lg">Runde zählen</legend>
+            <input
+              aria-label="Startnummer"
+              id="number"
+              name="number"
+              className={`font-mono input input-bordered box-border h-44 w-72 rounded-box text-center text-9xl font-medium ${
+                Object.values(runners).find(
+                  (runner) => runner.number == number
+                ) != undefined
+                  ? 'input-success'
+                  : 'input-error'
+              }`}
+              autoFocus
+              onChange={(e) => {
+                e.preventDefault();
+                if (!isNaN(+e.target.value)) {
+                  const number = +e.target.value;
+                  if (number < 1000) {
+                    setNumber(number);
                   }
-                }}
-                onKeyDown={async (e) => {
-                  if (e.key === 'Enter') {
-                    await createNewLapHandler();
-                  }
-                }}
-                type="text"
-                value={Number(number).toString()}
-                min={0}
-                required
-                inputMode="numeric"
-              />
+                }
+              }}
+              onKeyDown={async (e) => {
+                if (e.key === 'Enter') {
+                  await createNewLapHandler();
+                }
+              }}
+              type="text"
+              value={Number(number).toString()}
+              min={0}
+              required
+              inputMode="numeric"
+            />
+            <div className="label text-xs">
+              Drücke <kbd className="kbd kbd-xs">Enter</kbd>, um eine Runde zu
+              zählen
             </div>
-          </div>
-          <div className="w-full text-center text-sm">
-            Drücke <kbd className="kbd kbd-sm bg-neutral">Enter</kbd>, um eine
-            Runde zu zählen
-          </div>
-        </section>
-        <div className="hidden w-full flex-col items-center justify-start sm:flex">
-          <section className="vertical-list max-w-xl overflow-y-scroll!">
-            {createdLaps.length > 0 ? (
-              <>
-                {createdLaps
-                  .sort((a, b) => {
-                    return (
-                      // @ts-ignore
-                      b.createdAt - a.createdAt
-                    );
-                  })
-                  .map((lap) => (
-                    <ListItem
-                      key={lap.id + lap.createdAt}
-                      medals={false}
-                      number={runners[lap.runnerId]?.number}
-                      mainContent={(
-                        runners[lap.runnerId]?.name || 'Unbekannt'
-                      ).concat(
-                        runners[lap.runnerId]?.class
-                          ? ', '.concat(runners[lap.runnerId]?.class || '')
-                          : ''
-                      )}
-                    >
-                      <button
-                        disabled={!lap.id}
-                        className="btn btn-square btn-outline btn-error btn-sm hidden text-error md:flex"
-                        aria-label="Runde löschen"
-                        onClick={async () => await deleteLapHandler(lap.id)}
-                      >
-                        <Icon name="TrashIcon" className="h-5! w-5" />
-                      </button>
-                    </ListItem>
-                  ))}
-                <div className="w-full border-t-2 border-t-base-content p-3 text-center">
-                  Zuletzt erstellte Runden
-                </div>
-              </>
-            ) : (
-              <div className="w-full border-t-2 border-t-base-100 p-3 text-center">
-                Du hast noch keine Runden gezählt
-              </div>
-            )}
-          </section>
-
-          <div className="grow" />
-
-          <MenuPlaceholder />
+          </fieldset>
         </div>
+        <ul className="list col-span-2">
+          {createdLaps.length > 0 ? (
+            <>
+              {createdLaps
+                .sort((a, b) => {
+                  return (
+                    // @ts-ignore
+                    b.createdAt - a.createdAt
+                  );
+                })
+                .map((lap) => (
+                  <ListItem
+                    key={lap.id + lap.createdAt}
+                    medals={false}
+                    number={runners[lap.runnerId]?.number}
+                    mainContent={(
+                      runners[lap.runnerId]?.name || 'Unbekannt'
+                    ).concat(
+                      runners[lap.runnerId]?.class
+                        ? ', '.concat(runners[lap.runnerId]?.class || '')
+                        : ''
+                    )}
+                    secondaryContent={new Date(lap.createdAt)
+                      .toLocaleTimeString('de-DE')
+                      .toString()}
+                  >
+                    <button
+                      disabled={!lap.id}
+                      className="btn btn-circle btn-ghost btn-sm hidden text-error md:flex"
+                      aria-label="Runde löschen"
+                      onClick={async () => await deleteLapHandler(lap.id)}
+                    >
+                      <Icon name="TrashIcon" />
+                    </button>
+                  </ListItem>
+                ))}
+              <li className="p-4 opacity-60 tracking-wide text-center">
+                Zuletzt gezählte Runden
+              </li>
+            </>
+          ) : (
+            <li className="p-4 opacity-60 tracking-wide text-center">
+              Noch keine Runden gezählt
+            </li>
+          )}
+        </ul>
       </main>
     </>
   );

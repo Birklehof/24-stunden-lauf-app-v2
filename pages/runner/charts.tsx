@@ -26,7 +26,6 @@ import Loading from '@/components/Loading';
 import { useEffect, useState } from 'react';
 import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
 import { getRunner } from '@/lib/utils/firebase/frontend';
-import MenuPlaceholder from '@/components/MenuPlaceholder';
 import { useRouter } from 'next/router';
 
 // Incremental static regeneration to reduce load on backend
@@ -199,7 +198,7 @@ function RunnerGraphsPage({
           router.push('/runner-not-found');
         });
     }
-  }, [user]);
+  }, [user, router]);
 
   const [distancePerLap] = useRemoteConfig(
     'distancePerLap',
@@ -403,10 +402,23 @@ function RunnerGraphsPage({
       <Head title="Läufer Details" />
       <Menu navItems={runnerNavItems} />
 
-      <main className="gap-7 justify-start">
-        <div className="px-10 pt-10">
-          <h1 className="text-2xl font-semibold">Statistiken</h1>
-          <p>
+      <main className="flex flex-col items-center gap-7">
+        <div role="alert" className="alert w-full max-w-md">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            className="stroke-info h-6 w-6 shrink-0"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+          <span>
+            {' '}
             Stand{' '}
             {new Date(lastUpdated).toLocaleDateString('de-DE', {
               weekday: 'long',
@@ -420,11 +432,14 @@ function RunnerGraphsPage({
               timeZone: 'Europe/Berlin',
             })}
             Uhr
-          </p>
+          </span>
         </div>
 
-        <div className="px-10 pb-6">
-          <h2 className="text-xl font-semibold">Persönlicher Fortschritt</h2>
+        <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit max-w-md">
+          <legend className="fieldset-legend text-lg font-semibold">
+            Persönlicher Fortschritt
+          </legend>
+
           <p className="pb-2 text-base">
             Hier siehst du, wie nah du deinem Ziel schon gekommen bist.
           </p>
@@ -451,10 +466,9 @@ function RunnerGraphsPage({
             )?.lapCount || 0}{' '}
             / {runner?.goal || 'NaN'} Runden
           </p>
-        </div>
+        </fieldset>
 
-        <div className="flex flex-col gap-4 px-10 pb-6">
-          <h2 className="text-xl font-semibold">Allgemein</h2>
+        <div className="flex flex-col gap-4 max-w-4xl w-full">
           <div className="grid grid-cols-2 gap-3 gap-y-9 md:grid-cols-4">
             <div className="card card-compact flex items-center justify-center">
               <Stat value={runnerCount} label="Teilnehmer" />
@@ -485,7 +499,7 @@ function RunnerGraphsPage({
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 px-2 pb-6">
+        <div className="flex flex-col gap-2 max-w-4xl w-full">
           <h2 className="px-8 text-center text-xl font-semibold">
             Rundenverlauf
           </h2>
@@ -493,7 +507,7 @@ function RunnerGraphsPage({
           <Line data={lapCountByHourData} options={lineOptions} />
         </div>
 
-        <div className="flex flex-col gap-2 px-2 pb-6">
+        <div className="flex flex-col gap-2 w-full max-w-sm"> 
           <h2 className="px-8 text-center text-xl font-semibold">
             Ø Runden pro Haus
           </h2>
@@ -501,7 +515,7 @@ function RunnerGraphsPage({
           <Pie data={averageLapCountByHouseData} options={pieOptions} />
         </div>
 
-        <div className="flex flex-col gap-2 px-2 pb-6">
+        <div className="flex flex-col gap-2 w-full max-w-sm">
           <h2 className="px-8 text-center text-xl font-semibold">
             Ø Runden pro Klasse
           </h2>
@@ -509,7 +523,7 @@ function RunnerGraphsPage({
           <Pie data={averageLapCountByClassData} options={pieOptions} />
         </div>
 
-        <div className="flex flex-col gap-2 px-2 pb-6">
+        <div className="flex flex-col gap-2 w-full max-w-sm">
           <h2 className="px-8 text-center text-xl font-semibold">
             Runden pro Haus
           </h2>
@@ -517,15 +531,13 @@ function RunnerGraphsPage({
           <Pie data={lapCountByHouseData} options={pieOptions} />
         </div>
 
-        <div className="flex flex-col gap-2 px-2 pb-6">
+        <div className="flex flex-col gap-2 w-full max-w-sm">
           <h2 className="px-8 text-center text-xl font-semibold">
             Runden pro Klasse
           </h2>
           {/* @ts-ignore */}
           <Pie data={lapCountByClassData} options={pieOptions} />
         </div>
-
-        <MenuPlaceholder />
       </main>
     </>
   );

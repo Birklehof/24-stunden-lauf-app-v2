@@ -11,12 +11,12 @@ import { Timestamp } from 'firebase/firestore';
  *
  * @property {string} id - The firestore id of the lap
  * @property {string} runnerId - The firestore id of the associated runner
- * @property {Timestamp} createdAt - The time when the lap was created
+ * @property {Timestamp} createdAt - Timestamp in milliseconds
  */
 export interface Lap {
   id: string;
   runnerId: string;
-  createdAt: Timestamp;
+  createdAt: number;
 }
 
 /**

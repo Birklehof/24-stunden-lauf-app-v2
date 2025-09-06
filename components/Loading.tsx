@@ -65,7 +65,7 @@ export default function Loading() {
   return (
     <>
       <Head title="Lädt ..." />
-      <main className="items-center justify-center gap-10">
+      <main className="flex flex-col items-center justify-center gap-10">
         <span
           aria-label="Ladeanimation"
           className="loading loading-infinity loading-lg scale-[300%]"

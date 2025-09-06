@@ -22,6 +22,8 @@ Die App an sich enthält keine Administrationsoberfläche. Die Administration er
 
 Next ist das JavaScript-Framework, welches für die Entwicklung der App verwendet wird. Es basiert auf React. [Mehr](https://nextjs.org/)
 
+(`nvm use 22.19`)
+
 - `yarn` - Installiert alle Abhängigkeiten (**Wichtig! Diesen Befehl im Haupt-Ordner ausführen!**)
 - `yarn dev` - Startet den Entwicklungsserver
 
