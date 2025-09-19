@@ -6,6 +6,7 @@ interface ListItemProps {
   mainContent: string;
   secondaryContent?: string;
   children?: ReactNode | undefined;
+  animated?: boolean;
   highlight?: boolean;
   medals?: boolean;
 }
@@ -16,6 +17,7 @@ export default function ListItem({
   mainContent,
   secondaryContent,
   children,
+  animated = false,
   highlight,
   medals = true,
 }: ListItemProps) {
@@ -23,9 +25,11 @@ export default function ListItem({
     <li
       id={id}
       key={id}
-      className={`list-row ${highlight && 'border-b-4 border-b-primary font-bold'}`}
+      className={`list-row ${animated && 'rounded-none animate-fade-in'} ${highlight && 'border-b-4 border-b-primary font-bold'}`}
     >
-      <div className={`tabular-nums ${secondaryContent ? 'text-3xl' : 'text-xl'}`}>
+      <div
+        className={`tabular-nums ${secondaryContent ? 'text-3xl' : 'text-xl'}`}
+      >
         {number != undefined && (number > 3 || !medals) && (
           <>
             <span className="opacity-20 font-mono">
@@ -40,13 +44,13 @@ export default function ListItem({
           </>
         )}
       </div>
-      <div className={`list-col-grow ${secondaryContent ? 'text-base' : 'text-xl'}`}>
+      <div
+        className={`list-col-grow ${secondaryContent ? 'text-base' : 'text-xl'}`}
+      >
         {mainContent}
-        <div className='text-xs'>{secondaryContent}</div>
+        <div className="text-xs">{secondaryContent}</div>
       </div>
-      <div>
-        {children}
-      </div>
+      <div>{children}</div>
     </li>
   );
 }

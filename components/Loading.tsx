@@ -65,12 +65,12 @@ export default function Loading() {
   return (
     <>
       <Head title="Lädt ..." />
-      <main className="flex flex-col items-center justify-center gap-10">
+      <main className="flex flex-col items-center justify-center gap-16">
         <span
           aria-label="Ladeanimation"
-          className="loading loading-infinity loading-lg scale-[300%]"
+          className="loading loading-spinner loading-lg scale-[300%] text-primary"
         />
-        <p className="line-clamp-2 h-12 px-10 text-center">{message}</p>
+        <p className="text-center">{message}</p>
       </main>
     </>
   );

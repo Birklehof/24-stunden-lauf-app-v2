@@ -78,8 +78,8 @@ function AssistantIndexPage({
       <Head title="Helfer" />
       <Menu navItems={assistantNavItems} />
 
-      <main className="grid grid-cols-3">
-        <div className="flex justify-center items-center">
+      <main className="flex flex-row justify-around">
+        <div className="flex justify-center items-center w-fit">
           <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit">
             <legend className="fieldset-legend text-lg">Runde zählen</legend>
             <input
@@ -120,7 +120,7 @@ function AssistantIndexPage({
             </div>
           </fieldset>
         </div>
-        <ul className="list col-span-2">
+        <ul className="list h-[calc(100vh-4rem)] overflow-y-scroll grow max-w-2/3">
           {createdLaps.length > 0 ? (
             <>
               {createdLaps
@@ -131,30 +131,37 @@ function AssistantIndexPage({
                   );
                 })
                 .map((lap) => (
-                  <ListItem
-                    key={lap.id + lap.createdAt}
-                    medals={false}
-                    number={runners[lap.runnerId]?.number}
-                    mainContent={(
-                      runners[lap.runnerId]?.name || 'Unbekannt'
-                    ).concat(
-                      runners[lap.runnerId]?.class
-                        ? ', '.concat(runners[lap.runnerId]?.class || '')
-                        : ''
-                    )}
-                    secondaryContent={new Date(lap.createdAt)
-                      .toLocaleTimeString('de-DE')
-                      .toString()}
-                  >
-                    <button
-                      disabled={!lap.id}
-                      className="btn btn-circle btn-ghost btn-sm hidden text-error md:flex"
-                      aria-label="Runde löschen"
-                      onClick={async () => await deleteLapHandler(lap.id)}
-                    >
-                      <Icon name="TrashIcon" />
-                    </button>
-                  </ListItem>
+                  <>
+                    {/* Repeat 100 times */}
+                    {[...Array(100)].map((_, i) => (
+                      <ListItem
+                        key={lap.id + lap.createdAt}
+                        medals={false}
+                        number={runners[lap.runnerId]?.number}
+                        mainContent={(
+                          runners[lap.runnerId]?.name || 'Unbekannt'
+                        ).concat(
+                          runners[lap.runnerId]?.class
+                            ? ', '.concat(runners[lap.runnerId]?.class || '')
+                            : ''
+                        )}
+                        secondaryContent={
+                          new Date(lap.createdAt)
+                            .toLocaleTimeString('de-DE')
+                            .toString() + ' Uhr'
+                        }
+                      >
+                        <button
+                          disabled={!lap.id}
+                          className="btn btn-circle btn-ghost btn-sm hidden text-error md:flex"
+                          aria-label="Runde löschen"
+                          onClick={async () => await deleteLapHandler(lap.id)}
+                        >
+                          <Icon name="TrashIcon" />
+                        </button>
+                      </ListItem>
+                    ))}
+                  </>
                 ))}
               <li className="p-4 opacity-60 tracking-wide text-center">
                 Zuletzt gezählte Runden

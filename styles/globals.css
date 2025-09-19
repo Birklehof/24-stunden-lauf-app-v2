@@ -76,13 +76,14 @@ body {
   min-height: 100dvh;
   width: 100%;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   @apply bg-base-100;
 }
 
 main {
   min-height: 100vh;
   min-height: 100dvh;
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom));
   /* @apply mx-auto flex w-full max-w-xl flex-col justify-between; */
 }
 

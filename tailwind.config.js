@@ -1,3 +1,4 @@
+const { backup } = require('node:sqlite');
 const { fontFamily } = require('tailwindcss/defaultTheme');
 
 module.exports = {
@@ -37,6 +38,13 @@ module.exports = {
           '25%': { opacity: 1 },
           '100%': { opacity: 1 },
         },
+        'fade-in': {
+          '0%': { backgroundColor: '#A5C12A', transform: 'translateY(-100%)' },
+          '100%': { backgroundColor: 'transparent', transform: 'translateY(0)' },
+        },
+      },
+      animation: {
+        'fade-in': 'fade-in 0.5s ease-in-out forwards',
       },
       fontFamily: {
         sans: ['var(--montserrat-font)', ...fontFamily.sans],

@@ -53,8 +53,8 @@ function AssistantCreateRunnerPage() {
       <Head title="Helfer" />
       <Menu navItems={assistantNavItems} />
 
-      <main className="max-w-sm mx-auto">
-        <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit">
+      <main className="flex flex-col gap-4 pt-2 max-w-sm mx-auto">
+        <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit w-full">
           <legend className="fieldset-legend text-lg font-semibold">
             Läufer hinzufügen
           </legend>

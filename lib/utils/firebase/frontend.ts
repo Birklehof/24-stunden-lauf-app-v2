@@ -52,22 +52,29 @@ export async function deleteLap(lapId: string) {
   await deleteDoc(doc(firebase, 'laps', lapId));
 }
 
-// Used in pages/assistant/index.tsx
-export async function getNewestLaps(numberOfLaps: number): Promise<Lap[]> {
+export async function syncNewestLaps(
+  limitNumber: number,
+  updateFunction: Function
+) {
   const lapsQuery = query(
     collection(firebase, 'laps'),
     orderBy('createdAt', 'desc'),
-    limit(numberOfLaps)
+    limit(limitNumber)
   );
+
   const lapsSnapshot = await getDocs(lapsQuery);
+  const lapsData = lapsSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Lap[];
 
-  const laps = lapsSnapshot.docs.map((doc) => {
-    const data = doc.data();
-    return {
+  updateFunction(lapsData);
+
+  onSnapshot(lapsQuery, (snapshot) => {
+    const lapsData = snapshot.docs.map((doc) => ({
       id: doc.id,
-      ...data,
-    } as Lap;
+      ...doc.data(),
+    })) as Lap[];
+    updateFunction(lapsData);
   });
-
-  return laps;
 }

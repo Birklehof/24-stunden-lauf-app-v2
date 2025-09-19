@@ -5,6 +5,7 @@ import {
   BarChart,
   House,
   Info,
+  Search,
   Settings,
   Sliders,
   Trash2,
@@ -17,6 +18,7 @@ export type PossibleIcons = keyof typeof icons;
 interface IconProps {
   name: PossibleIcons;
   className?: string;
+  size?: number;
 }
 
 const icons: { [key: string]: any } = {
@@ -29,17 +31,19 @@ const icons: { [key: string]: any } = {
   AdjustmentsVerticalIcon: Sliders,
   UserPlusIcon: UserPlus,
   TrashIcon: Trash2,
-  UserIcon: User
+  UserIcon: User,
+  Search: Search,
 } as const;
 
 export default function Icon({
   name = 'ArrowLeftIcon',
   className = '',
+  size = 24,
 }: IconProps) {
   if (name in icons) {
     const LookedUpIcon = icons[name] || icons.x;
-    return <LookedUpIcon size={24} className={className} />;
+    return <LookedUpIcon size={size} className={className} />;
   } else {
-    return <AlertTriangle size={24} color="#FF0000" />;
+    return <AlertTriangle size={size} color="#FF0000" />;
   }
 }

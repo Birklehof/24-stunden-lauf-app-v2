@@ -11,7 +11,12 @@ import {
   defaultHouses,
 } from '@/lib/firebase/remoteConfigDefaultValues';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
-import { assistantNavItems, filterRunner, runnerNavItems, runnerTypes } from '@/lib/utils';
+import {
+  assistantNavItems,
+  filterRunner,
+  runnerNavItems,
+  runnerTypes,
+} from '@/lib/utils';
 import Menu from '@/components/Menu';
 
 // Incremental static regeneration to reduce load on backend
@@ -95,107 +100,100 @@ function RankingPage({
         <Menu navItems={runnerNavItems} />
       )}
 
-      <main className='max-w-xl mx-auto'>
-        <fieldset className="fieldset">
-          <label className="input w-full">
-            <svg
-              className="h-[1em] opacity-50"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <g
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                strokeWidth="2.5"
-                fill="none"
-                stroke="currentColor"
-              >
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.3-4.3"></path>
-              </g>
-            </svg>
-            <input
-              type="search"
-              className="grow text-lg"
-              placeholder="Suchen"
-              value={searchRunnerName}
-              onChange={(e) => setSearchRunnerName(e.target.value)}
-            />
-          </label>
-
-          <div className="collapse bg-base-100 border-base-300 border">
-            <input type="checkbox" className="peer" />
-            <div className="collapse-title text-sm font-semibold">Filter</div>
-            <div className="collapse-content flex flex-col gap-2">
-              <form className="flex flex-row flex-wrap gap-1">
-                <input
-                  className="btn btn-sm btn-circle"
-                  type="reset"
-                  value="×"
-                />
-                {runnerTypes.map((type) => (
-                  <input
-                    key={type.value}
-                    className="btn btn-sm rounded-full"
-                    type="checkbox"
-                    aria-label={type.name}
-                    value={type.value}
-                    checked={runnerTypeFilter.includes(type.value)}
-                    onChange={(e) =>
-                      handleCheckboxChange(e, runnerTypeFilter, setRunnerTypeFilter)
-                    }
-                  />
-                ))}
-              </form>
-
-              <form className="flex flex-row flex-wrap gap-1">
-                <input
-                  className="btn btn-sm btn-circle"
-                  type="reset"
-                  value="×"
-                  aria-label="Klassenfilter zurücksetzen"
-                  onClick={(e) => resetFilter(e, setRunnerClassFilter)}
-                />
-                {classes.map((classItem) => (
-                  <input
-                    key={classItem}
-                    className="btn btn-sm rounded-full"
-                    type="checkbox"
-                    aria-label={classItem}
-                    value={classItem}
-                    checked={runnerClassFilter.includes(classItem)}
-                    onChange={(e) =>
-                      handleCheckboxChange(e, runnerClassFilter, setRunnerClassFilter)
-                    }
-                  />
-                ))}
-              </form>
-
-              <form className="flex flex-row flex-wrap gap-1">
-                <input
-                  className="btn btn-sm btn-circle"
-                  type="reset"
-                  value="×"
-                  aria-label="Häuserfilter zurücksetzen"
-                  onClick={(e) => resetFilter(e, setRunnerHouseFilter)}
-                />
-                {houses.map((house) => (
-                  <input
-                    key={house.abbreviation}
-                    className="btn btn-sm rounded-full"
-                    type="checkbox"
-                    aria-label={house.name}
-                    value={house.abbreviation}
-                    checked={runnerHouseFilter.includes(house.abbreviation)}
-                    onChange={(e) =>
-                      handleCheckboxChange(e, runnerHouseFilter, setRunnerHouseFilter)
-                    }
-                  />
-                ))}
-              </form>
-            </div>
+      <main className="max-w-xl mx-auto flex pt-4 flex-col gap-2">
+        <div className="collapse border border-base-300 rounded-box">
+          <input type="checkbox" className="peer" />
+          <div className="collapse-title text-sm font-semibold flex items-center gap-2">
+            <Icon name="AdjustmentsVerticalIcon" size={16} />
+            Filter
           </div>
-        </fieldset>
+          <div className="collapse-content flex flex-col gap-2">
+            <label className="input w-full mb-3">
+              <Icon name="Search" size={17} />
+              <input
+                type="search"
+                className="grow text-lg rounded-box"
+                placeholder="Suchen"
+                value={searchRunnerName}
+                onChange={(e) => setSearchRunnerName(e.target.value)}
+              />
+            </label>
+            <form className="flex flex-row flex-wrap gap-1">
+              <input className="btn btn-sm btn-circle" type="reset" value="×" />
+              {runnerTypes.map((type) => (
+                <input
+                  key={type.value}
+                  className="btn btn-sm rounded-full"
+                  type="checkbox"
+                  aria-label={type.name}
+                  value={type.value}
+                  checked={runnerTypeFilter.includes(type.value)}
+                  onChange={(e) =>
+                    handleCheckboxChange(
+                      e,
+                      runnerTypeFilter,
+                      setRunnerTypeFilter
+                    )
+                  }
+                />
+              ))}
+            </form>
+
+            <form className="flex flex-row flex-wrap gap-1">
+              <input
+                className="btn btn-sm btn-circle"
+                type="reset"
+                value="×"
+                aria-label="Klassenfilter zurücksetzen"
+                onClick={(e) => resetFilter(e, setRunnerClassFilter)}
+              />
+              {classes.map((classItem) => (
+                <input
+                  key={classItem}
+                  className="btn btn-sm rounded-full"
+                  type="checkbox"
+                  aria-label={classItem}
+                  value={classItem}
+                  checked={runnerClassFilter.includes(classItem)}
+                  onChange={(e) =>
+                    handleCheckboxChange(
+                      e,
+                      runnerClassFilter,
+                      setRunnerClassFilter
+                    )
+                  }
+                />
+              ))}
+            </form>
+
+            <form className="flex flex-row flex-wrap gap-1">
+              <input
+                className="btn btn-sm btn-circle"
+                type="reset"
+                value="×"
+                aria-label="Häuserfilter zurücksetzen"
+                onClick={(e) => resetFilter(e, setRunnerHouseFilter)}
+              />
+              {houses.map((house) => (
+                <input
+                  key={house.abbreviation}
+                  className="btn btn-sm rounded-full"
+                  type="checkbox"
+                  aria-label={house.name}
+                  value={house.abbreviation}
+                  checked={runnerHouseFilter.includes(house.abbreviation)}
+                  onChange={(e) =>
+                    handleCheckboxChange(
+                      e,
+                      runnerHouseFilter,
+                      setRunnerHouseFilter
+                    )
+                  }
+                />
+              ))}
+            </form>
+          </div>
+        </div>
 
         <ul className="list">
           {runnersWithLapCount

@@ -23,8 +23,8 @@ function SettingsPage() {
         <Menu navItems={runnerNavItems} />
       )}
 
-      <main className="max-w-sm mx-auto">
-        <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit">
+      <main className="flex flex-col gap-4 my-2 max-w-sm mx-auto">
+        <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit w-full">
           <legend className="fieldset-legend text-lg font-semibold">
             Darstellung
           </legend>
@@ -50,11 +50,11 @@ function SettingsPage() {
               checked={showDebug}
               onChange={() => setShowDebug(!showDebug)}
             />
-            Debug
+            Zeige Debug Information
           </label>
         </fieldset>
 
-        <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit">
+        <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit w-full">
           <legend className="fieldset-legend text-lg font-semibold">
             Account
           </legend>
@@ -74,12 +74,14 @@ function SettingsPage() {
         </fieldset>
 
         {showDebug && (
-          <div className="flex flex-col">
-            <h2 className="text-xl font-semibold">Debug</h2>
-            <p className="overflow-hidden break-all pt-2">
+          <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit w-full">
+            <legend className="fieldset-legend text-lg font-semibold">
+              Debug
+            </legend>
+            <code className="break-all">
               {JSON.stringify(user)}
-            </p>
-          </div>
+            </code>
+          </fieldset>
         )}
       </main>
     </>
