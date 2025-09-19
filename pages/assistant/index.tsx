@@ -131,37 +131,32 @@ function AssistantIndexPage({
                   );
                 })
                 .map((lap) => (
-                  <>
-                    {/* Repeat 100 times */}
-                    {[...Array(100)].map((_, i) => (
-                      <ListItem
-                        key={lap.id + lap.createdAt}
-                        medals={false}
-                        number={runners[lap.runnerId]?.number}
-                        mainContent={(
-                          runners[lap.runnerId]?.name || 'Unbekannt'
-                        ).concat(
-                          runners[lap.runnerId]?.class
-                            ? ', '.concat(runners[lap.runnerId]?.class || '')
-                            : ''
-                        )}
-                        secondaryContent={
-                          new Date(lap.createdAt)
-                            .toLocaleTimeString('de-DE')
-                            .toString() + ' Uhr'
-                        }
-                      >
-                        <button
-                          disabled={!lap.id}
-                          className="btn btn-circle btn-ghost btn-sm hidden text-error md:flex"
-                          aria-label="Runde löschen"
-                          onClick={async () => await deleteLapHandler(lap.id)}
-                        >
-                          <Icon name="TrashIcon" />
-                        </button>
-                      </ListItem>
-                    ))}
-                  </>
+                  <ListItem
+                    key={lap.id + lap.createdAt}
+                    medals={false}
+                    number={runners[lap.runnerId]?.number}
+                    mainContent={(
+                      runners[lap.runnerId]?.name || 'Unbekannt'
+                    ).concat(
+                      runners[lap.runnerId]?.class
+                        ? ', '.concat(runners[lap.runnerId]?.class || '')
+                        : ''
+                    )}
+                    secondaryContent={
+                      new Date(lap.createdAt)
+                        .toLocaleTimeString('de-DE')
+                        .toString() + ' Uhr'
+                    }
+                  >
+                    <button
+                      disabled={!lap.id}
+                      className="btn btn-circle btn-ghost btn-sm hidden text-error md:flex"
+                      aria-label="Runde löschen"
+                      onClick={async () => await deleteLapHandler(lap.id)}
+                    >
+                      <Icon name="TrashIcon" />
+                    </button>
+                  </ListItem>
                 ))}
               <li className="p-4 opacity-60 tracking-wide text-center">
                 Zuletzt gezählte Runden

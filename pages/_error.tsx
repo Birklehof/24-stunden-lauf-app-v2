@@ -1,13 +1,10 @@
 import Head from '@/components/Head';
-import Icon from '@/components/Icon';
 import { NextPageContext } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function CustomErrorPage({
   statusCode,
-  message,
-  desc,
 }: {
   statusCode: number;
   message?: string;
@@ -32,11 +29,5 @@ export default function CustomErrorPage({
 
 CustomErrorPage.getInitialProps = ({ res, err }: NextPageContext) => {
   const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
-  let message = err?.message || res?.statusMessage;
-
-  if (statusCode === 404) {
-    message = 'Seite nicht gefunden';
-  }
-
-  return { statusCode, message };
+  return { statusCode };
 };
