@@ -104,12 +104,12 @@ function RankingPage({
         <div className="collapse border border-base-300 rounded-box">
           <input type="checkbox" className="peer" />
           <div className="collapse-title text-sm font-semibold flex items-center gap-2">
-            <Icon name="AdjustmentsVerticalIcon" size={16} />
+            <Icon name="AdjustmentsVerticalIcon" size={5} />
             Filter
           </div>
           <div className="collapse-content flex flex-col gap-2">
             <label className="input w-full mb-3">
-              <Icon name="Search" size={17} />
+              <Icon name="Search" size={4} />
               <input
                 type="search"
                 className="grow text-lg rounded-box"
