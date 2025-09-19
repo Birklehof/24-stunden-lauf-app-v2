@@ -28,6 +28,7 @@ export async function getServerSideProps() {
       ),
       lastUpdated: Date.now(),
     },
+    revalidate: 30,
   };
 }
 

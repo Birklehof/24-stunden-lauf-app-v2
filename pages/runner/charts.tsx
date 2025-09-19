@@ -142,7 +142,7 @@ export async function getStaticProps() {
         JSON.stringify(averageLapCountByClass)
       ),
     },
-    revalidate: 60 * 3, // Revalidate at most every 3 minutes
+    revalidate: 60 * 3
   };
 }
 
