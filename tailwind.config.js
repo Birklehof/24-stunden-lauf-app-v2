@@ -53,5 +53,4 @@ module.exports = {
       },
     },
   },
-  safelist: ['btn-primary', 'btn-secondary', 'btn-accent', 'btn-ghost'],
 };

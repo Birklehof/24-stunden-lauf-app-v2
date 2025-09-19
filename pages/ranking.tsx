@@ -20,7 +20,7 @@ import {
 import Menu from '@/components/Menu';
 
 // Incremental static regeneration to reduce load on backend
-export async function getServerSideProps() {
+export async function getStaticProps() {
   return {
     props: {
       runnersWithLapCount: JSON.parse(
@@ -28,7 +28,7 @@ export async function getServerSideProps() {
       ),
       lastUpdated: Date.now(),
     },
-    revalidate: 30,
+    revalidate: 10,
   };
 }
 
