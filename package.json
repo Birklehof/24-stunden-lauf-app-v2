@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "preview": "next build && next start",
     "build": "next build",
     "start": "next start",
@@ -47,5 +47,6 @@
   "resolutions": {
     "@types/react": "19.1.12",
     "@types/react-dom": "19.1.9"
-  }
+  },
+  "browserslist": "> 1%"
 }
