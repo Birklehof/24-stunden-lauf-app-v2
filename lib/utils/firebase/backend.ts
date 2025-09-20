@@ -8,7 +8,15 @@ export async function getRunnersWithLapCount(): Promise<RunnerWithLapCount[]> {
   // Get lap count for each runner
   const runnersWithLaps = await Promise.all(
     runners.docs.map(async (docs) => {
-      const runner = docs.data() as RunnerWithLapCount;
+      const runner = {
+        id: docs.id,
+        name: docs.data().name,
+        number: docs.data().number,
+        type: docs.data().type,
+        house: docs.data().house,
+        class: docs.data().class,
+        lapCount: docs.data().lapCount || 0,
+      } as RunnerWithLapCount;
 
       const lapCountSnapshot = await firebase
         .collection('laps')
@@ -55,7 +63,9 @@ export async function getRunnersDict(): Promise<{ [id: string]: Runner }> {
   runners.docs.forEach((runner) => {
     runnersDict[runner.id] = {
       id: runner.id,
-      ...runner.data(),
+      name: runner.data().name,
+      number: runner.data().number,
+      type: runner.data().type,
     } as Runner;
   });
 

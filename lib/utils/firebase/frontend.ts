@@ -52,6 +52,41 @@ export async function deleteLap(lapId: string) {
   await deleteDoc(doc(firebase, 'laps', lapId));
 }
 
+// Used in pages/assistant/index.tsx
+export async function syncRunnersDict(
+  updateFunction: Function
+): Promise<() => void> {
+  const runnersQuery = query(collection(firebase, 'runners'));
+
+  const runnersSnapshot = await getDocs(runnersQuery);
+
+  const runnersDict: { [id: string]: Runner } = {};
+
+  runnersSnapshot.docs.forEach((runner) => {
+    runnersDict[runner.id] = {
+      id: runner.id,
+      name: runner.data().name,
+      number: runner.data().number,
+      type: runner.data().type,
+    } as Runner;
+  });
+
+  updateFunction(runnersDict);
+  return onSnapshot(runnersQuery, (snapshot) => {
+    const runnersDict: { [id: string]: Runner } = {};
+    snapshot.docs.forEach((runner) => {
+      runnersDict[runner.id] = {
+        id: runner.id,
+        name: runner.data().name,
+        number: runner.data().number,
+        type: runner.data().type,
+      } as Runner;
+    });
+    updateFunction(runnersDict);
+  });
+}
+
+// Used in pages/assistant/status-board.tsx
 export async function syncNewestLaps(
   limitNumber: number,
   updateFunction: Function

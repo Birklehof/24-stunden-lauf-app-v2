@@ -5,6 +5,7 @@ import { AuthAction, withUser } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
 import { httpsCallable } from 'firebase/functions';
 import { functions } from '@/lib/firebase';
+import Loading from '@/components/Loading';
 
 function AssistantCreateRunnerPage() {
   const [submitting, setSubmitting] = useState(false);
@@ -114,4 +115,6 @@ function AssistantCreateRunnerPage() {
 
 export default withUser({
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
+  whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
+  LoaderComponent: Loading,
 })(AssistantCreateRunnerPage);

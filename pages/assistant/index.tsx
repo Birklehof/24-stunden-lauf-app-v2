@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from '@/components/Head';
 import Loading from '@/components/Loading';
 import Icon from '@/components/Icon';
 import { Lap, Runner } from '@/lib/interfaces';
 import { assistantNavItems, themedErrorToast } from '@/lib/utils/';
-import { deleteLap } from '@/lib/utils/firebase/frontend';
+import { deleteLap, syncRunnersDict } from '@/lib/utils/firebase/frontend';
 import ListItem from '@/components/ListItem';
 import { AuthAction, withUser } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
@@ -17,20 +17,26 @@ export async function getStaticProps() {
 
   return {
     props: {
-      runners: JSON.parse(JSON.stringify(runners)),
+      preloadedRunners: JSON.parse(JSON.stringify(runners)),
     },
     revalidate: 60 * 10,
   };
 }
 
 function AssistantIndexPage({
-  runners,
+  preloadedRunners,
 }: {
-  runners: { [id: string]: Runner };
+  preloadedRunners: { [id: string]: Runner };
 }) {
+  const [runners, setRunners] = useState<{ [id: string]: Runner }>(
+    preloadedRunners
+  );
   const [createdLaps, setCreatedLaps] = useState<Lap[]>([]);
-
   const [number, setNumber] = useState(0);
+
+  useEffect(() => {
+    syncRunnersDict(setRunners);
+  }, []);
 
   const createLap = httpsCallable(functions, 'createLap');
 
