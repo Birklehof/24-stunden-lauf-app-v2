@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+import ConfettiCanvas from '@/components/Confetti';
 import Head from '@/components/Head';
 import ListItem from '@/components/ListItem';
 import { Lap, Runner } from '@/lib/interfaces';
@@ -49,6 +50,10 @@ function StatusBoardPage({ runners }: { runners: { [id: string]: Runner } }) {
   return (
     <>
       <Head title="Status Board" />
+
+      {remainingSeconds === 0 && (
+        <ConfettiCanvas timeoutSeconds={60 * 60} />
+      )}
 
       <main className="flex flex-row justify-center gap-4 pr-4 scale-150 translate-y-[25%]">
         <ul className="list h-dvh overflow-hidden col-span-3">

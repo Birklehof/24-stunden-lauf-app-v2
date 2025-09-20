@@ -27,6 +27,7 @@ import { useEffect, useState } from 'react';
 import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
 import { getRunner } from '@/lib/utils/firebase/frontend';
 import { useRouter } from 'next/router';
+import ConfettiCanvas from '@/components/Confetti';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
@@ -142,7 +143,7 @@ export async function getStaticProps() {
         JSON.stringify(averageLapCountByClass)
       ),
     },
-    revalidate: 60 * 3
+    revalidate: 60 * 3,
   };
 }
 
@@ -400,6 +401,12 @@ function RunnerGraphsPage({
   return (
     <>
       <Head title="Läufer Details" />
+
+      {runner?.goal &&
+        (runnersWithLapCount.find(
+          (runnerWithLapCount) => runnerWithLapCount.email === user?.email
+        )?.lapCount || 0) >= runner?.goal && <ConfettiCanvas />}
+
       <Menu navItems={runnerNavItems} />
 
       <main className="flex flex-col items-center gap-7">
@@ -507,7 +514,7 @@ function RunnerGraphsPage({
           <Line data={lapCountByHourData} options={lineOptions} />
         </div>
 
-        <div className="flex flex-col gap-2 w-full max-w-sm"> 
+        <div className="flex flex-col gap-2 w-full max-w-sm">
           <h2 className="px-8 text-center text-xl font-semibold">
             Ø Runden pro Haus
           </h2>
