@@ -25,10 +25,10 @@ export default function ListItem({
     <li
       id={id}
       key={id}
-      className={`list-row ${animated && 'rounded-none animate-fade-in'} ${highlight && 'border-b-4 border-b-primary font-bold'}`}
+      className={`list-row p-2.5 ${animated && 'rounded-none animate-fade-in'} ${highlight && 'border-b-4 border-b-primary font-bold'}`}
     >
       <div
-        className={`tabular-nums ${secondaryContent ? 'text-3xl' : 'text-xl'}`}
+        className={`tabular-nums tracking-tight opacity-90 my-auto ${secondaryContent ? 'text-3xl' : 'text-xl'}`}
       >
         {number != undefined && (number > 3 || !medals) && (
           <>
@@ -40,12 +40,12 @@ export default function ListItem({
         )}
         {number != undefined && number <= 3 && medals && (
           <>
-            <span className="font-mono">{['🥇', '🥈', '🥉'][number - 1]} </span>
+            <span className="font-mono px-2.5">{['🥇', '🥈', '🥉'][number - 1]} </span>
           </>
         )}
       </div>
       <div
-        className={`list-col-grow ${secondaryContent ? 'text-base' : 'text-xl'}`}
+        className={'list-col-grow text-xl tracking-wide'}
       >
         {mainContent}
         <div className="text-xs">{secondaryContent}</div>

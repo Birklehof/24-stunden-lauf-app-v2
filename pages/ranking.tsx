@@ -215,6 +215,11 @@ function RankingPage({
                   key={runnerWithLapCount.number}
                   number={getPosition(runnerWithLapCount) + 1}
                   mainContent={runnerWithLapCount.name}
+                  secondaryContent={`Nr. ${runnerWithLapCount.number}${
+                    runnerWithLapCount.class
+                      ? ', ' + runnerWithLapCount.class
+                      : ''
+                  }${runnerWithLapCount.house ? ', ' + houses.filter((h) => h.abbreviation === runnerWithLapCount.house).map((h) => h.name)[0] : ''}`}
                 >
                   <div className="text-lg">
                     {runnerWithLapCount.lapCount.toString()}
