@@ -25,7 +25,7 @@ import Stat from '@/components/Stat';
 import Loading from '@/components/Loading';
 import { useEffect, useState } from 'react';
 import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
-import { getRunner } from '@/lib/utils/firebase/frontend';
+import { getRunner, syncLapCount } from '@/lib/utils/firebase/frontend';
 import { useRouter } from 'next/router';
 import ConfettiCanvas from '@/components/Confetti';
 
@@ -132,7 +132,6 @@ export async function getStaticProps() {
         (acc, cur) => acc + cur.lapCount,
         0
       ),
-      lastUpdated: Date.now(),
       lapCountByHour: JSON.parse(JSON.stringify(lapCountByHour)),
       lapCountByHouse: JSON.parse(JSON.stringify(lapCountByHouse)),
       averageLapCountByHouse: JSON.parse(
@@ -151,7 +150,6 @@ function RunnerGraphsPage({
   runnersWithLapCount,
   runnerCount,
   lapsTotal,
-  lastUpdated,
   lapCountByHour,
   lapCountByHouse,
   averageLapCountByHouse,
@@ -161,7 +159,6 @@ function RunnerGraphsPage({
   runnersWithLapCount: RunnerWithLapCount[];
   runnerCount: number;
   lapsTotal: number;
-  lastUpdated: number;
   lapCountByHour: { [hour: string]: number };
   lapCountByHouse: { [key: string]: number };
   averageLapCountByHouse: { [key: string]: number };
@@ -178,6 +175,7 @@ function RunnerGraphsPage({
   const user = useUser();
   const router = useRouter();
 
+  const [lapCount, setLapCount] = useState<number | undefined>(undefined);
   const [runner, setRunner] = useState<Runner | null>(null);
 
   const [textColor, setTextColor] = useState<string>('black');
@@ -200,6 +198,13 @@ function RunnerGraphsPage({
         });
     }
   }, [user, router]);
+
+  useEffect(() => {
+    if (!runner?.id) {
+      return;
+    }
+    syncLapCount(runner.id, setLapCount);
+  }, [runner?.id]);
 
   const [distancePerLap] = useRemoteConfig(
     'distancePerLap',
@@ -409,39 +414,7 @@ function RunnerGraphsPage({
 
       <Menu navItems={runnerNavItems} />
 
-      <main className="flex flex-col items-center gap-7">
-        <div role="alert" className="alert w-full max-w-md">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="stroke-info h-6 w-6 shrink-0"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            ></path>
-          </svg>
-          <span>
-            {' '}
-            Stand{' '}
-            {new Date(lastUpdated).toLocaleDateString('de-DE', {
-              weekday: 'long',
-              day: '2-digit',
-              month: '2-digit',
-              timeZone: 'Europe/Berlin',
-            })}{' '}
-            {new Date(lastUpdated).toLocaleString('de-DE', {
-              hour: '2-digit',
-              minute: '2-digit',
-              timeZone: 'Europe/Berlin',
-            })}
-            Uhr
-          </span>
-        </div>
-
+      <main className="flex flex-col items-center gap-7 my-2">
         <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit max-w-md">
           <legend className="fieldset-legend text-lg font-semibold">
             Persönlicher Fortschritt
@@ -456,10 +429,7 @@ function RunnerGraphsPage({
               <progress
                 className="progress progress-primary h-5 rounded-full bg-accent shadow-inner"
                 value={
-                  runnersWithLapCount.find(
-                    (runnerWithLapCount) =>
-                      runnerWithLapCount.email === user?.email
-                  )?.lapCount || 0
+                  lapCount
                 }
                 max={runner?.goal || 0}
               ></progress>
@@ -467,10 +437,8 @@ function RunnerGraphsPage({
               <div className="skeleton h-6 w-full"></div>
             )}
           </div>
-          <p className="font-semibold">
-            {runnersWithLapCount.find(
-              (runnerWithLapCount) => runnerWithLapCount.email === user?.email
-            )?.lapCount || 0}{' '}
+          <p className="font-semibold ml-2">
+            {lapCount || 'NaN'}{' '}
             / {runner?.goal || 'NaN'} Runden
           </p>
         </fieldset>

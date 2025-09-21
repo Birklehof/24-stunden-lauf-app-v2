@@ -19,6 +19,10 @@ export interface Lap {
   createdAt: number;
 }
 
+export interface LapWithRunner extends Lap {
+  runner: Runner;
+}
+
 /**
  * @type Runner
  *

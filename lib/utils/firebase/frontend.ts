@@ -52,7 +52,7 @@ export async function deleteLap(lapId: string) {
   await deleteDoc(doc(firebase, 'laps', lapId));
 }
 
-// Used in pages/assistant/index.tsx
+// Used in pages/assistant/status-board.tsx
 export async function syncRunnersDict(
   updateFunction: Function
 ): Promise<() => void> {

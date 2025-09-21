@@ -1,42 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Head from '@/components/Head';
 import Loading from '@/components/Loading';
 import Icon from '@/components/Icon';
-import { Lap, Runner } from '@/lib/interfaces';
+import { LapWithRunner } from '@/lib/interfaces';
 import { assistantNavItems, themedErrorToast } from '@/lib/utils/';
-import { deleteLap, syncRunnersDict } from '@/lib/utils/firebase/frontend';
+import { deleteLap } from '@/lib/utils/firebase/frontend';
 import ListItem from '@/components/ListItem';
 import { AuthAction, withUser } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
-import { getRunnersDict } from '@/lib/utils/firebase/backend';
 import { functions } from '@/lib/firebase';
 import { httpsCallable } from 'firebase/functions';
 
-export async function getStaticProps() {
-  const runners = await getRunnersDict();
 
-  return {
-    props: {
-      preloadedRunners: JSON.parse(JSON.stringify(runners)),
-    },
-    revalidate: 60 * 10,
-  };
-}
-
-function AssistantIndexPage({
-  preloadedRunners,
-}: {
-  preloadedRunners: { [id: string]: Runner };
-}) {
-  const [runners, setRunners] = useState<{ [id: string]: Runner }>(
-    preloadedRunners
-  );
-  const [createdLaps, setCreatedLaps] = useState<Lap[]>([]);
+function AssistantIndexPage() {
+  const [createdLaps, setCreatedLaps] = useState<LapWithRunner[]>([]);
   const [number, setNumber] = useState(0);
-
-  useEffect(() => {
-    syncRunnersDict(setRunners);
-  }, []);
 
   const createLap = httpsCallable(functions, 'createLap');
 
@@ -45,7 +23,7 @@ function AssistantIndexPage({
 
     await createLap({ number })
       .then((result) => {
-        const newLap = result.data as Lap;
+        const newLap = result.data as LapWithRunner;
 
         // Add new lap to list
         setCreatedLaps([newLap, ...createdLaps]);
@@ -92,13 +70,7 @@ function AssistantIndexPage({
               aria-label="Startnummer"
               id="number"
               name="number"
-              className={`font-mono input input-bordered box-border h-44 w-72 rounded-box text-center text-9xl font-medium ${
-                Object.values(runners).find(
-                  (runner) => runner.number == number
-                ) != undefined
-                  ? 'input-success'
-                  : 'input-error'
-              }`}
+              className='font-mono input input-bordered box-border h-44 w-72 rounded-box text-center text-9xl font-medium '
               autoFocus
               onChange={(e) => {
                 e.preventDefault();
@@ -140,12 +112,12 @@ function AssistantIndexPage({
                   <ListItem
                     key={lap.id + lap.createdAt}
                     medals={false}
-                    number={runners[lap.runnerId]?.number}
+                    number={lap.runner.number}
                     mainContent={(
-                      runners[lap.runnerId]?.name || 'Unbekannt'
+                      lap.runner.name
                     ).concat(
-                      runners[lap.runnerId]?.class
-                        ? ', '.concat(runners[lap.runnerId]?.class || '')
+                      lap.runner.class
+                        ? ', '.concat(lap.runner.class || '')
                         : ''
                     )}
                     secondaryContent={
