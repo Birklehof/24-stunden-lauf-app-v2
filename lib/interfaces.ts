@@ -17,6 +17,8 @@ export interface Lap {
   id: string;
   runnerId: string;
   createdAt: number;
+  name?: string;
+  number?: number;
 }
 
 export interface LapWithRunner extends Lap {
@@ -30,9 +32,9 @@ export interface LapWithRunner extends Lap {
  * @property {number} number - The starting number of the runner
  * @property {string} name - The full name of the runner
  * @property {string} type - The type of the runner (e.g. "student" or "staff")
- * @property {string} email - The email of the runner
- * @property {Timestamp} lastLapCreatedAt - The time when the last lap of the runner was created (might be null if longer than 2 minutes ago)
- * @property {number} goal - The goal of the runner
+ * @property {string} email [optional] - The email of the runner
+ * @property {Timestamp} lastLapCreatedAt [optional] - The time when the last lap of the runner was created (might be null if longer than 2 minutes ago)
+ * @property {number} goal [optional] - The goal of the runner
  *
  * @property {string} studentId [optional] - The firestore id of the associated student (only for runners of type "student")
  * @property {string} house [optional] - The boarding house of the runner (only for runners of type "student")
@@ -46,6 +48,7 @@ export interface Runner {
   email?: string;
   lastLapCreatedAt?: Timestamp;
   goal?: number;
+  laps?: number;
 
   // Attributes that only runners of type "student" have
   studentId?: string;

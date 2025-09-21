@@ -2,6 +2,7 @@ export type PossibleIcons = keyof typeof icons;
 import {
   AdjustmentsVerticalIcon,
   ArrowLeftIcon,
+  ArrowPathIcon,
   ChartBarIcon,
   Cog6ToothIcon,
   ExclamationTriangleIcon,
@@ -30,6 +31,7 @@ const icons: { [key: string]: any } = {
   TrashIcon: TrashIcon,
   UserIcon: UserIcon,
   Search: MagnifyingGlassIcon,
+  RefreshIcon: ArrowPathIcon,
 } as const;
 
 export default function Icon({ name = '', size = 7 }: IconProps) {

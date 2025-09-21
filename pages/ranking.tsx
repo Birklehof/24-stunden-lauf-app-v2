@@ -2,9 +2,9 @@ import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import Loading from '@/components/Loading';
 import Head from '@/components/Head';
 import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
-import { RunnerWithLapCount } from '@/lib/interfaces';
+import { Runner } from '@/lib/interfaces';
 import ListItem from '@/components/ListItem';
-import { getRunnersWithLapCount } from '@/lib/utils/firebase/backend';
+import { getRunnersArray } from '@/lib/utils/firebase/backend';
 import Icon from '@/components/Icon';
 import {
   defaultClasses,
@@ -18,29 +18,25 @@ import {
   runnerTypes,
 } from '@/lib/utils';
 import Menu from '@/components/Menu';
+import { refreshRunnersArray } from '@/lib/utils/firebase/frontend';
 
-// Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
+  const preloadedRunners = await getRunnersArray();
+
   return {
     props: {
-      runnersWithLapCount: JSON.parse(
-        JSON.stringify(await getRunnersWithLapCount())
-      ),
-      lastUpdated: Date.now(),
+      preloadedRunners: JSON.parse(JSON.stringify(preloadedRunners)),
     },
     revalidate: 10,
   };
 }
 
-function RankingPage({
-  runnersWithLapCount,
-  // eslint-disable-next-line no-unused-vars
-  lastUpdated,
-}: {
-  runnersWithLapCount: RunnerWithLapCount[];
-  lastUpdated: number;
-}) {
+function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
   const user = useUser();
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const [runners, setRunners] = useState<Runner[]>(preloadedRunners || []);
 
   const [classes] = useRemoteConfig('classes', defaultClasses);
   const [houses] = useRemoteConfig('houses', defaultHouses);
@@ -73,13 +69,30 @@ function RankingPage({
     }
   };
 
-  function getPosition(runner: RunnerWithLapCount): number {
-    // Get position of runner in runnersWithLapCount array
-    return runnersWithLapCount
-      .sort((a, b) => b.lapCount - a.lapCount)
-      .findIndex(
-        (runnerWithLapCount) => runnerWithLapCount.lapCount == runner.lapCount
-      );
+  function getPosition(runner: Runner): number {
+    if (runners.length === 0) {
+      setRunners([]);
+    }
+
+    // Get position of runner in runners array
+    return runners
+      .sort((a, b) => (b.laps || 0) - (a.laps || 0))
+      .findIndex((r) => r.laps == runner.laps);
+  }
+
+  async function handleRefresh() {
+    if (refreshing) {
+      return;
+    }
+
+    setRefreshing(true);
+
+    await refreshRunnersArray(setRunners);
+
+    // Wait at least 1 second to avoid flickering
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    setRefreshing(false);
   }
 
   function scrollToUser() {
@@ -101,128 +114,144 @@ function RankingPage({
         <Menu navItems={runnerNavItems} />
       )}
 
-      <main className="max-w-xl mx-auto flex pt-4 flex-col gap-2">
-        <div className="collapse border border-base-300 rounded-box">
-          <input type="checkbox" className="peer" />
-          <div className="collapse-title text-sm font-semibold flex items-center gap-2">
-            <Icon name="AdjustmentsVerticalIcon" size={5} />
-            Filter
-          </div>
-          <div className="collapse-content flex flex-col gap-2">
-            <label className="input w-full mb-3">
-              <Icon name="Search" size={4} />
-              <input
-                type="search"
-                className="grow text-lg rounded-box"
-                placeholder="Suchen"
-                value={searchRunnerName}
-                onChange={(e) => setSearchRunnerName(e.target.value)}
-              />
-            </label>
-            <form className="flex flex-row flex-wrap gap-1">
-              <input className="btn btn-sm btn-circle" type="reset" value="×" />
-              {runnerTypes.map((type) => (
+      <main className="max-w-xl mx-auto flex pt-2 flex-col gap-1">
+        <div className="flex flex-row gap-2 items-center mx-2">
+          <div className="collapse border border-base-300 rounded-box">
+            <input type="checkbox" className="peer" />
+            <div className="collapse-title text-sm font-semibold flex items-center gap-2">
+              <Icon name="AdjustmentsVerticalIcon" size={5} />
+              Filter
+            </div>
+            <div className="collapse-content flex flex-col gap-2">
+              <label className="input w-full mb-3">
+                <Icon name="Search" size={4} />
                 <input
-                  key={type.value}
-                  className="btn btn-sm rounded-full"
-                  type="checkbox"
-                  aria-label={type.name}
-                  value={type.value}
-                  checked={runnerTypeFilter.includes(type.value)}
-                  onChange={(e) =>
-                    handleCheckboxChange(
-                      e,
-                      runnerTypeFilter,
-                      setRunnerTypeFilter
-                    )
-                  }
+                  type="search"
+                  className="grow text-lg rounded-box"
+                  placeholder="Suchen"
+                  value={searchRunnerName}
+                  onChange={(e) => setSearchRunnerName(e.target.value)}
                 />
-              ))}
-            </form>
+              </label>
+              <form className="flex flex-row flex-wrap gap-1">
+                <input
+                  className="btn btn-sm btn-circle"
+                  type="reset"
+                  value="×"
+                />
+                {runnerTypes.map((type) => (
+                  <input
+                    key={type.value}
+                    className="btn btn-sm rounded-full"
+                    type="checkbox"
+                    aria-label={type.name}
+                    value={type.value}
+                    checked={runnerTypeFilter.includes(type.value)}
+                    onChange={(e) =>
+                      handleCheckboxChange(
+                        e,
+                        runnerTypeFilter,
+                        setRunnerTypeFilter
+                      )
+                    }
+                  />
+                ))}
+              </form>
 
-            <form className="flex flex-row flex-wrap gap-1">
-              <input
-                className="btn btn-sm btn-circle"
-                type="reset"
-                value="×"
-                aria-label="Klassenfilter zurücksetzen"
-                onClick={(e) => resetFilter(e, setRunnerClassFilter)}
-              />
-              {classes.map((classItem) => (
+              <form className="flex flex-row flex-wrap gap-1">
                 <input
-                  key={classItem}
-                  className="btn btn-sm rounded-full"
-                  type="checkbox"
-                  aria-label={classItem}
-                  value={classItem}
-                  checked={runnerClassFilter.includes(classItem)}
-                  onChange={(e) =>
-                    handleCheckboxChange(
-                      e,
-                      runnerClassFilter,
-                      setRunnerClassFilter
-                    )
-                  }
+                  className="btn btn-sm btn-circle"
+                  type="reset"
+                  value="×"
+                  aria-label="Klassenfilter zurücksetzen"
+                  onClick={(e) => resetFilter(e, setRunnerClassFilter)}
                 />
-              ))}
-            </form>
+                {classes.map((classItem) => (
+                  <input
+                    key={classItem}
+                    className="btn btn-sm rounded-full"
+                    type="checkbox"
+                    aria-label={classItem}
+                    value={classItem}
+                    checked={runnerClassFilter.includes(classItem)}
+                    onChange={(e) =>
+                      handleCheckboxChange(
+                        e,
+                        runnerClassFilter,
+                        setRunnerClassFilter
+                      )
+                    }
+                  />
+                ))}
+              </form>
 
-            <form className="flex flex-row flex-wrap gap-1">
-              <input
-                className="btn btn-sm btn-circle"
-                type="reset"
-                value="×"
-                aria-label="Häuserfilter zurücksetzen"
-                onClick={(e) => resetFilter(e, setRunnerHouseFilter)}
-              />
-              {houses.map((house) => (
+              <form className="flex flex-row flex-wrap gap-1">
                 <input
-                  key={house.abbreviation}
-                  className="btn btn-sm rounded-full"
-                  type="checkbox"
-                  aria-label={house.name}
-                  value={house.abbreviation}
-                  checked={runnerHouseFilter.includes(house.abbreviation)}
-                  onChange={(e) =>
-                    handleCheckboxChange(
-                      e,
-                      runnerHouseFilter,
-                      setRunnerHouseFilter
-                    )
-                  }
+                  className="btn btn-sm btn-circle"
+                  type="reset"
+                  value="×"
+                  aria-label="Häuserfilter zurücksetzen"
+                  onClick={(e) => resetFilter(e, setRunnerHouseFilter)}
                 />
-              ))}
-            </form>
+                {houses.map((house) => (
+                  <input
+                    key={house.abbreviation}
+                    className="btn btn-sm rounded-full"
+                    type="checkbox"
+                    aria-label={house.name}
+                    value={house.abbreviation}
+                    checked={runnerHouseFilter.includes(house.abbreviation)}
+                    onChange={(e) =>
+                      handleCheckboxChange(
+                        e,
+                        runnerHouseFilter,
+                        setRunnerHouseFilter
+                      )
+                    }
+                  />
+                ))}
+              </form>
+            </div>
           </div>
+          <button
+            className="btn btn-primary btn-square btn-lg"
+            aria-label="Aktualisieren"
+            onClick={handleRefresh}
+            disabled={refreshing}
+          >
+            {refreshing ? (
+              <span className="loading loading-spinner"></span>
+            ) : (
+              <Icon name="RefreshIcon" />
+            )}
+          </button>
         </div>
 
         <ul className="list">
-          {runnersWithLapCount
-            .filter((runnerWithLapCount) => {
-              return filterRunner(runnerWithLapCount, {
+          {runners
+            .filter((runner) => {
+              return filterRunner(runner, {
                 filterType: runnerTypeFilter,
                 filterName: searchRunnerName,
                 filterClasses: runnerClassFilter,
                 filterHouse: runnerHouseFilter,
               });
             })
-            .sort((a, b) => b.lapCount - a.lapCount)
-            .map((runnerWithLapCount) => {
+            .sort((a, b) => (b.laps || 0) - (a.laps || 0))
+            .map((runner) => {
               return (
                 <ListItem
-                  id={runnerWithLapCount.email}
-                  highlight={runnerWithLapCount.email === user?.email}
-                  key={runnerWithLapCount.number}
-                  number={getPosition(runnerWithLapCount) + 1}
-                  mainContent={runnerWithLapCount.name}
-                  secondaryContent={`Nr. ${runnerWithLapCount.number}${
-                    runnerWithLapCount.class
-                      ? ', ' + runnerWithLapCount.class
-                      : ''
-                  }${runnerWithLapCount.house ? ', ' + houses.filter((h) => h.abbreviation === runnerWithLapCount.house).map((h) => h.name)[0] : ''}`}
+                  id={runner.email}
+                  highlight={runner.email === user?.email}
+                  key={runner.number}
+                  number={getPosition(runner) + 1}
+                  mainContent={runner.name}
+                  secondaryContent={`Nr. ${runner.number}${
+                    runner.class ? ', ' + runner.class : ''
+                  }${runner.house ? ', ' + houses.filter((h) => h.abbreviation === runner.house).map((h) => h.name)[0] : ''}`}
                 >
-                  <div className="text-lg">
-                    {runnerWithLapCount.lapCount.toString()}
+                  <div className="text-lg h-full flex items-center justify-center px-3">
+                    {(runner.laps || 0).toString()}
                   </div>
                 </ListItem>
               );
@@ -231,6 +260,19 @@ function RankingPage({
             Keine weiteren Läufer
           </li>
         </ul>
+
+        <button
+          className="btn btn-circle btn-outline btn-primary fixed bottom-32 right-4 z-50 aspect-square border-2 shadow-md"
+          aria-label="Aktualisieren"
+          onClick={handleRefresh}
+          disabled={refreshing}
+        >
+          {refreshing ? (
+            <span className="loading loading-spinner"></span>
+          ) : (
+            <Icon name="RefreshIcon" />
+          )}
+        </button>
 
         {user.email !== null && (
           <button

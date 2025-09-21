@@ -2,25 +2,13 @@
 import ConfettiCanvas from '@/components/Confetti';
 import Head from '@/components/Head';
 import ListItem from '@/components/ListItem';
-import { Lap, Runner } from '@/lib/interfaces';
-import { getRunnersDict } from '@/lib/utils/firebase/backend';
+import { Lap } from '@/lib/interfaces';
 import { syncNewestLaps } from '@/lib/utils/firebase/frontend';
 import { useEffect, useState } from 'react';
 
-export async function getStaticProps() {
-  const runners = await getRunnersDict();
-
-  return {
-    props: {
-      runners: JSON.parse(JSON.stringify(runners)),
-    },
-    revalidate: 60 * 10,
-  };
-}
-
 const startDate = new Date(process.env.NEXT_PUBLIC_START_TIME as string);
 
-function StatusBoardPage({ runners }: { runners: { [id: string]: Runner } }) {
+function StatusBoardPage() {
   const [remainingSeconds, setRemainingSeconds] = useState(0);
   const [laps, setLaps] = useState<Lap[]>([]);
 
@@ -51,9 +39,7 @@ function StatusBoardPage({ runners }: { runners: { [id: string]: Runner } }) {
     <>
       <Head title="Status Board" />
 
-      {remainingSeconds === 0 && (
-        <ConfettiCanvas timeoutSeconds={60 * 60} />
-      )}
+      {remainingSeconds === 0 && <ConfettiCanvas timeoutSeconds={60 * 60} />}
 
       <main className="flex flex-row justify-center gap-4 pr-4 scale-150 translate-y-[25%]">
         <ul className="list h-dvh overflow-hidden col-span-3">
@@ -71,14 +57,8 @@ function StatusBoardPage({ runners }: { runners: { [id: string]: Runner } }) {
                     key={lap.id + lap.createdAt}
                     medals={false}
                     animated={true}
-                    number={runners[lap.runnerId]?.number}
-                    mainContent={(
-                      runners[lap.runnerId]?.name || 'Unbekannt'
-                    ).concat(
-                      runners[lap.runnerId]?.class
-                        ? ', '.concat(runners[lap.runnerId]?.class || '')
-                        : ''
-                    )}
+                    number={lap.number || 0}
+                    mainContent={lap.name || 'Unbekannt'}
                   />
                 ))}
             </>

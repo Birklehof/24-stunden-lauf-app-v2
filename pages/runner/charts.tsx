@@ -17,7 +17,7 @@ import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues'
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
 import {
   getLapsInHour,
-  getRunnersWithLapCount,
+  getRunnersArray,
 } from '@/lib/utils/firebase/backend';
 import Menu from '@/components/Menu';
 import { formatKilometer, runnerNavItems } from '@/lib/utils';
@@ -31,10 +31,10 @@ import ConfettiCanvas from '@/components/Confetti';
 
 // Incremental static regeneration to reduce load on backend
 export async function getStaticProps() {
-  const runnersWithLapCount = await getRunnersWithLapCount();
+  const runners = await getRunnersArray();
 
   // Count how many laps each house has, the house is a property of the runner
-  const lapCountByHouse: { [key: string]: number } = runnersWithLapCount.reduce(
+  const lapCountByHouse: { [key: string]: number } = runners.reduce(
     (acc: { [key: string]: number }, cur) => ({
       ...acc,
       // @ts-ignore
@@ -45,13 +45,13 @@ export async function getStaticProps() {
           cur.type == 'student'
             ? cur.house || ''
             : 'Extern (Mitarbeiter + Gäste)'
-        ] || 0) + cur.lapCount,
+        ] || 0) + (cur.laps || 0),
     }),
     {}
   );
 
   // Count how many laps each house has on average, the house is a property of the runner
-  const runnersPerHouse: { [key: string]: number } = runnersWithLapCount.reduce(
+  const runnersPerHouse: { [key: string]: number } = runners.reduce(
     (acc: { [key: string]: number }, cur) => ({
       ...acc,
       // @ts-ignore
@@ -74,7 +74,7 @@ export async function getStaticProps() {
   );
 
   // Count how many laps each class has, the class is a property of the runner
-  const lapCountByClass: { [key: string]: number } = runnersWithLapCount.reduce(
+  const lapCountByClass: { [key: string]: number } = runners.reduce(
     (acc, cur) => ({
       ...acc,
       // @ts-ignore
@@ -85,7 +85,7 @@ export async function getStaticProps() {
   delete lapCountByClass[''];
 
   // Count how many laps each class has on average, the class is a property of the runner
-  const runnersPerClass: { [key: string]: number } = runnersWithLapCount.reduce(
+  const runnersPerClass: { [key: string]: number } = runners.reduce(
     (acc, cur) => ({
       ...acc,
       // @ts-ignore
@@ -126,10 +126,10 @@ export async function getStaticProps() {
 
   return {
     props: {
-      runnersWithLapCount: JSON.parse(JSON.stringify(runnersWithLapCount)),
-      runnerCount: runnersWithLapCount.length,
-      lapsTotal: runnersWithLapCount.reduce(
-        (acc, cur) => acc + cur.lapCount,
+      runnersWithLapCount: JSON.parse(JSON.stringify(runners)),
+      runnerCount: runners.length,
+      lapsTotal: runners.reduce(
+        (acc, cur) => acc + (cur.laps || 0),
         0
       ),
       lapCountByHour: JSON.parse(JSON.stringify(lapCountByHour)),

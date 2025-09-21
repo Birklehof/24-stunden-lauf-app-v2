@@ -13,6 +13,39 @@ import {
 import { Runner, Lap } from '@/lib/interfaces';
 import { firebase } from '@/lib/firebase';
 
+// Used in pages/assistant/index.tsx
+export async function deleteLap(lapId: string) {
+  await deleteDoc(doc(firebase, 'laps', lapId));
+}
+
+// Used in pages/assistant/status-board.tsx
+export async function syncNewestLaps(
+  limitNumber: number,
+  updateFunction: Function
+) {
+  const lapsQuery = query(
+    collection(firebase, 'laps'),
+    orderBy('createdAt', 'desc'),
+    limit(limitNumber)
+  );
+
+  const lapsSnapshot = await getDocs(lapsQuery);
+  const lapsData = lapsSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Lap[];
+
+  updateFunction(lapsData);
+
+  onSnapshot(lapsQuery, (snapshot) => {
+    const lapsData = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Lap[];
+    updateFunction(lapsData);
+  });
+}
+
 // Used in pages/runner/index.tsx
 export async function syncLapCount(runnerId: string, updateFunction: Function) {
   const lapCountQuery = query(
@@ -47,69 +80,26 @@ export async function getRunner(email: string): Promise<Runner> {
   } as Runner;
 }
 
-// Used in pages/assistant/index.tsx
-export async function deleteLap(lapId: string) {
-  await deleteDoc(doc(firebase, 'laps', lapId));
-}
-
-// Used in pages/assistant/status-board.tsx
-export async function syncRunnersDict(
-  updateFunction: Function
-): Promise<() => void> {
+// Used in pages/ranking.tsx
+export async function refreshRunnersArray(updateFunction: Function) {
   const runnersQuery = query(collection(firebase, 'runners'));
 
   const runnersSnapshot = await getDocs(runnersQuery);
 
-  const runnersDict: { [id: string]: Runner } = {};
+  const runnersArray: Runner[] = [];
 
   runnersSnapshot.docs.forEach((runner) => {
-    runnersDict[runner.id] = {
+    runnersArray.push({
       id: runner.id,
       name: runner.data().name,
       number: runner.data().number,
       type: runner.data().type,
-    } as Runner;
+      email: runner.data().email,
+      class: runner.data().class,
+      house: runner.data().house,
+      laps: runner.data().laps || 0,
+    } as Runner);
   });
 
-  updateFunction(runnersDict);
-  return onSnapshot(runnersQuery, (snapshot) => {
-    const runnersDict: { [id: string]: Runner } = {};
-    snapshot.docs.forEach((runner) => {
-      runnersDict[runner.id] = {
-        id: runner.id,
-        name: runner.data().name,
-        number: runner.data().number,
-        type: runner.data().type,
-      } as Runner;
-    });
-    updateFunction(runnersDict);
-  });
-}
-
-// Used in pages/assistant/status-board.tsx
-export async function syncNewestLaps(
-  limitNumber: number,
-  updateFunction: Function
-) {
-  const lapsQuery = query(
-    collection(firebase, 'laps'),
-    orderBy('createdAt', 'desc'),
-    limit(limitNumber)
-  );
-
-  const lapsSnapshot = await getDocs(lapsQuery);
-  const lapsData = lapsSnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Lap[];
-
-  updateFunction(lapsData);
-
-  onSnapshot(lapsQuery, (snapshot) => {
-    const lapsData = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Lap[];
-    updateFunction(lapsData);
-  });
+  updateFunction(runnersArray);
 }
