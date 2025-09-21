@@ -24,7 +24,7 @@ import { formatKilometer, runnerNavItems } from '@/lib/utils';
 import Stat from '@/components/Stat';
 import Loading from '@/components/Loading';
 import { useEffect, useState } from 'react';
-import { Runner, RunnerWithLapCount } from '@/lib/interfaces';
+import { Runner } from '@/lib/interfaces';
 import { getRunner, syncLapCount } from '@/lib/utils/firebase/frontend';
 import { useRouter } from 'next/router';
 import ConfettiCanvas from '@/components/Confetti';
@@ -78,7 +78,7 @@ export async function getStaticProps() {
     (acc, cur) => ({
       ...acc,
       // @ts-ignore
-      [cur.class || '']: (acc[cur.class || ''] || 0) + cur.lapCount,
+      [cur.class || '']: (acc[cur.class || ''] || 0) + (cur.laps || 0),
     }),
     {}
   );
@@ -126,7 +126,6 @@ export async function getStaticProps() {
 
   return {
     props: {
-      runnersWithLapCount: JSON.parse(JSON.stringify(runners)),
       runnerCount: runners.length,
       lapsTotal: runners.reduce(
         (acc, cur) => acc + (cur.laps || 0),
@@ -147,7 +146,6 @@ export async function getStaticProps() {
 }
 
 function RunnerGraphsPage({
-  runnersWithLapCount,
   runnerCount,
   lapsTotal,
   lapCountByHour,
@@ -156,7 +154,6 @@ function RunnerGraphsPage({
   lapCountByClass,
   averageLapCountByClass,
 }: {
-  runnersWithLapCount: RunnerWithLapCount[];
   runnerCount: number;
   lapsTotal: number;
   lapCountByHour: { [hour: string]: number };
@@ -407,10 +404,7 @@ function RunnerGraphsPage({
     <>
       <Head title="Läufer Details" />
 
-      {runner?.goal &&
-        (runnersWithLapCount.find(
-          (runnerWithLapCount) => runnerWithLapCount.email === user?.email
-        )?.lapCount || 0) >= runner?.goal && <ConfettiCanvas />}
+      {lapCount && runner.goal && (lapCount >= runner?.goal) && <ConfettiCanvas />}
 
       <Menu navItems={runnerNavItems} />
 
