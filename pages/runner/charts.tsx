@@ -414,7 +414,7 @@ function RunnerGraphsPage({
 
       <Menu navItems={runnerNavItems} />
 
-      <main className="flex flex-col items-center gap-7 my-2">
+      <main className="flex flex-col items-center gap-7 m-2">
         <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit max-w-md">
           <legend className="fieldset-legend text-lg font-semibold">
             Persönlicher Fortschritt

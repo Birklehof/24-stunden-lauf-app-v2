@@ -23,7 +23,7 @@ function SettingsPage() {
         <Menu navItems={runnerNavItems} />
       )}
 
-      <main className="flex flex-col gap-4 my-2 max-w-sm mx-auto">
+      <main className="flex flex-col gap-4 max-w-sm mx-auto p-2">
         <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit w-full">
           <legend className="fieldset-legend text-lg font-semibold">
             Darstellung

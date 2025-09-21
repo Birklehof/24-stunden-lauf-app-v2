@@ -114,8 +114,8 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
         <Menu navItems={runnerNavItems} />
       )}
 
-      <main className="max-w-xl mx-auto flex pt-2 flex-col gap-1">
-        <div className="flex flex-row gap-2 items-center mx-2">
+      <main className="max-w-xl mx-auto flex flex-col">
+        <div className="m-2">
           <div className="collapse border border-base-300 rounded-box">
             <input type="checkbox" className="peer" />
             <div className="collapse-title text-sm font-semibold flex items-center gap-2">
@@ -213,18 +213,6 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
               </form>
             </div>
           </div>
-          <button
-            className="btn btn-primary btn-square btn-lg"
-            aria-label="Aktualisieren"
-            onClick={handleRefresh}
-            disabled={refreshing}
-          >
-            {refreshing ? (
-              <span className="loading loading-spinner"></span>
-            ) : (
-              <Icon name="RefreshIcon" />
-            )}
-          </button>
         </div>
 
         <ul className="list">
@@ -250,7 +238,7 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
                     runner.class ? ', ' + runner.class : ''
                   }${runner.house ? ', ' + houses.filter((h) => h.abbreviation === runner.house).map((h) => h.name)[0] : ''}`}
                 >
-                  <div className="text-lg h-full flex items-center justify-center px-3">
+                  <div className="text-lg h-full flex items-center justify-center px-2">
                     {(runner.laps || 0).toString()}
                   </div>
                 </ListItem>
