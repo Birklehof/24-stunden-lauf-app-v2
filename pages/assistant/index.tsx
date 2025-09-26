@@ -4,7 +4,6 @@ import Loading from '@/components/Loading';
 import Icon from '@/components/Icon';
 import { LapWithRunner } from '@/lib/interfaces';
 import { assistantNavItems, themedErrorToast } from '@/lib/utils/';
-import { deleteLap } from '@/lib/utils/firebase/frontend';
 import ListItem from '@/components/ListItem';
 import { AuthAction, withUser } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
@@ -17,6 +16,7 @@ function AssistantIndexPage() {
   const [number, setNumber] = useState(0);
 
   const createLap = httpsCallable(functions, 'createLap');
+  const deleteLap = httpsCallable(functions, 'deleteLap');
 
   async function createNewLapHandler() {
     setNumber(0);
@@ -40,7 +40,7 @@ function AssistantIndexPage() {
   }
 
   async function deleteLapHandler(lapId: string) {
-    await deleteLap(lapId)
+    await deleteLap({ lapId })
       .then(() => {
         // Focus input field
         document.getElementById('number')?.focus();

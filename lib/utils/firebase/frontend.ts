@@ -13,11 +13,6 @@ import {
 import { Runner, Lap } from '@/lib/interfaces';
 import { firebase } from '@/lib/firebase';
 
-// Used in pages/assistant/index.tsx
-export async function deleteLap(lapId: string) {
-  await deleteDoc(doc(firebase, 'laps', lapId));
-}
-
 // Used in pages/assistant/status-board.tsx
 export async function syncNewestLaps(
   limitNumber: number,

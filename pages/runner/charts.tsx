@@ -404,7 +404,7 @@ function RunnerGraphsPage({
     <>
       <Head title="Läufer Details" />
 
-      {lapCount && runner.goal && (lapCount >= runner?.goal) && <ConfettiCanvas />}
+      {(lapCount != undefined && runner.goal != undefined && (lapCount >= runner?.goal)) && <ConfettiCanvas />}
 
       <Menu navItems={runnerNavItems} />
 

@@ -32,7 +32,7 @@ export const getServerSideProps = withUserSSR({
     .then((runner) => {
       return {
         props: {
-          runner,
+          runner: {...runner, goal: runner.goal || null},
         },
       };
     })

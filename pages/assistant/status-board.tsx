@@ -39,7 +39,7 @@ function StatusBoardPage() {
     <>
       <Head title="Status Board" />
 
-      {remainingSeconds === 0 && <ConfettiCanvas timeoutSeconds={60 * 60} />}
+      {remainingSeconds <= 0 && <ConfettiCanvas timeoutSeconds={60 * 60} />}
 
       <main className="flex flex-row justify-center gap-4 pr-4 scale-150 translate-y-[25%]">
         <ul className="list h-dvh overflow-hidden col-span-3">
@@ -57,8 +57,8 @@ function StatusBoardPage() {
                     key={lap.id + lap.createdAt}
                     medals={false}
                     animated={true}
-                    number={lap.number || 0}
-                    mainContent={lap.name || 'Unbekannt'}
+                    number={lap.runnerData?.number || 0}
+                    mainContent={lap.runnerData?.name || 'Unbekannt'}
                   />
                 ))}
             </>
@@ -69,11 +69,13 @@ function StatusBoardPage() {
           )}
         </ul>
         <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit w-fit mt-2">
-          <legend className="fieldset-legend text-lg font-semibold">
-            Verbleibende Zeit
+          <legend className="fieldset-legend text-lg font-semibold -mb-5">
+            {remainingSeconds > 24 * 60 * 60
+              ? 'Start in'
+              : 'Verbleibende Zeit'}
           </legend>
           <div className="grid grid-flow-col gap-5 text-center auto-cols-max mx-auto">
-            <div className="flex flex-col p-4 dark:bg-white dark:text-black bg-black text-white rounded-box">
+            <div className="flex flex-col p-4 rounded-box">
               <span className="countdown font-mono text-5xl">
                 <span
                   style={
@@ -91,7 +93,7 @@ function StatusBoardPage() {
               </span>
               Stunden
             </div>
-            <div className="flex flex-col p-4 dark:bg-white dark:text-black bg-black text-white rounded-box">
+            <div className="flex flex-col p-4 rounded-box">
               <span className="countdown font-mono text-5xl">
                 <span
                   style={
@@ -109,7 +111,7 @@ function StatusBoardPage() {
               </span>
               Minuten
             </div>
-            <div className="flex flex-col p-4 dark:bg-white dark:text-black bg-black text-white rounded-box">
+            <div className="flex flex-col p-4 rounded-box">
               <span className="countdown font-mono text-5xl">
                 <span
                   style={

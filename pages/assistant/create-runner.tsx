@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react';
 import Head from '@/components/Head';
-import { assistantNavItems, themedPromiseToast } from '@/lib/utils/';
+import { assistantNavItems, themedErrorToast, themedPromiseToast } from '@/lib/utils/';
 import { AuthAction, withUser } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
 import { httpsCallable } from 'firebase/functions';
@@ -25,8 +25,28 @@ function AssistantCreateRunnerPage() {
     // Get form data
     const formData = new FormData(e.target as HTMLFormElement);
     const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
 
-    themedPromiseToast(createRunner({ name }), {
+    if (email && email.length > 0) {
+      const emailLower = email.toLowerCase();
+      if (
+        !emailLower.endsWith('@birklehof.de') &&
+        !emailLower.endsWith('@s.birklehof.de') &&
+        !emailLower.endsWith('@alumni.birklehof.de')
+      ) {
+        themedErrorToast('Nur Birklehof E-Mails erlaubt!');
+        setSubmitting(false);
+        return;
+      }
+    }
+
+    let runner: { name: string; email?: string } = { name };
+
+    if (email && email.length > 0) {
+      runner.email = email;
+    }
+
+    themedPromiseToast(createRunner(runner), {
       pending: 'Läufer wird erstellt...',
       success: 'Läufer wurde erstellt!',
       error: {
@@ -92,6 +112,13 @@ function AssistantCreateRunnerPage() {
                 type="text"
                 required
                 minLength={3}
+              />
+              <input
+                id="email"
+                name="email"
+                className="input-bordered input w-full"
+                placeholder="Email (optional)"
+                type="email"
               />
               <button
                 className={`btn-primary btn-outline btn ${
