@@ -13,6 +13,9 @@ import {
   TrophyIcon,
   UserIcon,
   UserPlusIcon,
+  BugAntIcon,
+  LifebuoyIcon,
+  CodeBracketIcon,
 } from '@heroicons/react/24/outline';
 interface IconProps {
   name: PossibleIcons;
@@ -32,6 +35,9 @@ const icons: { [key: string]: any } = {
   UserIcon: UserIcon,
   Search: MagnifyingGlassIcon,
   RefreshIcon: ArrowPathIcon,
+  BugIcon: BugAntIcon,
+  HelpIcon: LifebuoyIcon,
+  CodeIcon: CodeBracketIcon,
 } as const;
 
 export default function Icon({ name = '', size = 7 }: IconProps) {

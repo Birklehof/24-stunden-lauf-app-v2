@@ -2,6 +2,7 @@ import LoginOptions from '@/components/LoginOptions';
 import Head from '@/components/Head';
 import { withUser, AuthAction, withUserTokenSSR } from 'next-firebase-auth';
 import Loading from '@/components/Loading';
+import Link from 'next/link';
 
 export const getServerSideProps = withUserTokenSSR({
   whenAuthed: AuthAction.REDIRECT_TO_APP,
@@ -20,6 +21,17 @@ function LoginPage() {
             <LoginOptions />
           </div>
         </div>
+        <p className="fixed bottom-4 right-4 left-4 text-right btn-sm text-sm">
+          Probleme bei der Anmeldung?
+          <Link
+            href="https://teams.microsoft.com/l/chat/0/0?users=paul.maier@alumni.birklehof.de&amp;message=Hallo%20Paul,%20ich%20habe%20Probleme%20bei%20der%20Anmeldung%20zur%2024-Stunden-Lauf%20App."
+            target="_blank"
+            rel="noopener noreferrer"
+            className='text-primary hover:underline ml-1'
+          >
+            Melde dich!
+          </Link>
+        </p>
       </main>
     </>
   );

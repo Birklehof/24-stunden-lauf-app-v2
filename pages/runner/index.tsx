@@ -121,6 +121,8 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
             value={newGoal}
             inputMode="numeric"
             min={0}
+            max={200}
+            aria-label="Rundenziel"
             onChange={(e) => setNewGoal(e.target.value)}
           />
           <button

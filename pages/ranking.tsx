@@ -264,7 +264,7 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
 
         {user.email !== null && (
           <button
-            className="btn btn-circle btn-outline btn-primary fixed bottom-20 right-4 z-50 aspect-square border-2 shadow-md"
+            className="btn btn-circle btn-outline btn-primary fixed bottom-19 right-4 z-50 aspect-square border-2 shadow-md"
             onClick={scrollToUser}
             aria-label="Zu meinem Ergebnis"
           >

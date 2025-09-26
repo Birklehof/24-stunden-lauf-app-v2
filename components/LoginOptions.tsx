@@ -84,7 +84,7 @@ export default function LoginOptions() {
         Cypress e2e Login
       </button>
       <button
-        className="btn-primary btn-outline btn w-full"
+        className="btn-primary btn-outline btn w-full text-lg"
         onClick={() => {
           handleRunnerAuth().finally(() => {
             setPending(false);
@@ -93,13 +93,13 @@ export default function LoginOptions() {
         disabled={pending}
       >
         {pending && <span className="loading loading-spinner" />}
-        Läufer
+        Läufer*in
       </button>
       <div className="divider">
         <p className="text-sm font-semibold tracking-wider opacity-60">ODER</p>
       </div>
       <button
-        className="btn-primary btn-outline btn w-full"
+        className="btn-primary btn-outline btn w-full text-lg"
         onClick={() => {
           handleStaffAuth().finally(() => {
             setPending(false);
@@ -108,7 +108,7 @@ export default function LoginOptions() {
         disabled={pending}
       >
         {pending && <span className="loading loading-spinner" />}
-        Helfer
+        Helfer*in
       </button>
     </>
   );

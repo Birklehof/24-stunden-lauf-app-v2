@@ -100,11 +100,11 @@ export async function getStaticProps() {
     ])
   );
 
-  // Get the 24 hours before the end of the event
-  const hoursBeforeEnd = Array.from({ length: 24 }, (_, i) => i + 1).map(
+  // Get the 24 hours after the start of the event
+  const hoursAfterStart = Array.from({ length: 24 }, (_, i) => i + 1).map(
     (i) => {
       const date = new Date(process.env.NEXT_PUBLIC_START_TIME as string); // TODO: Change to not be hardcoded
-      date.setHours(date.getHours() - i);
+      date.setHours(date.getHours() + i);
       return date;
     }
   );
@@ -112,7 +112,7 @@ export async function getStaticProps() {
   // For each hour, get the number of laps
   const lapCountByHour = Object.fromEntries(
     await Promise.all(
-      hoursBeforeEnd.map(async (date) => {
+      hoursAfterStart.map(async (date) => {
         const label = date.toLocaleString('de-DE', {
           hour: '2-digit',
           minute: '2-digit',
@@ -432,7 +432,7 @@ function RunnerGraphsPage({
             )}
           </div>
           <p className="font-semibold ml-2">
-            {lapCount || 'NaN'}{' '}
+            {lapCount || '0'}{' '}
             / {runner?.goal || 'NaN'} Runden
           </p>
         </fieldset>
@@ -440,7 +440,7 @@ function RunnerGraphsPage({
         <div className="flex flex-col gap-4 max-w-4xl w-full">
           <div className="grid grid-cols-2 gap-3 gap-y-9 md:grid-cols-4">
             <div className="card card-compact flex items-center justify-center">
-              <Stat value={runnerCount} label="Teilnehmer" />
+              <Stat value={runnerCount} label="Läufer*innen" />
             </div>
             <div className="card card-compact flex items-center justify-center">
               <Stat value={lapsTotal} label="Runden gesamt" />
@@ -451,7 +451,7 @@ function RunnerGraphsPage({
                   .toFixed(1)
                   .toString()
                   .replace('.', ',')}
-                label="Ø Runden pro Teilnehmer"
+                label="Ø Runden pro Läufer*in"
               />
             </div>
             <div className="card card-compact flex items-center justify-center">
