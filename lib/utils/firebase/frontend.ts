@@ -1,7 +1,5 @@
 import {
   collection,
-  deleteDoc,
-  doc,
   getCountFromServer,
   getDocs,
   limit,

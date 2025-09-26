@@ -32,7 +32,7 @@ export const getServerSideProps = withUserSSR({
     .then((runner) => {
       return {
         props: {
-          runner: {...runner, goal: runner.goal || null},
+          runner: { ...runner, goal: runner.goal || null },
         },
       };
     })
@@ -63,7 +63,9 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
     if (!runner?.goal) {
       // Show set goal dialog
       console.log('No goal set, showing dialog');
-      const goalDialog = document.getElementById('set_goal') as HTMLDialogElement;
+      const goalDialog = document.getElementById(
+        'set_goal'
+      ) as HTMLDialogElement;
       if (goalDialog) {
         goalDialog.showModal();
       }
