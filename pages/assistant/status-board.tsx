@@ -41,33 +41,7 @@ function StatusBoardPage() {
 
       {remainingSeconds <= 0 && <ConfettiCanvas timeoutSeconds={60 * 60} />}
 
-      <main className="flex flex-row justify-center gap-4 pr-4 scale-150 translate-y-[25%]">
-        <ul className="list h-dvh overflow-hidden col-span-3">
-          {laps.length > 0 ? (
-            <>
-              {laps
-                .sort((a, b) => {
-                  return (
-                    // @ts-ignore
-                    b.createdAt - a.createdAt
-                  );
-                })
-                .map((lap) => (
-                  <ListItem
-                    key={lap.id + lap.createdAt}
-                    medals={false}
-                    animated={true}
-                    number={lap.runnerData?.number || 0}
-                    mainContent={lap.runnerData?.name || 'Unbekannt'}
-                  />
-                ))}
-            </>
-          ) : (
-            <li className="p-4 opacity-60 tracking-wide text-center">
-              Noch keine Runden gezählt
-            </li>
-          )}
-        </ul>
+      <main className="flex flex-col justify-center w-full h-screen items-center">
         <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit w-fit mt-2">
           <legend className="fieldset-legend text-lg font-semibold -mb-5">
             {remainingSeconds > 24 * 60 * 60
@@ -131,6 +105,33 @@ function StatusBoardPage() {
             </div>
           </div>
         </fieldset>
+        <ul className="list h-dvh overflow-hidden col-span-3 gap-6">
+          {laps.length > 0 ? (
+            <>
+              {laps
+                .sort((a, b) => {
+                  return (
+                    // @ts-ignore
+                    b.createdAt - a.createdAt
+                  );
+                })
+                .map((lap) => (
+                  <ListItem
+                    key={lap.id + lap.createdAt}
+                    medals={false}
+                    extraLarge={true}
+                    animated={true}
+                    number={lap.runnerData?.number || 0}
+                    mainContent={lap.runnerData?.name || 'Unbekannt'}
+                  />
+                ))}
+            </>
+          ) : (
+            <li className="p-4 opacity-60 tracking-wide text-center">
+              Noch keine Runden gezählt
+            </li>
+          )}
+        </ul>
       </main>
     </>
   );

@@ -9,6 +9,7 @@ interface ListItemProps {
   animated?: boolean;
   highlight?: boolean;
   medals?: boolean;
+  extraLarge?: boolean;
 }
 
 export default function ListItem({
@@ -20,6 +21,7 @@ export default function ListItem({
   animated = false,
   highlight,
   medals = true,
+  extraLarge = false,
 }: ListItemProps) {
   return (
     <li
@@ -28,7 +30,7 @@ export default function ListItem({
       className={`list-row p-2.5 ${animated && 'rounded-none animate-fade-in'} ${highlight && 'border-b-4 border-b-primary font-bold'}`}
     >
       <div
-        className={`tabular-nums tracking-tight opacity-90 my-auto ${secondaryContent ? 'text-3xl' : 'text-xl'}`}
+        className={`tabular-nums tracking-tight opacity-90 my-auto ${secondaryContent ? 'text-3xl' : 'text-xl'} ${extraLarge ? 'text-8xl!' : ''}`}
       >
         {number != undefined && (number > 3 || !medals) && (
           <>
@@ -45,7 +47,7 @@ export default function ListItem({
         )}
       </div>
       <div
-        className={'list-col-grow text-xl tracking-wide'}
+        className={`list-col-grow tracking-wide ${extraLarge ? 'text-8xl overflow-hidden line-clamp-1' : 'text-xl'}`}
       >
         {mainContent}
         <div className="text-xs">{secondaryContent}</div>
