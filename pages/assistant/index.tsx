@@ -10,10 +10,10 @@ import Menu from '@/components/Menu';
 import { functions } from '@/lib/firebase';
 import { httpsCallable } from 'firebase/functions';
 
-
 function AssistantIndexPage() {
   const [createdLaps, setCreatedLaps] = useState<LapWithRunner[]>([]);
   const [number, setNumber] = useState(0);
+  const [ignoreCooldown, setIgnoreCooldown] = useState<boolean>(false);
 
   const createLap = httpsCallable(functions, 'createLap');
   const deleteLap = httpsCallable(functions, 'deleteLap');
@@ -21,7 +21,7 @@ function AssistantIndexPage() {
   async function createNewLapHandler() {
     setNumber(0);
 
-    await createLap({ number })
+    await createLap({ number, ignoreCooldown })
       .then((result) => {
         const newLap = result.data as LapWithRunner;
 
@@ -70,7 +70,7 @@ function AssistantIndexPage() {
               aria-label="Startnummer"
               id="number"
               name="number"
-              className='font-mono input input-bordered box-border h-44 w-72 rounded-box text-center text-9xl font-medium '
+              className="font-mono input input-bordered box-border h-44 w-72 rounded-box text-center text-9xl font-medium "
               autoFocus
               onChange={(e) => {
                 e.preventDefault();
@@ -92,6 +92,16 @@ function AssistantIndexPage() {
               required
               inputMode="numeric"
             />
+            <label className="label hidden">
+              <input
+                type="checkbox"
+                defaultChecked
+                className="toggle"
+                checked={ignoreCooldown}
+                onChange={(e) => setIgnoreCooldown(e.target.checked)}
+              />
+              Cooldown ignorieren
+            </label>
             <div className="label text-xs">
               Drücke <kbd className="kbd kbd-xs">Enter</kbd>, um eine Runde zu
               zählen
@@ -113,9 +123,7 @@ function AssistantIndexPage() {
                     key={lap.id + lap.createdAt}
                     medals={false}
                     number={lap.runner.number}
-                    mainContent={(
-                      lap.runner.name
-                    ).concat(
+                    mainContent={lap.runner.name.concat(
                       lap.runner.class
                         ? ', '.concat(lap.runner.class || '')
                         : ''
