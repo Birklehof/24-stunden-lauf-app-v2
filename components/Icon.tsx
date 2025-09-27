@@ -20,6 +20,7 @@ import {
 interface IconProps {
   name: PossibleIcons;
   size?: number;
+  className?: string;
 }
 
 const icons: { [key: string]: any } = {
@@ -40,7 +41,11 @@ const icons: { [key: string]: any } = {
   CodeIcon: CodeBracketIcon,
 } as const;
 
-export default function Icon({ name = '', size = 7 }: IconProps) {
+export default function Icon({
+  name = '',
+  size = 7,
+  className = '',
+}: IconProps) {
   const sizeClass =
     {
       4: 'h-4 w-4',
@@ -53,8 +58,8 @@ export default function Icon({ name = '', size = 7 }: IconProps) {
 
   if (name in icons) {
     const LookedUpIcon = icons[name];
-    return <LookedUpIcon className={sizeClass} />;
+    return <LookedUpIcon className={`${sizeClass} ${className}`} />;
   } else {
-    return <ExclamationTriangleIcon />;
+    return <ExclamationTriangleIcon className={`${sizeClass} ${className}`} />;
   }
 }

@@ -268,8 +268,18 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
           </li>
         </ul>
 
+        {user.email !== null && (
+          <button
+            className="btn btn-circle btn-outline btn-primary hover:bg-primary fixed bottom-32 portrait:left-4 right-4 z-50 aspect-square border-2 shadow-md bg-base-100/75"
+            onClick={scrollToUser}
+            aria-label="Zu meinem Ergebnis"
+          >
+            <Icon name="UserIcon" />
+          </button>
+        )}
+
         <button
-          className="btn btn-circle btn-outline btn-primary fixed bottom-32 right-4 z-50 aspect-square border-2 shadow-md"
+          className="btn btn-circle btn-outline btn-primary hover:bg-primary fixed bottom-19 portrait:left-4 right-4 z-50 aspect-square border-2 shadow-md bg-base-100/75"
           aria-label="Aktualisieren"
           onClick={handleRefresh}
           disabled={refreshing}
@@ -280,16 +290,6 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
             <Icon name="RefreshIcon" />
           )}
         </button>
-
-        {user.email !== null && (
-          <button
-            className="btn btn-circle btn-outline btn-primary fixed bottom-19 right-4 z-50 aspect-square border-2 shadow-md"
-            onClick={scrollToUser}
-            aria-label="Zu meinem Ergebnis"
-          >
-            <Icon name="UserIcon" />
-          </button>
-        )}
 
         <div className="grow" />
       </main>
