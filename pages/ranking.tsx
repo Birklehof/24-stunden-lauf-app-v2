@@ -128,7 +128,7 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
                 <input
                   type="search"
                   className="grow text-lg rounded-box"
-                  placeholder="Suchen"
+                  placeholder="Name oder Startnummer"
                   value={searchRunnerName}
                   onChange={(e) => setSearchRunnerName(e.target.value)}
                 />

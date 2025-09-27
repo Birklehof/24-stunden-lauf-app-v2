@@ -104,7 +104,7 @@ export function filterRunner(
   }
 
   return (
-    !filterName || runner.name?.toLowerCase().includes(filterName.toLowerCase())
+    !filterName || runner.name?.toLowerCase().includes(filterName.trim().toLowerCase()) || (isNaN(+filterName.trim()) ? false : runner.number === +filterName.trim())
   );
 }
 
