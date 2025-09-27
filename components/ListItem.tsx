@@ -27,7 +27,7 @@ export default function ListItem({
     <li
       id={id}
       key={id}
-      className={`list-row p-2.5 ${animated && 'rounded-none animate-fade-in'} ${highlight && 'border-b-4 border-b-primary font-bold'}`}
+      className={`list-row rounded-none p-2.5 ${animated && 'animate-fade-in'} ${highlight && 'border-b-4 border-b-primary font-bold'}`}
     >
       <div
         className={`tabular-nums tracking-tight opacity-90 my-auto ${secondaryContent ? 'text-3xl' : 'text-xl'} ${extraLarge ? 'text-8xl!' : ''}`}

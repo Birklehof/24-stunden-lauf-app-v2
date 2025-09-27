@@ -120,7 +120,7 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
             <input type="checkbox" className="peer" />
             <div className="collapse-title text-sm font-semibold flex items-center gap-2">
               <Icon name="AdjustmentsVerticalIcon" size={5} />
-              Filter
+              Suchen & Filtern
             </div>
             <div className="collapse-content flex flex-col gap-2">
               <label className="input w-full mb-3">
@@ -216,6 +216,13 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
         </div>
 
         <ul className="list">
+          <li className="list-row p-2.5 font-semibold border-b-2 border-b-base-300 rounded-none sticky top-0 bg-base-100 z-10">
+            <div className="tabular-nums tracking-tight opacity-90 mx-2.5 text-center">
+              Platz
+            </div>
+            <div className="list-col-grow tracking-wide">Läufer</div>
+            <div>Runden</div>
+          </li>
           {runners
             .filter((runner) => {
               return filterRunner(runner, {
@@ -244,8 +251,20 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
                 </ListItem>
               );
             })}
-          <li className="p-4 opacity-60 tracking-wide text-center">
-            Keine weiteren Läufer
+          <li className="list-row p-2.5 border-t-2 border-t-base-300 rounded-none">
+            <div className="list-col-grow tracking-wide text-right">
+              Summe{' '}
+              {runners
+                .filter((runner) => {
+                  return filterRunner(runner, {
+                    filterType: runnerTypeFilter,
+                    filterName: searchRunnerName,
+                    filterClasses: runnerClassFilter,
+                    filterHouse: runnerHouseFilter,
+                  });
+                })
+                .reduce((total, runner) => total + (runner.laps || 0), 0)}
+            </div>
           </li>
         </ul>
 
