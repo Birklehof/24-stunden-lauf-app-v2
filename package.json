@@ -27,7 +27,7 @@
     "firebase": "^12.6.0",
     "firebase-admin": "^13.6.0",
     "fs": "^0.0.1-security",
-    "next": "16.0.7",
+    "next": "16.0.9",
     "next-firebase-auth": "^1.0.0",
     "postcss": "^8.4.47",
     "prettier": "^3.7.4",
