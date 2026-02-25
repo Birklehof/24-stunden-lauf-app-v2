@@ -35,10 +35,6 @@ Tailwind ist das CSS-Framework, welches für die Gestaltung der App verwendet wi
 
 Daisy UI ist eine Erweiterung für Tailwind, welche vorgefertigte Komponenten zur Verfügung stellt. [Mehr](https://daisyui.com/)
 
-## Cypress
-
-Cypress ist das Framework, welches für das testen verwendet wird.
-
 ## Backend
 
 ### Firebase
