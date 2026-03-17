@@ -15,7 +15,7 @@ function LoginPage() {
       <main className="flex items-center justify-center">
         <div className="my-auto flex w-full flex-col items-center justify-center gap-x-16 gap-y-6 md:p-4 landscape:flex-row">
           <h1 className="text-3xl font-bold landscape:sm:text-4xl portrait:text-center landscape:text-right landscape:md:text-5xl landscape:lg:text-6xl">
-            24-Stunden-Lauf App
+            24-Stunden-Lauf-App
           </h1>
           <div className="w-full max-w-xs">
             <LoginOptions />

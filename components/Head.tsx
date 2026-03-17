@@ -5,7 +5,7 @@ interface HeadProps {
 }
 
 export default function Header({ title }: HeadProps) {
-  const pageTitle = title ? `24 Stunden Lauf | ${title}` : '24 Stunden Lauf';
+  const pageTitle = title ? `24-Stunden-Lauf-App | ${title}` : '24-Stunden-Lauf-App';
 
   return (
     <>
