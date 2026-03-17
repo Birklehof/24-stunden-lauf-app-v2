@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @plugin "daisyui";
 @plugin "daisyui/theme" {
-  name: 'light';
+  name: 'my-light';
   default: true;
   prefersdark: false;
   color-scheme: light;
@@ -26,7 +26,7 @@
   --border-btn: 1px;
   --tab-border: 1px;
   --tab-radius: 0.5rem;
-};
+}
 
 @plugin "daisyui/theme" {
   name: 'dark';
@@ -54,7 +54,7 @@
   --border-btn: 1px;
   --tab-border: 1px;
   --tab-radius: 0.5rem;
-};
+}
 
 @config '../tailwind.config.js';
 

@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     const body = document.body;
-    body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+    body.setAttribute('data-theme', isDarkMode ? 'dark' : 'my-light');
   }, [isDarkMode]);
 
   return (
