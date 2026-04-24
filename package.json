@@ -28,7 +28,7 @@
     "fs": "^0.0.1-security",
     "next": "16.1.6",
     "next-firebase-auth": "^1.0.0",
-    "postcss": "^8.4.47",
+    "postcss": "^8.5.10",
     "prettier": "^3.7.4",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "react": "19.2.4",
