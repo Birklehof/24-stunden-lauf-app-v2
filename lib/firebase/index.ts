@@ -11,7 +11,7 @@ const auth = getAuth(app);
 auth.languageCode = 'de';
 
 const firebase = getFirestore(app);
-const functions = getFunctions(app, 'europe-west1');
+const functions = getFunctions(app, 'europe-west3');
 
 // connectFirestoreEmulator(firebase, '192.168.56.3', 8080);
 // connectFunctionsEmulator(functions, '192.168.56.3', 5001)

@@ -45,9 +45,7 @@ Der Code und die Konfiguration für Firebase findet sich [hier](https://github.c
 
 ## Deployment
 
-Das Deployment erfolgt automatisch über Vercel. Jeder Push auf den `main`-Branch löst ein neues Deployment aus. Falls das Repository nicht mehr mit Vercel verbunden ist,
-kann es nach dieser [Anleitung](https://nextjs.org/learn-pages-router/basics/deploying-nextjs-app/deploy) importiert werden. Diese Art des Deployments ist relativ
-schnell und unkompliziert, allerdings gibt es gewisse [**Einschränkungen durch die kostenlose Version**](https://vercel.com/pricing).
+Das Deployment erfolgt automatisch über Vercel. Jeder Push auf den `main`-Branch löst ein neues Deployment aus. Falls das Repository nicht mehr mit Vercel verbunden ist, kann es nach dieser [Anleitung](https://nextjs.org/learn-pages-router/basics/deploying-nextjs-app/deploy) importiert werden. Diese Art des Deployments ist relativ schnell und unkompliziert, allerdings gibt es gewisse [**Einschränkungen durch die kostenlose Version**](https://vercel.com/pricing).
 
 ## Sonstiges
 
