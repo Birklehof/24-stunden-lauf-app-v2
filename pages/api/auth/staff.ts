@@ -38,7 +38,7 @@ export default async function handler(
           role: 'assistant',
         }
       )
-      .then((customToken) => {
+      .then((customToken: string) => {
         res.status(200).json({ success: true, token: customToken });
       });
   } catch {

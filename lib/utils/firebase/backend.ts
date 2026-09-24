@@ -1,5 +1,6 @@
 import { Runner } from '@/lib/interfaces';
 import { firebase } from '@/lib/firebase/admin';
+import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
 
 
 export async function getRunner(email: string): Promise<Runner> {
@@ -41,7 +42,7 @@ export async function getRunnersArray(): Promise<Runner[]> {
 
   const runnersArray: Runner[] = [];
 
-  runners.docs.forEach((runner) => {
+  runners.docs.forEach((runner: QueryDocumentSnapshot) => {
     runnersArray.push({
       id: runner.id,
       name: runner.data().name,

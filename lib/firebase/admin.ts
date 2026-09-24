@@ -1,28 +1,23 @@
-import admin from 'firebase-admin';
+import { cert, getApps, initializeApp } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
+import { getDatabase } from 'firebase-admin/database';
+import { getFirestore } from 'firebase-admin/firestore';
 import { firebaseConfig } from '@/lib/firebase/firebaseConfig';
 
 const serviceAccount = JSON.parse(
   process.env.FIREBASE_SERVICE_ACCOUNT?.toString() || '{}'
 );
 
-try {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: firebaseConfig.databaseURL,
-  });
-  console.log('Firebase admin initialized successfully.');
-} catch (error) {
-  /*
-   * We skip the "already exists" message which is
-   * not an actual error when we're hot-reloading.
-   */
-  if (error instanceof Error && !error.message.includes('already exists')) {
-    console.error('Firebase admin initialization error', error.stack);
-  }
-}
+const firebaseAdminApp =
+  getApps().length === 0
+    ? initializeApp({
+        credential: cert(serviceAccount),
+        databaseURL: firebaseConfig.databaseURL,
+      })
+    : getApps()[0];
 
-const auth = admin.auth();
-const firebase = admin.firestore();
-const database = admin.database();
+const auth = getAuth(firebaseAdminApp);
+const firebase = getFirestore(firebaseAdminApp);
+const database = getDatabase(firebaseAdminApp);
 
 export { auth, firebase, database };
