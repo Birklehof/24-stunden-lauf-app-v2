@@ -150,7 +150,7 @@ export async function getStaticProps() {
       lapCountByClass,
       averageLapCountByClass,
     },
-    revalidate: 60 * 3,
+    revalidate: 10,
   };
 }
 
