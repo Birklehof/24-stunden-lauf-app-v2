@@ -33,7 +33,7 @@ export default function LoginOptions() {
     setPending(true);
 
     // Ask user for a six digit code
-    const code = prompt('Bitte gib den 6-stelligen Code ein:', '');
+    const code = prompt('Bitte gib den 6-stelligen Code ein:', '')?.trim();
 
     if (!code || code.length !== 6 || !/^\d+$/.test(code)) {
       themedErrorToast('Fehlerhafter Code!');

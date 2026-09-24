@@ -141,7 +141,7 @@ function AssistantIndexPage() {
                         .toString() + ' Uhr'
                     }
                     badgeContent={(lap.runner.laps
-                        ? ((lap.runner.laps + 1)).toString().concat(". Runde")
+                        ? ((lap.runner.laps)).toString().concat(". Runde")
                         : '')}
                   >
                     <button
