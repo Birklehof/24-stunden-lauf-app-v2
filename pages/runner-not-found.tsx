@@ -11,7 +11,7 @@ function RunnerNotFound() {
     if (user !== undefined) {
       themedErrorToast('Account nicht als Läufer registriert', {
         autoClose: false,
-        hideProgressBar: true
+        hideProgressBar: true,
       });
       user.signOut();
     }
