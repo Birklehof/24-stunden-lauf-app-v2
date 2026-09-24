@@ -38,7 +38,10 @@ export async function syncNewestLaps(
   });
 }
 
-export async function syncLapCount(runnerId: string, updateFunction: (lapCount: number) => void) {
+export async function syncLapCount(
+  runnerId: string,
+  updateFunction: (lapCount: number) => void
+) {
   const lapCountQuery = query(
     collection(firebase, 'laps'),
     where('runnerId', '==', runnerId)
@@ -70,7 +73,9 @@ export async function getRunner(email: string): Promise<Runner> {
   } as Runner;
 }
 
-export async function refreshRunnersArray(updateFunction: (runners: Runner[]) => void) {
+export async function refreshRunnersArray(
+  updateFunction: (runners: Runner[]) => void
+) {
   const runnersQuery = query(collection(firebase, 'runners'));
 
   const runnersSnapshot = await getDocs(runnersQuery);

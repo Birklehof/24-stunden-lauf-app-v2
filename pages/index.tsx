@@ -27,7 +27,7 @@ function LoginPage() {
             href="https://teams.microsoft.com/l/chat/0/0?users=paul.maier@alumni.birklehof.de&amp;message=Hallo%20Paul,%20ich%20habe%20Probleme%20bei%20der%20Anmeldung%20zur%2024-Stunden-Lauf%20App."
             target="_blank"
             rel="noopener noreferrer"
-            className='text-primary hover:underline ml-1'
+            className="text-primary hover:underline ml-1"
           >
             Melde dich!
           </Link>

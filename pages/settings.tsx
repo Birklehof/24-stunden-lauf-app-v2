@@ -79,7 +79,7 @@ function SettingsPage() {
             Sonstiges
           </legend>
           <p className="mb-2 text-base">
-            &copy; {new Date().getFullYear()}{' '}Paul Maier
+            &copy; {new Date().getFullYear()} Paul Maier
           </p>
           <Link
             href="https://github.com/Birklehof"

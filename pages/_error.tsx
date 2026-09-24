@@ -1,7 +1,7 @@
 import Head from '@/components/Head';
 import Link from 'next/link';
 import Image from 'next/image';
-import type { NextPageContext } from 'next'
+import type { NextPageContext } from 'next';
 
 export default function CustomErrorPage({
   statusCode,
@@ -14,7 +14,11 @@ export default function CustomErrorPage({
     <>
       <Head title="Seite nicht gefunden" />
       <main className="flex flex-col justify-center items-center h-screen">
-        <Link href="/" className="relative w-full max-w-2xl h-full" aria-label="Zur Startseite">
+        <Link
+          href="/"
+          className="relative w-full max-w-2xl h-full"
+          aria-label="Zur Startseite"
+        >
           <Image
             src={'https://http.garden/' + statusCode + '.jpg'}
             alt="Logo"
@@ -28,6 +32,6 @@ export default function CustomErrorPage({
 }
 
 CustomErrorPage.getInitialProps = ({ res, err }: NextPageContext) => {
-  const statusCode = res ? res.statusCode : err ? err.statusCode : 404
-  return { statusCode }
-}
+  const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
+  return { statusCode };
+};

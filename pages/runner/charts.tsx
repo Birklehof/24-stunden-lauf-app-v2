@@ -15,10 +15,7 @@ import {
 import useRemoteConfig from '@/lib/firebase/useRemoteConfig';
 import { defaultDistancePerLap } from '@/lib/firebase/remoteConfigDefaultValues';
 import { AuthAction, useUser, withUser } from 'next-firebase-auth';
-import {
-  getLapsInHour,
-  getRunnersArray,
-} from '@/lib/utils/firebase/backend';
+import { getLapsInHour, getRunnersArray } from '@/lib/utils/firebase/backend';
 import Menu from '@/components/Menu';
 import { formatKilometer, runnerNavItems } from '@/lib/utils';
 import Stat from '@/components/Stat';
@@ -50,9 +47,7 @@ export async function getStaticProps() {
   // Count laps by house.
   const lapCountByHouse = runners.reduce<NumberMap>((acc, cur) => {
     const house =
-      cur.type === 'student'
-        ? cur.house || ''
-        : 'Extern (Mitarbeiter + Gäste)';
+      cur.type === 'student' ? cur.house || '' : 'Extern (Mitarbeiter + Gäste)';
 
     acc[house] = (acc[house] || 0) + (cur.laps || 0);
 
@@ -62,9 +57,7 @@ export async function getStaticProps() {
   // Count runners by house.
   const runnersPerHouse = runners.reduce<NumberMap>((acc, cur) => {
     const house =
-      cur.type === 'student'
-        ? cur.house || ''
-        : 'Extern (Mitarbeiter + Gäste)';
+      cur.type === 'student' ? cur.house || '' : 'Extern (Mitarbeiter + Gäste)';
 
     acc[house] = (acc[house] || 0) + 1;
 
@@ -133,17 +126,12 @@ export async function getStaticProps() {
     })
   );
 
-  const lapCountByHour: NumberMap = Object.fromEntries(
-    lapCountByHourEntries
-  );
+  const lapCountByHour: NumberMap = Object.fromEntries(lapCountByHourEntries);
 
   return {
     props: {
       runnerCount: runners.length,
-      lapsTotal: runners.reduce(
-        (acc, cur) => acc + (cur.laps || 0),
-        0
-      ),
+      lapsTotal: runners.reduce((acc, cur) => acc + (cur.laps || 0), 0),
       lapCountByHour,
       lapCountByHouse,
       averageLapCountByHouse,
@@ -197,9 +185,7 @@ function RunnerGraphsPage({
       style.getPropertyValue('--color-base-content').trim() || 'black'
     );
 
-    setCardColor(
-      style.getPropertyValue('--color-base-100').trim() || 'white'
-    );
+    setCardColor(style.getPropertyValue('--color-base-100').trim() || 'white');
   }, []);
 
   useEffect(() => {
@@ -451,9 +437,7 @@ function RunnerGraphsPage({
               <Stat
                 value={
                   runnerCount > 0
-                    ? (lapsTotal / runnerCount)
-                        .toFixed(1)
-                        .replace('.', ',')
+                    ? (lapsTotal / runnerCount).toFixed(1).replace('.', ',')
                     : '0'
                 }
                 label="Ø Runden pro Läufer*in"
@@ -484,10 +468,7 @@ function RunnerGraphsPage({
             Ø Runden pro Haus
           </h2>
 
-          <Pie
-            data={averageLapCountByHouseData}
-            options={pieOptions}
-          />
+          <Pie data={averageLapCountByHouseData} options={pieOptions} />
         </div>
 
         <div className="flex flex-col gap-2 w-full max-w-sm">
@@ -495,10 +476,7 @@ function RunnerGraphsPage({
             Ø Runden pro Klasse
           </h2>
 
-          <Pie
-            data={averageLapCountByClassData}
-            options={pieOptions}
-          />
+          <Pie data={averageLapCountByClassData} options={pieOptions} />
         </div>
 
         <div className="flex flex-col gap-2 w-full max-w-sm">
@@ -506,10 +484,7 @@ function RunnerGraphsPage({
             Runden pro Haus
           </h2>
 
-          <Pie
-            data={lapCountByHouseData}
-            options={pieOptions}
-          />
+          <Pie data={lapCountByHouseData} options={pieOptions} />
         </div>
 
         <div className="flex flex-col gap-2 w-full max-w-sm">
@@ -517,10 +492,7 @@ function RunnerGraphsPage({
             Runden pro Klasse
           </h2>
 
-          <Pie
-            data={lapCountByClassData}
-            options={pieOptions}
-          />
+          <Pie data={lapCountByClassData} options={pieOptions} />
         </div>
       </main>
     </>

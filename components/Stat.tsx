@@ -12,9 +12,7 @@ export default function Stat({
       ) : (
         <span className="loading loading-bars loading-lg scale-150 mb-4" />
       )}
-      <h2 className="text-center font-semibold opacity-80 text-lg">
-        {label}
-      </h2>
+      <h2 className="text-center font-semibold opacity-80 text-lg">{label}</h2>
     </div>
   );
 }

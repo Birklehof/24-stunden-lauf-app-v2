@@ -44,19 +44,24 @@ export default function ListItem({
         )}
         {number != undefined && number <= 3 && medals && (
           <>
-            <span className="font-mono px-2.5">{['🥇', '🥈', '🥉'][number - 1]} </span>
+            <span className="font-mono px-2.5">
+              {['🥇', '🥈', '🥉'][number - 1]}{' '}
+            </span>
           </>
         )}
       </div>
       <div
         className={`list-col-grow tracking-wide ${extraLarge ? 'text-8xl overflow-hidden line-clamp-1' : 'text-xl'}`}
       >
-        <div className='flex flex-row justify-between'>
+        <div className="flex flex-row justify-between">
           {mainContent}
-          {badgeContent && <div className='text-primary font-bold'>
-            <div className="badge badge-outline badge-primary mt-0.5">{badgeContent}</div>
-          </div>}
-
+          {badgeContent && (
+            <div className="text-primary font-bold">
+              <div className="badge badge-outline badge-primary mt-0.5">
+                {badgeContent}
+              </div>
+            </div>
+          )}
         </div>
         <div className="text-xs">{secondaryContent}</div>
       </div>

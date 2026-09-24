@@ -36,17 +36,9 @@ export const runnerTypes: RunnerType[] = [
   { name: 'Gäste', value: 'guest' },
 ];
 
-export function themedPromiseToast<
-  TData,
-  TError = unknown,
-  TSuccess = TData
->(
+export function themedPromiseToast<TData, TError = unknown, TSuccess = TData>(
   promise: Promise<TData> | (() => Promise<TData>),
-  {
-    pending,
-    error,
-    success,
-  }: ToastPromiseParams<TData, TError, TSuccess>,
+  { pending, error, success }: ToastPromiseParams<TData, TError, TSuccess>,
   options?: ToastOptions<TData>
 ) {
   return toast.promise(
@@ -55,11 +47,9 @@ export function themedPromiseToast<
     {
       ...options,
       theme:
-        document.body.getAttribute('data-theme') === 'dark'
-          ? 'dark'
-          : 'light',
+        document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
     }
-  )
+  );
 }
 
 export function themedErrorToast(
@@ -69,10 +59,8 @@ export function themedErrorToast(
   return toast.error(message, {
     ...options,
     theme:
-      document.body.getAttribute('data-theme') === 'dark'
-        ? 'dark'
-        : 'light',
-  })
+      document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
+  });
 }
 
 export function filterRunner(
@@ -112,7 +100,9 @@ export function filterRunner(
   }
 
   return (
-    !filterName || runner.name?.toLowerCase().includes(filterName.trim().toLowerCase()) || (isNaN(+filterName.trim()) ? false : runner.number === +filterName.trim())
+    !filterName ||
+    runner.name?.toLowerCase().includes(filterName.trim().toLowerCase()) ||
+    (isNaN(+filterName.trim()) ? false : runner.number === +filterName.trim())
   );
 }
 

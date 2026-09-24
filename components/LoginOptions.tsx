@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import {
-  signInWithPopup,
-  signInWithCustomToken,
-} from 'firebase/auth';
+import { signInWithPopup, signInWithCustomToken } from 'firebase/auth';
 import { auth, microsoftOAuthProvider } from '@/lib/firebase';
 import { themedErrorToast, themedPromiseToast } from '@/lib/utils/';
 
@@ -11,22 +8,19 @@ export default function LoginOptions() {
 
   const handleRunnerAuth = async () => {
     setPending(true);
-    await themedPromiseToast(
-      signInWithPopup(auth, microsoftOAuthProvider),
-      {
-        pending: 'Anmeldung läuft...',
-        success: {
-          render: () => {
-            return 'Willkommen zurück!';
-          },
-          icon: () => {
-            return '👋';
-          },
-          type: 'info',
+    await themedPromiseToast(signInWithPopup(auth, microsoftOAuthProvider), {
+      pending: 'Anmeldung läuft...',
+      success: {
+        render: () => {
+          return 'Willkommen zurück!';
         },
-        error: 'Fehler beim Anmelden!',
+        icon: () => {
+          return '👋';
+        },
+        type: 'info',
       },
-    );
+      error: 'Fehler beim Anmelden!',
+    });
   };
 
   const handleStaffAuth = async () => {

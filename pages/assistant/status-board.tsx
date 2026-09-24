@@ -43,9 +43,7 @@ function StatusBoardPage() {
       <main className="flex flex-col justify-center w-full h-screen items-center">
         <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit w-fit mt-2">
           <legend className="fieldset-legend text-lg font-semibold -mb-5">
-            {remainingSeconds > 24 * 60 * 60
-              ? 'Start in'
-              : 'Verbleibende Zeit'}
+            {remainingSeconds > 24 * 60 * 60 ? 'Start in' : 'Verbleibende Zeit'}
           </legend>
           <div className="grid grid-flow-col gap-5 text-center auto-cols-max mx-auto">
             <div className="flex flex-col p-4 rounded-box">
@@ -112,9 +110,7 @@ function StatusBoardPage() {
             <>
               {laps
                 .sort((a, b) => {
-                  return (
-                    b.createdAt - a.createdAt
-                  );
+                  return b.createdAt - a.createdAt;
                 })
                 .map((lap) => (
                   <ListItem

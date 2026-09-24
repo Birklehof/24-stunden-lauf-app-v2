@@ -2,7 +2,6 @@ import { Runner } from '@/lib/interfaces';
 import { firebase } from '@/lib/firebase/admin';
 import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
 
-
 export async function getRunner(email: string): Promise<Runner> {
   const runner = await firebase
     .collection('runners')

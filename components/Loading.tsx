@@ -44,7 +44,6 @@ export default function Loading() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-
     // Function to change the message
     const updateMessage = () => {
       const ind = Math.floor(Math.random() * funnyMessages.length);

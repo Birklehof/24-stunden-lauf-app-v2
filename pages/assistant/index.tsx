@@ -31,12 +31,15 @@ function AssistantIndexPage() {
       })
       .catch((error) => {
         console.error(error);
-        themedErrorToast(`[${number}] ${error.message.replace(/\s*\[\d+\]$/, "")}`, {
-          position: 'bottom-center',
-          autoClose: 4000,
-          draggable: false,
-          hideProgressBar: true,
-        });
+        themedErrorToast(
+          `[${number}] ${error.message.replace(/\s*\[\d+\]$/, '')}`,
+          {
+            position: 'bottom-center',
+            autoClose: 4000,
+            draggable: false,
+            hideProgressBar: true,
+          }
+        );
       });
   }
 
@@ -121,9 +124,7 @@ function AssistantIndexPage() {
             <>
               {createdLaps
                 .sort((a, b) => {
-                  return (
-                    b.createdAt - a.createdAt
-                  );
+                  return b.createdAt - a.createdAt;
                 })
                 .map((lap) => (
                   <ListItem
@@ -140,9 +141,11 @@ function AssistantIndexPage() {
                         .toLocaleTimeString('de-DE')
                         .toString() + ' Uhr'
                     }
-                    badgeContent={(lap.runner.laps
-                        ? ((lap.runner.laps)).toString().concat(". Runde")
-                        : '')}
+                    badgeContent={
+                      lap.runner.laps
+                        ? lap.runner.laps.toString().concat('. Runde')
+                        : ''
+                    }
                   >
                     <button
                       disabled={!lap.id}

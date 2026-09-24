@@ -1,6 +1,10 @@
 import { useState, FormEvent } from 'react';
 import Head from '@/components/Head';
-import { assistantNavItems, themedErrorToast, themedPromiseToast } from '@/lib/utils/';
+import {
+  assistantNavItems,
+  themedErrorToast,
+  themedPromiseToast,
+} from '@/lib/utils/';
 import { AuthAction, withUser } from 'next-firebase-auth';
 import Menu from '@/components/Menu';
 import { httpsCallable } from 'firebase/functions';
@@ -8,20 +12,19 @@ import { functions } from '@/lib/firebase';
 import Loading from '@/components/Loading';
 
 type CreateRunnerRequest = {
-  name: string
-  email?: string
-}
+  name: string;
+  email?: string;
+};
 
 type CreateRunnerResponse = {
-  number: number
-}
+  number: number;
+};
 
-const createRunner = httpsCallable(
-  functions,
-  'createRunner'
-) as (data: CreateRunnerRequest) => Promise<{
-  data: CreateRunnerResponse
-}>
+const createRunner = httpsCallable(functions, 'createRunner') as (
+  data: CreateRunnerRequest
+) => Promise<{
+  data: CreateRunnerResponse;
+}>;
 
 function AssistantCreateRunnerPage() {
   const [submitting, setSubmitting] = useState(false);

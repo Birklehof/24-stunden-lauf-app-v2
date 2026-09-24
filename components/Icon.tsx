@@ -1,4 +1,4 @@
-import type { ComponentType, SVGProps } from 'react'
+import type { ComponentType, SVGProps } from 'react';
 import {
   AdjustmentsVerticalIcon,
   ArrowLeftIcon,
@@ -16,9 +16,9 @@ import {
   LifebuoyIcon,
   CodeBracketIcon,
   HomeIcon,
-} from '@heroicons/react/24/outline'
+} from '@heroicons/react/24/outline';
 
-type IconComponent = ComponentType<SVGProps<SVGSVGElement>>
+type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
 const icons = {
   HomeIcon,
@@ -36,14 +36,14 @@ const icons = {
   BugIcon: BugAntIcon,
   HelpIcon: LifebuoyIcon,
   CodeIcon: CodeBracketIcon,
-} satisfies Record<string, IconComponent>
+} satisfies Record<string, IconComponent>;
 
-export type PossibleIcons = keyof typeof icons
+export type PossibleIcons = keyof typeof icons;
 
 interface IconProps {
-  name?: PossibleIcons
-  size?: 4 | 5 | 6 | 7 | 8 | 10
-  className?: string
+  name?: PossibleIcons;
+  size?: 4 | 5 | 6 | 7 | 8 | 10;
+  className?: string;
 }
 
 const sizeClassMap: Record<NonNullable<IconProps['size']>, string> = {
@@ -53,16 +53,16 @@ const sizeClassMap: Record<NonNullable<IconProps['size']>, string> = {
   7: 'h-7 w-7',
   8: 'h-8 w-8',
   10: 'h-10 w-10',
-}
+};
 
 export default function Icon({
   name = 'HelpIcon',
   size = 7,
   className = '',
 }: IconProps) {
-  const IconComponent = name ? icons[name] : ExclamationTriangleIcon
+  const IconComponent = name ? icons[name] : ExclamationTriangleIcon;
 
-  const sizeClass = sizeClassMap[size] ?? 'h-7 w-7'
+  const sizeClass = sizeClassMap[size] ?? 'h-7 w-7';
 
-  return <IconComponent className={`${sizeClass} ${className}`} />
+  return <IconComponent className={`${sizeClass} ${className}`} />;
 }
