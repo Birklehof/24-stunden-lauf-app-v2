@@ -15,6 +15,10 @@ import {
   runnerNavItems,
   themedErrorToast,
 } from '@/lib/utils/';
+import { functions } from '@/lib/firebase';
+import { httpsCallable } from 'firebase/functions';
+
+const setRunnerGoal = httpsCallable(functions, 'setRunnerGoal');
 
 export const getServerSideProps = withUserSSR({
   whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
@@ -61,7 +65,7 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
 
     if (!runner?.goal) {
       // Show set goal dialog
-      console.log('No goal set, showing dialog');
+      // console.log('No goal set, showing dialog');
       const goalDialog = document.getElementById(
         'set_goal'
       ) as HTMLDialogElement;
@@ -77,17 +81,9 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
     return <Loading />;
   }
 
-  async function setGoalHandler(newGoal: number) {
+  async function setGoalHandler(goal: number) {
     // Make a post request to set the goal
-    await fetch('/api/runner/set-goal', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        goal: newGoal,
-      }),
-    })
+    await setRunnerGoal({ goal })
       .then(() => {
         // Reload the page
         window.location.reload();

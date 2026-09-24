@@ -33,8 +33,6 @@ function AssistantIndexPage() {
         console.error(error);
         themedErrorToast(`[${number}] ${error.message.replace(/\s*\[\d+\]$/, "")}`, {
           position: 'bottom-center',
-          autoClose: 3000,
-          draggable: true,
           hideProgressBar: true,
         });
       });
