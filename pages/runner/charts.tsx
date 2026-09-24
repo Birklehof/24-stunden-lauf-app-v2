@@ -423,7 +423,7 @@ function RunnerGraphsPage({
           <div className="px-1">
             {runner.goal !== undefined ? (
               <progress
-                className="progress progress-primary h-5 rounded-full bg-accent shadow-inner"
+                className="progress progress-primary h-5 dark:bg-accent rounded-full shadow-inner"
                 value={lapCount ?? 0}
                 max={runner.goal}
               />

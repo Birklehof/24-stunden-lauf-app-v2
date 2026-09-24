@@ -65,7 +65,6 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
 
     if (!runner?.goal) {
       // Show set goal dialog
-      // console.log('No goal set, showing dialog');
       const goalDialog = document.getElementById(
         'set_goal'
       ) as HTMLDialogElement;

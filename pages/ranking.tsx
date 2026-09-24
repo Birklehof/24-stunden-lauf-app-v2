@@ -237,7 +237,7 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
                   number={getPosition(runner) + 1}
                   mainContent={runner.name}
                   secondaryContent={`Nr. ${runner.number}${
-                    runner.class ? ', ' + runner.class : ''
+                    runner.class ? ', Klasse ' + runner.class : ''
                   }${runner.house ? ', ' + houses.filter((h) => h.abbreviation === runner.house).map((h) => h.name)[0] : ''}`}
                 >
                   <div className="text-lg h-full flex items-center justify-center px-2">

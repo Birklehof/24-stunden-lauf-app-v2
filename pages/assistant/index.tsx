@@ -33,6 +33,8 @@ function AssistantIndexPage() {
         console.error(error);
         themedErrorToast(`[${number}] ${error.message.replace(/\s*\[\d+\]$/, "")}`, {
           position: 'bottom-center',
+          autoClose: 4000,
+          draggable: false,
           hideProgressBar: true,
         });
       });
@@ -49,8 +51,8 @@ function AssistantIndexPage() {
       .catch((error) => {
         themedErrorToast(error.message, {
           position: 'bottom-center',
-          autoClose: 3000,
-          draggable: true,
+          autoClose: 4000,
+          draggable: false,
           hideProgressBar: true,
         });
       });
