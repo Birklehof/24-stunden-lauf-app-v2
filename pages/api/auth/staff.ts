@@ -35,6 +35,7 @@ export default async function handler(
       .createCustomToken(
         process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID || 'some-uid',
         {
+          // @ts-ignore
           role: 'assistant',
         }
       )
