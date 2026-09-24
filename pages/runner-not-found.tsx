@@ -9,7 +9,10 @@ function RunnerNotFound() {
 
   useEffect(() => {
     if (user !== undefined) {
-      themedErrorToast('Account nicht als Läufer registriert');
+      themedErrorToast('Account nicht als Läufer registriert', {
+        autoClose: false,
+        hideProgressBar: true
+      });
       user.signOut();
     }
   }, [user]);
