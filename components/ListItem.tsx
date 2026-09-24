@@ -5,6 +5,7 @@ interface ListItemProps {
   number?: number;
   mainContent: string;
   secondaryContent?: string;
+  badgeContent?: string;
   children?: ReactNode | undefined;
   animated?: boolean;
   highlight?: boolean;
@@ -17,6 +18,7 @@ export default function ListItem({
   number,
   mainContent,
   secondaryContent,
+  badgeContent,
   children,
   animated = false,
   highlight,
@@ -49,7 +51,13 @@ export default function ListItem({
       <div
         className={`list-col-grow tracking-wide ${extraLarge ? 'text-8xl overflow-hidden line-clamp-1' : 'text-xl'}`}
       >
-        {mainContent}
+        <div className='flex flex-row justify-between'>
+          {mainContent}
+          {badgeContent && <div className='text-primary font-bold'>
+            <div className="badge badge-outline badge-primary mt-0.5">{badgeContent}</div>
+          </div>}
+
+        </div>
         <div className="text-xs">{secondaryContent}</div>
       </div>
       <div>{children}</div>

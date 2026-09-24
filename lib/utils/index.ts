@@ -8,7 +8,6 @@ export interface NavItem {
   icon: PossibleIcons;
 }
 
-// Used in pages/runner/index.tsx, pages/runner/charts.tsx, pages/assistant/index.tsx, pages/assistant/create-runner.tsx
 export const runnerNavItems: NavItem[] = [
   { name: 'Startseite', href: '/runner', icon: 'HomeIcon' },
   { name: 'Ranking', href: '/ranking', icon: 'TrophyIcon' },
@@ -37,11 +36,18 @@ export const runnerTypes: RunnerType[] = [
   { name: 'Gäste', value: 'guest' },
 ];
 
-// Used in components/LoginOptions.tsx, pages/assistant/create-runner.tsx, pages/assistant/index.tsx
-export function themedPromiseToast(
-  promise: Promise<any> | (() => Promise<any>),
-  { pending, error, success }: ToastPromiseParams<any, unknown, unknown>,
-  options?: ToastOptions<{}> | undefined
+export function themedPromiseToast<
+  TData,
+  TError = unknown,
+  TSuccess = TData
+>(
+  promise: Promise<TData> | (() => Promise<TData>),
+  {
+    pending,
+    error,
+    success,
+  }: ToastPromiseParams<TData, TError, TSuccess>,
+  options?: ToastOptions<TData>
 ) {
   return toast.promise(
     promise,
@@ -49,24 +55,26 @@ export function themedPromiseToast(
     {
       ...options,
       theme:
-        document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
+        document.body.getAttribute('data-theme') === 'dark'
+          ? 'dark'
+          : 'light',
     }
-  );
+  )
 }
 
-// Used in components/LoginOptions.tsx
 export function themedErrorToast(
   message: string,
-  options?: ToastOptions<{}> | undefined
+  options?: ToastOptions<unknown>
 ) {
   return toast.error(message, {
     ...options,
     theme:
-      document.body.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
-  });
+      document.body.getAttribute('data-theme') === 'dark'
+        ? 'dark'
+        : 'light',
+  })
 }
 
-// Used in pages/ranking.tsx
 export function filterRunner(
   runner: Runner,
   {

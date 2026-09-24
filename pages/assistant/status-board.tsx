@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import ConfettiCanvas from '@/components/Confetti';
 import Head from '@/components/Head';
 import ListItem from '@/components/ListItem';
@@ -54,6 +53,7 @@ function StatusBoardPage() {
                 <span
                   style={
                     {
+                      '--digits': 2,
                       '--value': new Date(
                         remainingSeconds * 1000
                       ).getUTCHours(),
@@ -72,6 +72,7 @@ function StatusBoardPage() {
                 <span
                   style={
                     {
+                      '--digits': 2,
                       '--value': new Date(
                         remainingSeconds * 1000
                       ).getUTCMinutes(),
@@ -90,6 +91,7 @@ function StatusBoardPage() {
                 <span
                   style={
                     {
+                      '--digits': 2,
                       '--value': new Date(
                         remainingSeconds * 1000
                       ).getUTCSeconds(),
@@ -111,7 +113,6 @@ function StatusBoardPage() {
               {laps
                 .sort((a, b) => {
                   return (
-                    // @ts-ignore
                     b.createdAt - a.createdAt
                   );
                 })

@@ -8,7 +8,6 @@ const funnyMessages = [
   'Geduld bitte.',
   'Sind wir bald da?',
   'Es liegt nicht an dir ...',
-  // eslint-disable-next-line quotes
   "Don't panic!",
   'Berechne Erfolgschancen',
   'Du bist ja immer noch hier',

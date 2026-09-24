@@ -2,7 +2,6 @@ import { Runner } from '@/lib/interfaces';
 import { firebase } from '@/lib/firebase/admin';
 
 
-// Used in pages/runner/index.tsx
 export async function getRunner(email: string): Promise<Runner> {
   const runner = await firebase
     .collection('runners')
@@ -23,9 +22,8 @@ export async function getRunner(email: string): Promise<Runner> {
   } as Runner;
 }
 
-// Used in pages/runner/charts.tsx
 export async function getLapsInHour(fromHour: Date): Promise<number> {
-  let toHour = new Date(fromHour);
+  const toHour = new Date(fromHour);
   toHour.setHours(toHour.getHours() + 1);
 
   const lapCount = await firebase
@@ -38,7 +36,6 @@ export async function getLapsInHour(fromHour: Date): Promise<number> {
   return lapCount.data().count || 0;
 }
 
-// Used in pages/ranking.tsx
 export async function getRunnersArray(): Promise<Runner[]> {
   const runners = await firebase.collection('runners').get();
 

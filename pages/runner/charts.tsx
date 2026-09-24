@@ -29,99 +29,112 @@ import { getRunner, syncLapCount } from '@/lib/utils/firebase/frontend';
 import { useRouter } from 'next/router';
 import ConfettiCanvas from '@/components/Confetti';
 
-// Incremental static regeneration to reduce load on backend
+// Register Chart.js components once, outside the component.
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
+
+type NumberMap = Record<string, number>;
+
 export async function getStaticProps() {
   const runners = await getRunnersArray();
 
-  // Count how many laps each house has, the house is a property of the runner
-  const lapCountByHouse: { [key: string]: number } = runners.reduce(
-    (acc: { [key: string]: number }, cur) => ({
-      ...acc,
-      // @ts-ignore
-      [cur.type == 'student'
+  // Count laps by house.
+  const lapCountByHouse = runners.reduce<NumberMap>((acc, cur) => {
+    const house =
+      cur.type === 'student'
         ? cur.house || ''
-        : 'Extern (Mitarbeiter + Gäste)']:
-        (acc[
-          cur.type == 'student'
-            ? cur.house || ''
-            : 'Extern (Mitarbeiter + Gäste)'
-        ] || 0) + (cur.laps || 0),
-    }),
-    {}
-  );
+        : 'Extern (Mitarbeiter + Gäste)';
 
-  // Count how many laps each house has on average, the house is a property of the runner
-  const runnersPerHouse: { [key: string]: number } = runners.reduce(
-    (acc: { [key: string]: number }, cur) => ({
-      ...acc,
-      // @ts-ignore
-      [cur.type == 'student'
+    acc[house] = (acc[house] || 0) + (cur.laps || 0);
+
+    return acc;
+  }, {});
+
+  // Count runners by house.
+  const runnersPerHouse = runners.reduce<NumberMap>((acc, cur) => {
+    const house =
+      cur.type === 'student'
         ? cur.house || ''
-        : 'Extern (Mitarbeiter + Gäste)']:
-        (acc[
-          cur.type == 'student'
-            ? cur.house || ''
-            : 'Extern (Mitarbeiter + Gäste)'
-        ] || 0) + 1,
-    }),
-    {}
-  );
-  const averageLapCountByHouse: { [key: string]: number } = Object.fromEntries(
+        : 'Extern (Mitarbeiter + Gäste)';
+
+    acc[house] = (acc[house] || 0) + 1;
+
+    return acc;
+  }, {});
+
+  // Calculate average laps by house.
+  const averageLapCountByHouse = Object.fromEntries(
     Object.entries(lapCountByHouse).map(([house, lapCount]) => [
       house,
       lapCount / runnersPerHouse[house],
     ])
   );
 
-  // Count how many laps each class has, the class is a property of the runner
-  const lapCountByClass: { [key: string]: number } = runners.reduce(
-    (acc, cur) => ({
-      ...acc,
-      // @ts-ignore
-      [cur.class || '']: (acc[cur.class || ''] || 0) + (cur.laps || 0),
-    }),
-    {}
-  );
-  delete lapCountByClass[''];
+  // Count laps by class.
+  const lapCountByClass = runners.reduce<NumberMap>((acc, cur) => {
+    const className = cur.class || '';
 
-  // Count how many laps each class has on average, the class is a property of the runner
-  const runnersPerClass: { [key: string]: number } = runners.reduce(
-    (acc, cur) => ({
-      ...acc,
-      // @ts-ignore
-      [cur.class || '']: (acc[cur.class || ''] || 0) + 1,
-    }),
-    {}
-  );
-  const averageLapCountByClass: { [key: string]: number } = Object.fromEntries(
-    Object.entries(lapCountByClass).map(([grade, lapCount]) => [
-      grade,
-      lapCount / runnersPerClass[grade],
+    if (className) {
+      acc[className] = (acc[className] || 0) + (cur.laps || 0);
+    }
+
+    return acc;
+  }, {});
+
+  // Count runners by class.
+  const runnersPerClass = runners.reduce<NumberMap>((acc, cur) => {
+    const className = cur.class || '';
+
+    if (className) {
+      acc[className] = (acc[className] || 0) + 1;
+    }
+
+    return acc;
+  }, {});
+
+  // Calculate average laps by class.
+  const averageLapCountByClass = Object.fromEntries(
+    Object.entries(lapCountByClass).map(([className, lapCount]) => [
+      className,
+      lapCount / runnersPerClass[className],
     ])
   );
 
-  // Get the 24 hours after the start of the event
+  // Get the 24 hours after the start of the event.
   const hoursAfterStart = Array.from({ length: 24 }, (_, i) => i + 1).map(
     (i) => {
       const date = new Date(process.env.NEXT_PUBLIC_START_TIME as string);
+
       date.setHours(date.getHours() - i + 24);
+
       return date;
     }
   );
 
-  // For each hour, get the number of laps
-  const lapCountByHour = Object.fromEntries(
-    await Promise.all(
-      hoursAfterStart.map(async (date) => {
-        const label = date.toLocaleString('de-DE', {
-          hour: '2-digit',
-          minute: '2-digit',
-          timeZone: 'Europe/Berlin',
-        });
+  // Get the number of laps for each hour.
+  const lapCountByHourEntries = await Promise.all(
+    hoursAfterStart.map(async (date) => {
+      const label = date.toLocaleString('de-DE', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Europe/Berlin',
+      });
 
-        return [label, await getLapsInHour(date)];
-      })
-    )
+      return [label, await getLapsInHour(date)] as const;
+    })
+  );
+
+  const lapCountByHour: NumberMap = Object.fromEntries(
+    lapCountByHourEntries
   );
 
   return {
@@ -131,18 +144,24 @@ export async function getStaticProps() {
         (acc, cur) => acc + (cur.laps || 0),
         0
       ),
-      lapCountByHour: JSON.parse(JSON.stringify(lapCountByHour)),
-      lapCountByHouse: JSON.parse(JSON.stringify(lapCountByHouse)),
-      averageLapCountByHouse: JSON.parse(
-        JSON.stringify(averageLapCountByHouse)
-      ),
-      lapCountByClass: JSON.parse(JSON.stringify(lapCountByClass)),
-      averageLapCountByClass: JSON.parse(
-        JSON.stringify(averageLapCountByClass)
-      ),
+      lapCountByHour,
+      lapCountByHouse,
+      averageLapCountByHouse,
+      lapCountByClass,
+      averageLapCountByClass,
     },
     revalidate: 60 * 3,
   };
+}
+
+interface RunnerGraphsPageProps {
+  runnerCount: number;
+  lapsTotal: number;
+  lapCountByHour: NumberMap;
+  lapCountByHouse: NumberMap;
+  averageLapCountByHouse: NumberMap;
+  lapCountByClass: NumberMap;
+  averageLapCountByClass: NumberMap;
 }
 
 function RunnerGraphsPage({
@@ -153,15 +172,7 @@ function RunnerGraphsPage({
   averageLapCountByHouse,
   lapCountByClass,
   averageLapCountByClass,
-}: {
-  runnerCount: number;
-  lapsTotal: number;
-  lapCountByHour: { [hour: string]: number };
-  lapCountByHouse: { [key: string]: number };
-  averageLapCountByHouse: { [key: string]: number };
-  lapCountByClass: { [key: string]: number };
-  averageLapCountByClass: { [key: string]: number };
-}) {
+}: RunnerGraphsPageProps) {
   const [houseAbbreviationTranslations] = useRemoteConfig<
     {
       name: string;
@@ -175,31 +186,41 @@ function RunnerGraphsPage({
   const [lapCount, setLapCount] = useState<number | undefined>(undefined);
   const [runner, setRunner] = useState<Runner | null>(null);
 
-  const [textColor, setTextColor] = useState<string>('black');
-  const [cardColor, setCardColor] = useState<string>('white');
+  const [textColor, setTextColor] = useState('black');
+  const [cardColor, setCardColor] = useState('white');
 
   useEffect(() => {
     const style = getComputedStyle(document.body);
-    setTextColor(style.getPropertyValue('--color-base-content'));
-    setCardColor(style.getPropertyValue('--color-base-100'));
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTextColor(
+      style.getPropertyValue('--color-base-content').trim() || 'black'
+    );
+
+    setCardColor(
+      style.getPropertyValue('--color-base-100').trim() || 'white'
+    );
   }, []);
 
   useEffect(() => {
-    if (user.email) {
-      getRunner(user.email)
-        .then(async (runner) => {
-          setRunner(runner);
-        })
-        .catch(() => {
-          router.push('/runner-not-found');
-        });
+    if (!user.email) {
+      return;
     }
-  }, [user, router]);
+
+    getRunner(user.email)
+      .then((runner) => {
+        setRunner(runner);
+      })
+      .catch(() => {
+        router.push('/runner-not-found');
+      });
+  }, [user.email, router]);
 
   useEffect(() => {
     if (!runner?.id) {
       return;
     }
+
     syncLapCount(runner.id, setLapCount);
   }, [runner?.id]);
 
@@ -207,33 +228,6 @@ function RunnerGraphsPage({
     'distancePerLap',
     defaultDistancePerLap
   );
-
-  Chart.register({
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    ArcElement,
-    Title,
-    Tooltip,
-    Legend,
-    Filler,
-  });
-
-  const lapCountByHourData = {
-    labels: Object.keys(lapCountByHour).reverse(),
-    datasets: [
-      {
-        label: 'Laps',
-        data: Object.values(lapCountByHour).reverse(),
-        fill: 'start',
-        backgroundColor: 'rgba(165, 192, 42, 0.4)',
-        borderColor: 'rgba(165, 192, 42, 1)',
-        borderWidth: 1.5,
-        tension: 0.4,
-      },
-    ],
-  };
 
   const colors = [
     '#68023f',
@@ -253,22 +247,38 @@ function RunnerGraphsPage({
     '#ffdc3d',
   ];
 
+  const getHouseLabel = (house: string) => {
+    return (
+      houseAbbreviationTranslations.find(
+        (translation) => translation.name === house
+      )?.abbreviation ||
+      house ||
+      'Sonstige'
+    );
+  };
+
+  const lapCountByHourData = {
+    labels: Object.keys(lapCountByHour).reverse(),
+    datasets: [
+      {
+        label: 'Laps',
+        data: Object.values(lapCountByHour).reverse(),
+        fill: 'start' as const,
+        backgroundColor: 'rgba(165, 192, 42, 0.4)',
+        borderColor: 'rgba(165, 192, 42, 1)',
+        borderWidth: 1.5,
+        tension: 0.4,
+      },
+    ],
+  };
+
   const averageLapCountByHouseData = {
-    labels: Object.keys(lapCountByHouse).map((house) => {
-      // @ts-ignore
-      return (
-        houseAbbreviationTranslations.find(
-          (translation) => translation.name === house
-        )?.abbreviation ||
-        house ||
-        'Sonstige'
-      );
-    }),
+    labels: Object.keys(averageLapCountByHouse).map(getHouseLabel),
     datasets: [
       {
         label: 'Laps',
         data: Object.values(averageLapCountByHouse),
-        fill: 'start',
+        fill: 'start' as const,
         backgroundColor: colors,
         borderColor: cardColor,
       },
@@ -276,21 +286,12 @@ function RunnerGraphsPage({
   };
 
   const lapCountByHouseData = {
-    labels: Object.keys(lapCountByHouse).map((house) => {
-      // @ts-ignore
-      return (
-        houseAbbreviationTranslations.find(
-          (translation) => translation.name === house
-        )?.abbreviation ||
-        house ||
-        'Sonstige'
-      );
-    }),
+    labels: Object.keys(lapCountByHouse).map(getHouseLabel),
     datasets: [
       {
         label: 'Laps',
         data: Object.values(lapCountByHouse),
-        fill: 'start',
+        fill: 'start' as const,
         backgroundColor: colors,
         borderColor: cardColor,
       },
@@ -303,7 +304,7 @@ function RunnerGraphsPage({
       {
         label: 'Laps',
         data: Object.values(lapCountByClass),
-        fill: 'start',
+        fill: 'start' as const,
         backgroundColor: colors,
         borderColor: cardColor,
       },
@@ -311,12 +312,12 @@ function RunnerGraphsPage({
   };
 
   const averageLapCountByClassData = {
-    labels: Object.keys(lapCountByClass),
+    labels: Object.keys(averageLapCountByClass),
     datasets: [
       {
         label: 'Laps',
         data: Object.values(averageLapCountByClass),
-        fill: 'start',
+        fill: 'start' as const,
         backgroundColor: colors,
         borderColor: cardColor,
       },
@@ -333,7 +334,7 @@ function RunnerGraphsPage({
       line: {
         tension: 0,
         borderWidth: 3,
-        fill: 'start',
+        fill: 'start' as const,
       },
       point: {
         radius: 0,
@@ -371,20 +372,17 @@ function RunnerGraphsPage({
           },
         },
       },
-      xAxis: {
-        display: false,
-      },
     },
-    animation: false,
+    animation: false as const,
   };
 
   const pieOptions = {
     aspectRatio: 0.75,
     hoverOffset: 2,
-    clip: false,
+    clip: false as const,
     plugins: {
       legend: {
-        position: 'bottom',
+        position: 'bottom' as const,
         labels: {
           color: textColor,
           font: {
@@ -393,18 +391,22 @@ function RunnerGraphsPage({
         },
       },
     },
-    animation: false,
+    animation: false as const,
   };
 
   if (!runner || !user) {
     return <Loading />;
   }
 
+  const totalDistance = lapsTotal * distancePerLap;
+
   return (
     <>
       <Head title="Läufer Details" />
 
-      {(lapCount != undefined && runner.goal != undefined && (lapCount >= runner?.goal)) && <ConfettiCanvas />}
+      {lapCount !== undefined &&
+        runner.goal !== undefined &&
+        lapCount >= runner.goal && <ConfettiCanvas />}
 
       <Menu navItems={runnerNavItems} />
 
@@ -419,21 +421,19 @@ function RunnerGraphsPage({
           </p>
 
           <div className="px-1">
-            {runner?.goal ? (
+            {runner.goal !== undefined ? (
               <progress
                 className="progress progress-primary h-5 rounded-full bg-accent shadow-inner"
-                value={
-                  lapCount
-                }
-                max={runner?.goal || 0}
-              ></progress>
+                value={lapCount ?? 0}
+                max={runner.goal}
+              />
             ) : (
-              <div className="skeleton h-6 w-full"></div>
+              <div className="skeleton h-6 w-full" />
             )}
           </div>
+
           <p className="font-semibold ml-2">
-            {lapCount || '0'}{' '}
-            / {runner?.goal || 'NaN'} Runden
+            {lapCount ?? 0} / {runner.goal ?? 'NaN'} Runden
           </p>
         </fieldset>
 
@@ -442,26 +442,29 @@ function RunnerGraphsPage({
             <div className="card card-compact flex items-center justify-center">
               <Stat value={runnerCount} label="Läufer*innen" />
             </div>
+
             <div className="card card-compact flex items-center justify-center">
               <Stat value={lapsTotal} label="Runden gesamt" />
             </div>
-            <div className="card card-compact flex items-center justify-center">
-              <Stat
-                value={(lapsTotal / runnerCount)
-                  .toFixed(1)
-                  .toString()
-                  .replace('.', ',')}
-                label="Ø Runden pro Läufer*in"
-              />
-            </div>
+
             <div className="card card-compact flex items-center justify-center">
               <Stat
                 value={
-                  lapsTotal &&
-                  formatKilometer(lapsTotal * distancePerLap)
-                    .toString()
-                    .replace('.', ',')
+                  runnerCount > 0
+                    ? (lapsTotal / runnerCount)
+                        .toFixed(1)
+                        .replace('.', ',')
+                    : '0'
                 }
+                label="Ø Runden pro Läufer*in"
+              />
+            </div>
+
+            <div className="card card-compact flex items-center justify-center">
+              <Stat
+                value={formatKilometer(totalDistance)
+                  .toString()
+                  .replace('.', ',')}
                 label="km Gesamtstrecke"
               />
             </div>
@@ -472,7 +475,7 @@ function RunnerGraphsPage({
           <h2 className="px-8 text-center text-xl font-semibold">
             Rundenverlauf
           </h2>
-          {/* @ts-ignore */}
+
           <Line data={lapCountByHourData} options={lineOptions} />
         </div>
 
@@ -480,41 +483,52 @@ function RunnerGraphsPage({
           <h2 className="px-8 text-center text-xl font-semibold">
             Ø Runden pro Haus
           </h2>
-          {/* @ts-ignore */}
-          <Pie data={averageLapCountByHouseData} options={pieOptions} />
+
+          <Pie
+            data={averageLapCountByHouseData}
+            options={pieOptions}
+          />
         </div>
 
         <div className="flex flex-col gap-2 w-full max-w-sm">
           <h2 className="px-8 text-center text-xl font-semibold">
             Ø Runden pro Klasse
           </h2>
-          {/* @ts-ignore */}
-          <Pie data={averageLapCountByClassData} options={pieOptions} />
+
+          <Pie
+            data={averageLapCountByClassData}
+            options={pieOptions}
+          />
         </div>
 
         <div className="flex flex-col gap-2 w-full max-w-sm">
           <h2 className="px-8 text-center text-xl font-semibold">
             Runden pro Haus
           </h2>
-          {/* @ts-ignore */}
-          <Pie data={lapCountByHouseData} options={pieOptions} />
+
+          <Pie
+            data={lapCountByHouseData}
+            options={pieOptions}
+          />
         </div>
 
         <div className="flex flex-col gap-2 w-full max-w-sm">
           <h2 className="px-8 text-center text-xl font-semibold">
             Runden pro Klasse
           </h2>
-          {/* @ts-ignore */}
-          <Pie data={lapCountByClassData} options={pieOptions} />
+
+          <Pie
+            data={lapCountByClassData}
+            options={pieOptions}
+          />
         </div>
       </main>
     </>
   );
 }
 
-export default withUser({
+export default withUser<RunnerGraphsPageProps>({
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
   LoaderComponent: Loading,
-  // @ts-ignore
 })(RunnerGraphsPage);

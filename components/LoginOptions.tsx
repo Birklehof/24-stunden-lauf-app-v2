@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   signInWithPopup,
-  signInWithRedirect,
   signInWithCustomToken,
 } from 'firebase/auth';
 import { auth, microsoftOAuthProvider } from '@/lib/firebase';

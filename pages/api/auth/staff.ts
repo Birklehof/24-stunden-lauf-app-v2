@@ -41,7 +41,7 @@ export default async function handler(
       .then((customToken) => {
         res.status(200).json({ success: true, token: customToken });
       });
-  } catch (e) {
+  } catch {
     return res.status(500).json({ error: 'Unexpected error.' });
   }
 }

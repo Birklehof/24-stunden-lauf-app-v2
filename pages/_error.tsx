@@ -1,6 +1,7 @@
 import Head from '@/components/Head';
 import Link from 'next/link';
 import Image from 'next/image';
+import type { NextPageContext } from 'next'
 
 export default function CustomErrorPage({
   statusCode,
@@ -26,8 +27,7 @@ export default function CustomErrorPage({
   );
 }
 
-// @ts-ignore
-CustomErrorPage.getInitialProps = ({ res, err }) => {
+CustomErrorPage.getInitialProps = ({ res, err }: NextPageContext) => {
   const statusCode = res ? res.statusCode : err ? err.statusCode : 404
   return { statusCode }
 }

@@ -22,11 +22,11 @@ export default async function handler(
   let user;
   try {
     user = await getUserFromCookies({ req });
-  } catch (e) {
+  } catch {
     return res.status(500).json({
       error: {
         status: 'internal',
-        message: 'Internal server error',
+        message: 'Interner Serverfehler.',
       },
     });
   }
@@ -35,7 +35,7 @@ export default async function handler(
     return res.status(401).json({
       error: {
         status: 'unauthenticated',
-        message: 'Unauthenticated',
+        message: 'Authentifizierung erforderlich.',
       },
     });
   }

@@ -11,10 +11,9 @@ import {
 import { Runner, Lap } from '@/lib/interfaces';
 import { firebase } from '@/lib/firebase';
 
-// Used in pages/assistant/status-board.tsx
 export async function syncNewestLaps(
   limitNumber: number,
-  updateFunction: Function
+  updateFunction: (laps: Lap[]) => void
 ) {
   const lapsQuery = query(
     collection(firebase, 'laps'),
@@ -39,8 +38,7 @@ export async function syncNewestLaps(
   });
 }
 
-// Used in pages/runner/index.tsx
-export async function syncLapCount(runnerId: string, updateFunction: Function) {
+export async function syncLapCount(runnerId: string, updateFunction: (lapCount: number) => void) {
   const lapCountQuery = query(
     collection(firebase, 'laps'),
     where('runnerId', '==', runnerId)
@@ -54,7 +52,6 @@ export async function syncLapCount(runnerId: string, updateFunction: Function) {
   });
 }
 
-// Used in pages/runner/charts.tsx
 export async function getRunner(email: string): Promise<Runner> {
   const runnerQuery = query(
     collection(firebase, 'runners'),
@@ -73,8 +70,7 @@ export async function getRunner(email: string): Promise<Runner> {
   } as Runner;
 }
 
-// Used in pages/ranking.tsx
-export async function refreshRunnersArray(updateFunction: Function) {
+export async function refreshRunnersArray(updateFunction: (runners: Runner[]) => void) {
   const runnersQuery = query(collection(firebase, 'runners'));
 
   const runnersSnapshot = await getDocs(runnersQuery);

@@ -18,7 +18,6 @@ import {
 
 export const getServerSideProps = withUserSSR({
   whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
-  // @ts-ignore
 })(async ({ user }) => {
   if (!user?.email) {
     return {
@@ -32,7 +31,7 @@ export const getServerSideProps = withUserSSR({
     .then((runner) => {
       return {
         props: {
-          runner: { ...runner, goal: runner.goal || null },
+          runner: { ...runner, goal: runner.goal || null } as Runner | null,
         },
       };
     })
@@ -155,9 +154,8 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
   );
 }
 
-export default withUser({
+export default withUser<{ runner: Runner | null }>({
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
   LoaderComponent: Loading,
-  // @ts-ignore
 })(RunnerIndexPage);

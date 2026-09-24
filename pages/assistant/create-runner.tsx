@@ -7,11 +7,25 @@ import { httpsCallable } from 'firebase/functions';
 import { functions } from '@/lib/firebase';
 import Loading from '@/components/Loading';
 
+type CreateRunnerRequest = {
+  name: string
+  email?: string
+}
+
+type CreateRunnerResponse = {
+  number: number
+}
+
+const createRunner = httpsCallable(
+  functions,
+  'createRunner'
+) as (data: CreateRunnerRequest) => Promise<{
+  data: CreateRunnerResponse
+}>
+
 function AssistantCreateRunnerPage() {
   const [submitting, setSubmitting] = useState(false);
   const [number, setNumber] = useState(0);
-
-  const createRunner = httpsCallable(functions, 'createRunner');
 
   async function createRunnerHandler(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -40,7 +54,7 @@ function AssistantCreateRunnerPage() {
       }
     }
 
-    let runner: { name: string; email?: string } = { name };
+    const runner: { name: string; email?: string } = { name };
 
     if (email && email.length > 0) {
       runner.email = email;
@@ -50,7 +64,7 @@ function AssistantCreateRunnerPage() {
       pending: 'Läufer wird erstellt...',
       success: 'Läufer wurde erstellt!',
       error: {
-        render: ({ data }: any) => {
+        render: ({ data }) => {
           if (data instanceof Error) {
             return data.message;
           }

@@ -70,14 +70,9 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
   };
 
   function getPosition(runner: Runner): number {
-    if (runners.length === 0) {
-      setRunners([]);
-    }
-
-    // Get position of runner in runners array
-    return runners
+    return [...runners]
       .sort((a, b) => (b.laps || 0) - (a.laps || 0))
-      .findIndex((r) => r.laps == runner.laps);
+      .findIndex((r) => r.laps === runner.laps);
   }
 
   async function handleRefresh() {
@@ -297,9 +292,8 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
   );
 }
 
-export default withUser({
+export default withUser<{ preloadedRunners: Runner[] }>({
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
   LoaderComponent: Loading,
-  // @ts-ignore
 })(RankingPage);

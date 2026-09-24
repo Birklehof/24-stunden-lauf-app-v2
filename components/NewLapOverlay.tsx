@@ -1,6 +1,19 @@
 import { useEffect } from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 
+function animateGrow() {
+  // Animation currently not working because of there is no way to call the animation when the value of laps changes
+  const grow = document.querySelector('.grow');
+  const container = document.querySelector('.container');
+  container?.classList.remove('hidden');
+  grow?.classList.add('animate-[grow_4s_linear]');
+  // Wait for animation to finish
+  setTimeout(() => {
+    grow?.classList.remove('animate-[grow_4s_linear]');
+    container?.classList.add('hidden');
+  }, 4000);
+}
+
 export default function NewLapOverlay({
   lapCount,
 }: {
@@ -18,19 +31,6 @@ export default function NewLapOverlay({
       setLastLapCount(lapCount);
     }
   }, [lapCount, lastLapCount, setLastLapCount]);
-
-  function animateGrow() {
-    // Animation currently not working because of there is no way to call the animation when the value of laps changes
-    const grow = document.querySelector('.grow');
-    const container = document.querySelector('.container');
-    container?.classList.remove('hidden');
-    grow?.classList.add('animate-[grow_4s_linear]');
-    // Wait for animation to finish
-    setTimeout(() => {
-      grow?.classList.remove('animate-[grow_4s_linear]');
-      container?.classList.add('hidden');
-    }, 4000);
-  }
 
   return (
     <>

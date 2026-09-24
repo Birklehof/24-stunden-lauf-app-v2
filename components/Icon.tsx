@@ -1,4 +1,4 @@
-export type PossibleIcons = keyof typeof icons;
+import type { ComponentType, SVGProps } from 'react'
 import {
   AdjustmentsVerticalIcon,
   ArrowLeftIcon,
@@ -6,7 +6,6 @@ import {
   ChartBarIcon,
   Cog6ToothIcon,
   ExclamationTriangleIcon,
-  HomeIcon,
   InformationCircleIcon,
   MagnifyingGlassIcon,
   TrashIcon,
@@ -16,50 +15,54 @@ import {
   BugAntIcon,
   LifebuoyIcon,
   CodeBracketIcon,
-} from '@heroicons/react/24/outline';
-interface IconProps {
-  name: PossibleIcons;
-  size?: number;
-  className?: string;
-}
+  HomeIcon,
+} from '@heroicons/react/24/outline'
 
-const icons: { [key: string]: any } = {
-  HomeIcon: HomeIcon,
-  TrophyIcon: TrophyIcon,
-  ChartBarIcon: ChartBarIcon,
-  Cog6ToothIcon: Cog6ToothIcon,
-  ArrowLeftIcon: ArrowLeftIcon,
-  InformationCircleIcon: InformationCircleIcon,
-  AdjustmentsVerticalIcon: AdjustmentsVerticalIcon,
-  UserPlusIcon: UserPlusIcon,
-  TrashIcon: TrashIcon,
-  UserIcon: UserIcon,
+type IconComponent = ComponentType<SVGProps<SVGSVGElement>>
+
+const icons = {
+  HomeIcon,
+  TrophyIcon,
+  ChartBarIcon,
+  Cog6ToothIcon,
+  ArrowLeftIcon,
+  InformationCircleIcon,
+  AdjustmentsVerticalIcon,
+  UserPlusIcon,
+  TrashIcon,
+  UserIcon,
   Search: MagnifyingGlassIcon,
   RefreshIcon: ArrowPathIcon,
   BugIcon: BugAntIcon,
   HelpIcon: LifebuoyIcon,
   CodeIcon: CodeBracketIcon,
-} as const;
+} satisfies Record<string, IconComponent>
+
+export type PossibleIcons = keyof typeof icons
+
+interface IconProps {
+  name?: PossibleIcons
+  size?: 4 | 5 | 6 | 7 | 8 | 10
+  className?: string
+}
+
+const sizeClassMap: Record<NonNullable<IconProps['size']>, string> = {
+  4: 'h-4 w-4',
+  5: 'h-5 w-5',
+  6: 'h-6 w-6',
+  7: 'h-7 w-7',
+  8: 'h-8 w-8',
+  10: 'h-10 w-10',
+}
 
 export default function Icon({
-  name = '',
+  name = 'HelpIcon',
   size = 7,
   className = '',
 }: IconProps) {
-  const sizeClass =
-    {
-      4: 'h-4 w-4',
-      5: 'h-5 w-5',
-      6: 'h-6 w-6',
-      7: 'h-7 w-7',
-      8: 'h-8 w-8',
-      10: 'h-10 w-10',
-    }[size] || 'h-7 w-7';
+  const IconComponent = name ? icons[name] : ExclamationTriangleIcon
 
-  if (name in icons) {
-    const LookedUpIcon = icons[name];
-    return <LookedUpIcon className={`${sizeClass} ${className}`} />;
-  } else {
-    return <ExclamationTriangleIcon className={`${sizeClass} ${className}`} />;
-  }
+  const sizeClass = sizeClassMap[size] ?? 'h-7 w-7'
+
+  return <IconComponent className={`${sizeClass} ${className}`} />
 }

@@ -26,5 +26,4 @@ export default withUser({
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
   LoaderComponent: Loading,
-  // @ts-ignore
 })(RunnerNotFound);

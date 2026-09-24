@@ -14,6 +14,7 @@ function AssistantIndexPage() {
   const [createdLaps, setCreatedLaps] = useState<LapWithRunner[]>([]);
   const [number, setNumber] = useState(0);
   const [ignoreCooldown, setIgnoreCooldown] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const createLap = httpsCallable(functions, 'createLap');
   const deleteLap = httpsCallable(functions, 'deleteLap');
@@ -26,11 +27,11 @@ function AssistantIndexPage() {
         const newLap = result.data as LapWithRunner;
 
         // Add new lap to list
-        setCreatedLaps([newLap, ...createdLaps]);
+        setCreatedLaps((prev) => [newLap, ...prev]);
       })
       .catch((error) => {
         console.error(error);
-        themedErrorToast(`[${number}] ${error.message}`, {
+        themedErrorToast(`[${number}] ${error.message.replace(/\s*\[\d+\]$/, "")}`, {
           position: 'bottom-center',
           autoClose: 3000,
           draggable: true,
@@ -45,7 +46,7 @@ function AssistantIndexPage() {
         // Focus input field
         document.getElementById('number')?.focus();
         // Filer out deleted lap
-        setCreatedLaps(createdLaps?.filter((lap) => lap.id !== lapId) || null);
+        setCreatedLaps((prev) => prev.filter((lap) => lap.id !== lapId));
       })
       .catch((error) => {
         themedErrorToast(error.message, {
@@ -74,15 +75,23 @@ function AssistantIndexPage() {
               autoFocus
               onChange={(e) => {
                 e.preventDefault();
-                if (!isNaN(+e.target.value)) {
-                  const number = +e.target.value;
+
+                const value = e.target.value;
+
+                if (!isNaN(+value)) {
+                  const number = +value;
+
                   if (number < 1000) {
                     setNumber(number);
                   }
                 }
               }}
               onKeyDown={async (e) => {
-                if (e.key === 'Enter') {
+                if (e.key === '.') {
+                  e.preventDefault();
+                  setNumber(0);
+                  return;
+                } else if (e.key === 'Enter') {
                   await createNewLapHandler();
                 }
               }}
@@ -95,7 +104,6 @@ function AssistantIndexPage() {
             <label className="label hidden">
               <input
                 type="checkbox"
-                defaultChecked
                 className="toggle"
                 checked={ignoreCooldown}
                 onChange={(e) => setIgnoreCooldown(e.target.checked)}
@@ -114,7 +122,6 @@ function AssistantIndexPage() {
               {createdLaps
                 .sort((a, b) => {
                   return (
-                    // @ts-ignore
                     b.createdAt - a.createdAt
                   );
                 })
@@ -133,12 +140,25 @@ function AssistantIndexPage() {
                         .toLocaleTimeString('de-DE')
                         .toString() + ' Uhr'
                     }
+                    badgeContent={(lap.runner.laps
+                        ? ((lap.runner.laps + 1)).toString().concat(". Runde")
+                        : '')}
                   >
                     <button
                       disabled={!lap.id}
                       className="btn btn-circle btn-ghost btn-sm hidden text-error md:flex"
                       aria-label="Runde löschen"
-                      onClick={async () => await deleteLapHandler(lap.id)}
+                      onClick={async () => {
+                        if (isDeleting) return;
+
+                        setIsDeleting(true);
+
+                        try {
+                          await deleteLapHandler(lap.id);
+                        } finally {
+                          setIsDeleting(false);
+                        }
+                      }}
                     >
                       <Icon name="TrashIcon" />
                     </button>
@@ -163,5 +183,4 @@ export default withUser({
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
   LoaderComponent: Loading,
-  // @ts-ignore
 })(AssistantIndexPage);

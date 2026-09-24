@@ -35,7 +35,6 @@ function SettingsPage() {
             className="select w-full"
             aria-label="Einstellung für den Dark Mode"
             onChange={(ev) => {
-              // eslint-disable-next-line
               setTernaryDarkMode(ev.target.value as TernaryDarkMode);
             }}
             value={ternaryDarkMode}
@@ -119,5 +118,4 @@ export default withUser({
   whenUnauthedBeforeInit: AuthAction.SHOW_LOADER,
   whenUnauthedAfterInit: AuthAction.REDIRECT_TO_LOGIN,
   LoaderComponent: Loading,
-  // @ts-ignore
 })(SettingsPage);
