@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Head from '@/components/Head';
 import Loading from '@/components/Loading';
 import Icon from '@/components/Icon';
@@ -19,10 +19,32 @@ function AssistantIndexPage() {
   const createLap = httpsCallable(functions, 'createLap');
   const deleteLap = httpsCallable(functions, 'deleteLap');
 
+  const numberInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (/^\d$/.test(e.key)) {
+        numberInputRef.current?.focus();
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   async function createNewLapHandler() {
+    const lapNumber = number;
+
+    if (!lapNumber) {
+      return;
+    }
+
     setNumber(0);
 
-    await createLap({ number, ignoreCooldown })
+    await createLap({ lapNumber, ignoreCooldown })
       .then((result) => {
         const newLap = result.data as LapWithRunner;
 
@@ -32,7 +54,7 @@ function AssistantIndexPage() {
       .catch((error) => {
         console.error(error);
         themedErrorToast(
-          `[${number}] ${error.message.replace(/\s*\[\d+\]$/, '')}`,
+          `[${lapNumber}] ${error.message.replace(/\s*\[\d+\]$/, '')}`,
           {
             position: 'bottom-center',
             autoClose: 4000,
@@ -47,7 +69,7 @@ function AssistantIndexPage() {
     await deleteLap({ lapId })
       .then(() => {
         // Focus input field
-        document.getElementById('number')?.focus();
+        numberInputRef.current?.focus();
         // Filer out deleted lap
         setCreatedLaps((prev) => prev.filter((lap) => lap.id !== lapId));
       })
@@ -71,6 +93,7 @@ function AssistantIndexPage() {
           <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit">
             <legend className="fieldset-legend text-lg">Runde zählen</legend>
             <input
+              ref={numberInputRef}
               aria-label="Startnummer"
               id="number"
               name="number"
