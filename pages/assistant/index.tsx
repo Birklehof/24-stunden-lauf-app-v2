@@ -95,6 +95,9 @@ function AssistantIndexPage() {
             <input
               ref={numberInputRef}
               aria-label="Startnummer"
+              autoCorrect="off"
+              spellCheck="false"
+              autoComplete="off"
               id="number"
               name="number"
               className="font-mono input input-bordered box-border h-44 w-72 rounded-box text-center text-9xl font-medium "
