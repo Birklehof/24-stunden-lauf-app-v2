@@ -39,7 +39,8 @@
   },
   "resolutions": {
     "@types/react": "19.1.12",
-    "@types/react-dom": "19.1.9"
+    "@types/react-dom": "19.1.9",
+    "jose": "4.15.9"
   },
   "devDependencies": {
     "baseline-browser-mapping": "^2.10.0",
