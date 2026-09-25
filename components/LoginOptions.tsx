@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { signInWithPopup, signInWithCustomToken } from 'firebase/auth';
 import { auth, microsoftOAuthProvider } from '@/lib/firebase';
-import { themedErrorToast, themedPromiseToast } from '@/lib/utils/';
+import {
+  getAuthErrorMessage,
+  themedErrorToast,
+  themedPromiseToast,
+} from '@/lib/utils/';
 
 export default function LoginOptions() {
   const [pending, setPending] = useState(false);
@@ -19,7 +23,11 @@ export default function LoginOptions() {
         },
         type: 'info',
       },
-      error: 'Fehler beim Anmelden!',
+      error: {
+        render: ({ data }) => getAuthErrorMessage(data),
+      },
+    }).catch(() => {
+      // Already shown via the toast above.
     });
   };
 
@@ -44,7 +52,7 @@ export default function LoginOptions() {
     });
 
     if (!response.ok) {
-      themedErrorToast('Fehler beim Anmelden!');
+      themedErrorToast(`Fehler beim Anmelden! (HTTP ${response.status})`);
       return;
     }
 
@@ -61,9 +69,13 @@ export default function LoginOptions() {
           },
           type: 'info',
         },
-        error: 'Fehler beim Anmelden!',
+        error: {
+          render: ({ data }) => getAuthErrorMessage(data),
+        },
       }
-    );
+    ).catch(() => {
+      // Already shown via the toast above.
+    });
   };
 
   return (

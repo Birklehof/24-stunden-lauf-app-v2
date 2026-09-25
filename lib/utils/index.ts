@@ -63,6 +63,13 @@ export function themedErrorToast(
   });
 }
 
+export function getAuthErrorMessage(error: unknown): string {
+  const code =
+    (error as { code?: string } | null)?.code ??
+    (error instanceof Error ? error.message : String(error));
+  return `Fehler beim Anmelden! (${code})`;
+}
+
 export function filterRunner(
   runner: Runner,
   {
