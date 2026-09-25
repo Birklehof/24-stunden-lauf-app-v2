@@ -3830,7 +3830,7 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
 
-next-firebase-auth@^1.0.0:
+next-firebase-auth@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/next-firebase-auth/-/next-firebase-auth-1.4.0.tgz#da1514bcb20a90dcd064f509f2124544828ee866"
   integrity sha512-1HnteemeBOgMHcqIPVtk81U7hjODeznZQIWG0hdRaR0EwyQMDorn4JE7372rI7YyyDl/gbIBemfp0nUWHvcIog==
