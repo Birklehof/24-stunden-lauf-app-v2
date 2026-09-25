@@ -44,7 +44,7 @@ function AssistantIndexPage() {
 
     setNumber(0);
 
-    await createLap({ lapNumber, ignoreCooldown })
+    await createLap({ number: lapNumber, ignoreCooldown })
       .then((result) => {
         const newLap = result.data as LapWithRunner;
 
