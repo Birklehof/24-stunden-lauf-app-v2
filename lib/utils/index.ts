@@ -18,7 +18,7 @@ export const assistantNavItems: NavItem[] = [
   { name: 'Runde zählen', href: '/assistant', icon: 'HomeIcon' },
   { name: 'Ranking', href: '/ranking', icon: 'TrophyIcon' },
   {
-    name: 'Läufer hinzufügen',
+    name: 'Läufer*in hinzufügen',
     href: '/assistant/create-runner',
     icon: 'UserPlusIcon',
   },

@@ -101,7 +101,7 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
 
   return (
     <>
-      <Head title="Läufer" />
+      <Head title="Läufer*innen" />
 
       {user.id === process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID ? (
         <Menu navItems={assistantNavItems} />
@@ -215,7 +215,7 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
             <div className="tabular-nums tracking-tight opacity-90 mx-2.5 text-center">
               Platz
             </div>
-            <div className="list-col-grow tracking-wide">Läufer</div>
+            <div className="list-col-grow tracking-wide">Läufer*in</div>
             <div>Runden</div>
           </li>
           {runners

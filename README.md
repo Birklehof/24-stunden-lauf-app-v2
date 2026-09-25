@@ -6,8 +6,8 @@ Die App an sich enthält keine Administrationsoberfläche. Die Administration er
 
 ### Ablauf
 
-- 🔧 Import der Schüler und Mitarbeiter als Läufer
-- 🔧 Export der Teilnehmerliste
+- 🔧 Import der Schüler*innen und Mitarbeiter*innen als Läufer*innen
+- 🔧 Export der Teilnehmer*innenliste
 - Verteilung der Startnummern **entsprechend der Teilnehmerliste**
 - 🔧 Erstellung der Zugangscodes für die Helfer (Die Helfer können sich mit diesen Zugangscodes anmelden und die gelaufenen Runden erfassen)
 - 🎰 24-Stunden-Lauf (Rundenerfassung, Live-Statistiken, etc.)

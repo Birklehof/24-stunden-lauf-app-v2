@@ -64,8 +64,8 @@ function AssistantCreateRunnerPage() {
     }
 
     themedPromiseToast(createRunner(runner), {
-      pending: 'Läufer wird erstellt...',
-      success: 'Läufer wurde erstellt!',
+      pending: 'Läufer*in wird erstellt...',
+      success: 'Läufer*in wurde erstellt!',
       error: {
         render: ({ data }) => {
           if (data instanceof Error) {

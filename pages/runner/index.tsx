@@ -94,7 +94,7 @@ function RunnerIndexPage({ runner }: { runner: Runner | null }) {
 
   return (
     <>
-      <Head title="Läufer" />
+      <Head title="Läufer*in" />
 
       <Menu navItems={runnerNavItems} />
 

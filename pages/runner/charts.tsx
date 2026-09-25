@@ -1,5 +1,5 @@
 import Head from '@/components/Head';
-import { Line, Pie } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import {
   Chart,
   CategoryScale,
@@ -135,8 +135,10 @@ export async function getStaticProps() {
       lapCountByHour,
       lapCountByHouse,
       averageLapCountByHouse,
+      runnersPerHouse,
       lapCountByClass,
       averageLapCountByClass,
+      runnersPerClass,
     },
     revalidate: 10,
   };
@@ -148,8 +150,10 @@ interface RunnerGraphsPageProps {
   lapCountByHour: NumberMap;
   lapCountByHouse: NumberMap;
   averageLapCountByHouse: NumberMap;
+  runnersPerHouse: NumberMap;
   lapCountByClass: NumberMap;
   averageLapCountByClass: NumberMap;
+  runnersPerClass: NumberMap;
 }
 
 function RunnerGraphsPage({
@@ -158,8 +162,10 @@ function RunnerGraphsPage({
   lapCountByHour,
   lapCountByHouse,
   averageLapCountByHouse,
+  runnersPerHouse,
   lapCountByClass,
   averageLapCountByClass,
+  runnersPerClass,
 }: RunnerGraphsPageProps) {
   const [houseAbbreviationTranslations] = useRemoteConfig<
     {
@@ -175,7 +181,6 @@ function RunnerGraphsPage({
   const [runner, setRunner] = useState<Runner | null>(null);
 
   const [textColor, setTextColor] = useState('black');
-  const [cardColor, setCardColor] = useState('white');
 
   useEffect(() => {
     const style = getComputedStyle(document.body);
@@ -184,8 +189,6 @@ function RunnerGraphsPage({
     setTextColor(
       style.getPropertyValue('--color-base-content').trim() || 'black'
     );
-
-    setCardColor(style.getPropertyValue('--color-base-100').trim() || 'white');
   }, []);
 
   useEffect(() => {
@@ -215,24 +218,6 @@ function RunnerGraphsPage({
     defaultDistancePerLap
   );
 
-  const colors = [
-    '#68023f',
-    '#008169',
-    '#ef0096',
-    '#00dcb5',
-    '#ffcfe2',
-    '#003c86',
-    '#9400e6',
-    '#009ffa',
-    '#ff71fd',
-    '#7cfffa',
-    '#6a0213',
-    '#008607',
-    '#f60239',
-    '#00e307',
-    '#ffdc3d',
-  ];
-
   const getHouseLabel = (house: string) => {
     return (
       houseAbbreviationTranslations.find(
@@ -254,58 +239,6 @@ function RunnerGraphsPage({
         borderColor: 'rgba(165, 192, 42, 1)',
         borderWidth: 1.5,
         tension: 0.4,
-      },
-    ],
-  };
-
-  const averageLapCountByHouseData = {
-    labels: Object.keys(averageLapCountByHouse).map(getHouseLabel),
-    datasets: [
-      {
-        label: 'Laps',
-        data: Object.values(averageLapCountByHouse),
-        fill: 'start' as const,
-        backgroundColor: colors,
-        borderColor: cardColor,
-      },
-    ],
-  };
-
-  const lapCountByHouseData = {
-    labels: Object.keys(lapCountByHouse).map(getHouseLabel),
-    datasets: [
-      {
-        label: 'Laps',
-        data: Object.values(lapCountByHouse),
-        fill: 'start' as const,
-        backgroundColor: colors,
-        borderColor: cardColor,
-      },
-    ],
-  };
-
-  const lapCountByClassData = {
-    labels: Object.keys(lapCountByClass),
-    datasets: [
-      {
-        label: 'Laps',
-        data: Object.values(lapCountByClass),
-        fill: 'start' as const,
-        backgroundColor: colors,
-        borderColor: cardColor,
-      },
-    ],
-  };
-
-  const averageLapCountByClassData = {
-    labels: Object.keys(averageLapCountByClass),
-    datasets: [
-      {
-        label: 'Laps',
-        data: Object.values(averageLapCountByClass),
-        fill: 'start' as const,
-        backgroundColor: colors,
-        borderColor: cardColor,
       },
     ],
   };
@@ -362,24 +295,6 @@ function RunnerGraphsPage({
     animation: false as const,
   };
 
-  const pieOptions = {
-    aspectRatio: 0.75,
-    hoverOffset: 2,
-    clip: false as const,
-    plugins: {
-      legend: {
-        position: 'bottom' as const,
-        labels: {
-          color: textColor,
-          font: {
-            size: 14,
-          },
-        },
-      },
-    },
-    animation: false as const,
-  };
-
   if (!runner || !user) {
     return <Loading />;
   }
@@ -388,7 +303,7 @@ function RunnerGraphsPage({
 
   return (
     <>
-      <Head title="Läufer Details" />
+      <Head title="Statistiken" />
 
       {lapCount !== undefined &&
         runner.goal !== undefined &&
@@ -396,7 +311,7 @@ function RunnerGraphsPage({
 
       <Menu navItems={runnerNavItems} />
 
-      <main className="flex flex-col items-center gap-7 m-2">
+      <main className="flex flex-col items-center gap-8 m-2">
         <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit max-w-md">
           <legend className="fieldset-legend text-lg font-semibold">
             Persönlicher Fortschritt
@@ -463,36 +378,117 @@ function RunnerGraphsPage({
           <Line data={lapCountByHourData} options={lineOptions} />
         </div>
 
-        <div className="flex flex-col gap-2 w-full max-w-sm">
-          <h2 className="px-8 text-center text-xl font-semibold">
-            Ø Runden pro Haus
-          </h2>
+        <div className="flex flex-col gap-2 max-w-4xl w-full mb-4">
+          <div className="tabs tabs-box w-full bg-base-100">
+            {/* Häuser */}
+            <input
+              type="radio"
+              name="stats_tabs"
+              className="tab w-1/2 font-bold checked:bg-primary"
+              aria-label="Häuser"
+              defaultChecked
+            />
 
-          <Pie data={averageLapCountByHouseData} options={pieOptions} />
-        </div>
+            <div className="tab-content">
+              <div className="overflow-x-auto">
+                <table className="table dark:table-zebra">
+                  <thead>
+                    <tr>
+                      <th>Haus</th>
+                      <th>
+                        Läufer*
+                        <br />
+                        innen
+                      </th>
+                      <th>Runden</th>
+                      <th>Ø Runden</th>
+                    </tr>
+                  </thead>
 
-        <div className="flex flex-col gap-2 w-full max-w-sm">
-          <h2 className="px-8 text-center text-xl font-semibold">
-            Ø Runden pro Klasse
-          </h2>
+                  <tbody>
+                    {Object.entries(lapCountByHouse)
+                      .sort(([, a], [, b]) => b - a)
+                      .map(([house, totalLaps]) => {
+                        const average = averageLapCountByHouse[house];
 
-          <Pie data={averageLapCountByClassData} options={pieOptions} />
-        </div>
+                        return (
+                          <tr key={house}>
+                            <td className="font-medium">
+                              {getHouseLabel(house)}
+                            </td>
 
-        <div className="flex flex-col gap-2 w-full max-w-sm">
-          <h2 className="px-8 text-center text-xl font-semibold">
-            Runden pro Haus
-          </h2>
+                            <td className="text-right">
+                              {runnersPerHouse[house]}
+                            </td>
 
-          <Pie data={lapCountByHouseData} options={pieOptions} />
-        </div>
+                            <td className="text-right font-semibold">
+                              {totalLaps}
+                            </td>
 
-        <div className="flex flex-col gap-2 w-full max-w-sm">
-          <h2 className="px-8 text-center text-xl font-semibold">
-            Runden pro Klasse
-          </h2>
+                            <td className="text-right">
+                              {average.toFixed(1).replace('.', ',')}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-          <Pie data={lapCountByClassData} options={pieOptions} />
+            {/* Klassen */}
+            <input
+              type="radio"
+              name="stats_tabs"
+              className="tab w-1/2 font-bold checked:bg-primary"
+              aria-label="Klassen"
+            />
+
+            <div className="tab-content">
+              <div className="overflow-x-auto">
+                <table className="table dark:table-zebra">
+                  <thead>
+                    <tr>
+                      <th>Klasse</th>
+                      <th>
+                        Läufer*
+                        <br />
+                        innen
+                      </th>
+                      <th>Runden</th>
+                      <th>Ø Runden</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {Object.entries(lapCountByClass)
+                      .sort(([, a], [, b]) => b - a)
+                      .map(([className, totalLaps]) => {
+                        const average = averageLapCountByClass[className];
+
+                        return (
+                          <tr key={className}>
+                            <td className="font-medium">{className}</td>
+
+                            <td className="text-right">
+                              {runnersPerClass[className]}
+                            </td>
+
+                            <td className="text-right font-semibold">
+                              {totalLaps}
+                            </td>
+
+                            <td className="text-right">
+                              {average.toFixed(1).replace('.', ',')}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     </>

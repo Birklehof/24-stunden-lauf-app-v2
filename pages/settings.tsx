@@ -27,7 +27,7 @@ function SettingsPage() {
 
       <main className="flex flex-col gap-4 max-w-sm mx-auto p-2">
         <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit w-full">
-          <legend className="fieldset-legend text-lg font-semibold">
+          <legend className="fieldset-legend text-lg font-semibold -mb-3">
             Darstellung
           </legend>
           <select
@@ -56,7 +56,7 @@ function SettingsPage() {
         </fieldset>
 
         <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit w-full">
-          <legend className="fieldset-legend text-lg font-semibold">
+          <legend className="fieldset-legend text-lg font-semibold -mb-4">
             Account
           </legend>
           {user.id === process.env.NEXT_PUBLIC_ASSISTANT_ACCOUNT_UID ? (
@@ -75,7 +75,7 @@ function SettingsPage() {
         </fieldset>
 
         <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit w-full">
-          <legend className="fieldset-legend text-lg font-semibold">
+          <legend className="fieldset-legend text-lg font-semibold -mb-4">
             Sonstiges
           </legend>
           <p className="mb-2 text-base">
@@ -103,12 +103,13 @@ function SettingsPage() {
 
         {showDebug && (
           <fieldset className="fieldset border-base-300 rounded-box border p-4 h-fit w-full">
-            <legend className="fieldset-legend text-lg font-semibold">
+            <legend className="fieldset-legend text-lg font-semibold -mb-4">
               Debug
             </legend>
             <code className="break-all">{JSON.stringify(user)}</code>
           </fieldset>
         )}
+        <div />
       </main>
     </>
   );
