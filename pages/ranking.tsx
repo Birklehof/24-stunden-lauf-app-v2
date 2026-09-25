@@ -247,6 +247,19 @@ function RankingPage({ preloadedRunners }: { preloadedRunners: Runner[] }) {
               );
             })}
           <li className="list-row p-2.5 border-t-2 border-t-base-300 rounded-none">
+            <div className="list-col-grow tracking-wide text-left">
+              Anzahl{' '}
+              {
+                runners.filter((runner) => {
+                  return filterRunner(runner, {
+                    filterType: runnerTypeFilter,
+                    filterName: searchRunnerName,
+                    filterClasses: runnerClassFilter,
+                    filterHouse: runnerHouseFilter,
+                  });
+                }).length
+              }
+            </div>
             <div className="list-col-grow tracking-wide text-right">
               Summe{' '}
               {runners
